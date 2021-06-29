@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../images/chat-box.png" type="image/x-icon">
+    <link rel="stylesheet" href="../css/chat.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <title>Chat</title>
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <div class="imageContainer">
+                <img src="../images/cup.png">
+            </div>
+            <div class="optionsMenu">
+                <div class="options" id="optionsSelected">
+                    <img src="../images/comment.svg">
+                </div>
+                <div class="options">
+                    <img src="../images/favorite.svg">
+                </div>
+                <div class="options">
+                    <img src="../images/user.svg">
+                </div>
+                <div class="options" id="logout">
+                    <img src="../images/logout.png">
+                </div>
+            </div>
+            <div class="containerUser">
+                <img src="../images/user3.png">
+            </div>
+        </div>
+        <div class="main">
+            <div class="participants">
+                <div class="participantsHeader">
+                    <p>Participantes</p>
+                </div>
+                <div class="participantsMain">
+                    <div class="searchContainer">
+                        <div class="searchImage">
+                            <img src="../images/loupe.svg">
+                        </div>
+                        <div class="inputContainer">
+                            <input type="text" placeholder="Search">
+                        </div>
+                    </div>
+                    <span class="listPeoples">
+                        <!-- <div class="people">
+                            <div class="peopleImage">
+                                <img src="../images/user3.png">
+                            </div>
+                            <div class="peopleInformations">
+                                <p>Igor Silva</p>
+                            </div>
+                        </div> -->
+                    </span>
+                </div>
+            </div>
+            <div class="chat chatLoadingSelect" id="chat_loading_chat">
+                <div class="selectUserLoading">
+                    <img src="../images/chat-select.png">
+                    <p>Escolha um usuario ao lado para começar a conversa</p>
+                </div>
+            </div>
+            <div class="chat" id="chat_container" style="display: none;">
+                <div class="headerChat">
+                    <p>Mensagens</p>
+                </div>
+                <div class="containerChat" id="containerChat">
+                    <!-- <div class="messageUserLoged">
+                        <div class="containerMessage userLoged">
+                            <span class="usernameLoged">
+                                Igor
+                            </span>
+                            <span class="messageBox">
+                                Oi tudo bem?
+                            </span>
+                            <span class="date_message">
+                                16:32
+                            </span>
+                        </div>
+                    </div>
+                    <div class="messageOtherUser">
+                        <div class="containerMessage otherUser">
+                            <span class="otherUsername">
+                                Vitoria
+                            </span>
+                            <span class="messageBox">
+                                Tudo sim e você?
+                            </span>
+                            <span class="date_message">
+                                16:32
+                            </span>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="footerChat">
+                    <div class="sendMessage">
+                        <input type="text" placeholder="Escreva mensagem" id="messageUser" name="messageUser">
+                    </div>
+                    <div class="buttonSendMessage" id="buttonSubmitMessage"> 
+                        <img src="../images/email.svg">
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.4/dayjs.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/chat.js"></script>
+
+</body>
+</html>

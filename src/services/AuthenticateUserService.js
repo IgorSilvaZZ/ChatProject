@@ -22,7 +22,12 @@ class AuthenticateUserService {
             expiresIn: '1d'
         });
 
-        return token;
+        const data = {
+            user,
+            token
+        }
+
+        return data;
 
     }   
 

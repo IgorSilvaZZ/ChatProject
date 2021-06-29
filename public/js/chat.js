@@ -1,4 +1,6 @@
 const username = JSON.parse(localStorage.getItem('username'));
+const token = JSON.parse(localStorage.getItem('token'));
+
 let socket = null;
 let participants = [];
 
@@ -153,7 +155,7 @@ document.getElementById('logout').addEventListener('click', () => {
 
 window.addEventListener('load', () => {
 
-    if(!username){
+    if(!token || !username){
         window.location = "/index";
     }
 })

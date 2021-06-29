@@ -9,7 +9,6 @@ const userController = new UserController();
 const authController = new AuthController();
 
 router.post('/createUser', userController.create);
-router.post('/login', userController.login);
 router.post('/authenticate', authController.handle);
 
 router.get('/index', (req, res) => {

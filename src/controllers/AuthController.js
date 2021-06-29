@@ -8,9 +8,13 @@ class AuthController {
 
         const authenticateUserService = new AuthenticateUserService();
 
-        const token = await authenticateUserService.execute({ email, password });
+        const data = await authenticateUserService.execute({ email, password });
 
-        return res.status(200).json(token);
+        const username =  data.user.name;
+
+        global.io.emit('acess_chat', { username });
+
+        return res.status(200).json(data);
 
     }
 

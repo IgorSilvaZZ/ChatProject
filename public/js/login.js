@@ -12,7 +12,9 @@ document.getElementById('btnSubmit').addEventListener('click', () => {
             res.json().then(response => {
 
                 localStorage.setItem('username', JSON.stringify(response.user.name));
+                localStorage.setItem('email', JSON.stringify(response.user.email));
                 localStorage.setItem('token', JSON.stringify(response.token));
+                localStorage.setItem('id', JSON.stringify(response.user.id));
 
                 Toastify({
                     text: "Login efetuado com Sucesso",

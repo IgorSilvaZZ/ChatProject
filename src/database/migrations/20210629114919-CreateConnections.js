@@ -11,15 +11,23 @@ module.exports = {
       },
       user_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: { model: 'tbUsers', key: 'id' },
         onUpdate: 'SET NULL',
         onDelete: 'SET NULL'
       },
       socket_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
+      created_at: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW
+      },
+      updated_at: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW
+      }
     })
   },
 

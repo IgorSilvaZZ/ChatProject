@@ -4,12 +4,15 @@ class Connection extends Model {
 
     static init(sequelize){
         super.init({
-            user_id: { type: DataTypes.INTEGER },
-            socket_id: { type: DataTypes.INTEGER }
+            user_id: DataTypes.INTEGER,
+            socket_id: DataTypes.INTEGER,
+            created_at: DataTypes.DATE,
+            updated_at: DataTypes.DATE,
         },{
             sequelize,
             freezeTableName: true,
-            tableName: 'tbConnections'
+            tableName: 'tbConnections',
+            underscored: true,
         })
     }
 

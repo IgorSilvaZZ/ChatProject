@@ -4,7 +4,11 @@ class FindAllConnectionsService {
 
     async execute() {
 
-        const connections = await ConnectionsRepositories.findAll();
+        const connections = await ConnectionsRepositories.findAll({
+            include: [
+                { association: 'user' }
+            ]
+        });
 
         return connections;
 

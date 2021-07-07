@@ -11,6 +11,9 @@ const authController = new AuthController();
 router.post('/createUser', userController.create);
 router.post('/authenticate', authController.handle);
 
+//Rota para teste
+router.get('/connectionsUser', userController.connectionsUsers);
+
 router.get('/index', (req, res) => {
     return res.render('html/index.html');
 });

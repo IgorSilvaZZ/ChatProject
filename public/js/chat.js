@@ -1,4 +1,6 @@
 const username = JSON.parse(localStorage.getItem('username'));
+const email = JSON.parse(localStorage.getItem('email'));
+const id = JSON.parse(localStorage.getItem('id'));
 const token = JSON.parse(localStorage.getItem('token'));
 
 let socket = null;
@@ -18,13 +20,13 @@ socket.on('acess_chat', (params) => {
 
 });
 
-socket.emit('acess_chat_parcipant', username);
+socket.emit('acess_chat_parcipant', { username , email });
 
 socket.on('participants_list_all', connections => {
 
-    const newParticipants = connections.filter(participant => participant.username !== username);
+    const newParticipants = connections.filter(participant => participant.name !== username && participant.socket_id !== null);
 
-    const informationUser = connections.filter(participant => participant.username == username);
+    const informationUser = connections.filter(participant => participant.name == username);
 
     socket_user = localStorage.setItem('user_socket', JSON.stringify(informationUser[0].socket_id));
 
@@ -54,7 +56,7 @@ socket.on('participants_list_all', connections => {
         informationPeople.className = "peopleInformations";
 
         const namePeople = document.createElement('p');
-        namePeople.innerHTML = participant.username;
+        namePeople.innerHTML = participant.name;
 
         informationPeople.append(namePeople);
 
@@ -145,7 +147,7 @@ document.getElementById('logout').addEventListener('click', () => {
     document.getElementById('chat_loading_chat').style.display = "flex"
     document.getElementById('chat_container').style.display = "none";
 
-    socket.emit('logout_parcipant', username);
+    socket.emit('logout_parcipant', id);
 
     localStorage.clear();
     

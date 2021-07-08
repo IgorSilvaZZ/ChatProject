@@ -11,8 +11,13 @@ const authController = new AuthController();
 router.post('/createUser', userController.create);
 router.post('/authenticate', authController.handle);
 
-//Rota para teste
+//Rota para teste para listar as conexões
 router.get('/connectionsUser', userController.connectionsUsers);
+
+//Rota para teste de envio de Messagem
+router.post('/sendMessage', userController.sendMessage)
+
+router.get('/messages', userController.listMessages)
 
 router.get('/index', (req, res) => {
     return res.render('html/index.html');

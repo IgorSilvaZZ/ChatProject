@@ -2,35 +2,21 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.createTable('tbMessages', {
+    return queryInterface.createTable('tbChanels', {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         allowNull: false,
         autoIncrement: true,
       },
-      message: {
-        type: Sequelize.TEXT,
+      descChanel: {
+        type: Sequelize.STRING,
         allowNull: true
       },
-      fkUserSender: {
+      fkUserCreate: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: { model: 'tbUsers', key: 'id' },
-        onUpdate: 'SET NULL',
-        onDeleted: 'SET NULL'
-      },
-      fkUserReceiver: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: 'tbUsers', key: 'id' },
-        onUpdate: 'SET NULL',
-        onDeleted: 'SET NULL'
-      },
-      fkChanel: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: 'tbChanels', key: 'id' },
         onUpdate: 'SET NULL',
         onDeleted: 'SET NULL'
       },
@@ -46,6 +32,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('tbMessages');
+    return queryInterface.dropTable('tbChanels');
   }
 };

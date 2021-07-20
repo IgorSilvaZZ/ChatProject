@@ -7,6 +7,7 @@ class Message extends Model {
             message: DataTypes.TEXT,
             fkUserSender: DataTypes.INTEGER,
             fkUserReceiver: DataTypes.INTEGER,
+            fkChanel: DataTypes.INTEGER,
             createdAt: DataTypes.DATE,
             updatedAt: DataTypes.DATE,
         }, {
@@ -17,8 +18,9 @@ class Message extends Model {
     }
 
     static associate(models){
-        this.belongsTo(models.User, { foreignKey: 'fkUserSender', as: 'user_sender' })
-        this.belongsTo(models.User, { foreignKey: 'fkUserReceiver', as: 'user_receiver' })
+        this.belongsTo(models.User, { foreignKey: 'fkUserSender', as: 'user_sender' });
+        this.belongsTo(models.User, { foreignKey: 'fkUserReceiver', as: 'user_receiver' });
+        this.belongsTo(models.Chanel, { foreignKey: 'fkChanel', as: 'chanel' });
     }
 
 }

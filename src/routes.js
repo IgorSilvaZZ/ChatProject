@@ -13,7 +13,6 @@ router.post('/authenticate', authController.handle);
 
 //Rota para teste para listar as conexões
 router.get('/connectionsUser', userController.connectionsUsers);
-
 //Rota para teste de envio de Messagem
 router.post('/sendMessage', userController.sendMessage)
 

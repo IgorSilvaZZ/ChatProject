@@ -1,11 +1,14 @@
 const { ConnectionsRepositories } = require('../repositories/ConnectionsRepositories');
-
+const { Op } = require('sequelize');
 class WithSocketConnectionService {
 
     async execute() {
 
-        const connections = ConnectionsRepositories.findAll({
-            where: { socket_id: { $not: 'null' } }
+        const connections = await ConnectionsRepositories.findAll({
+            where: { socket_id: { [ Op.ne ]:  null } },
+            include: [
+                { association: 'user' }
+            ]
         })
 
         return connections;

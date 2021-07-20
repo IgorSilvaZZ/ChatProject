@@ -7,6 +7,9 @@ let socket = null;
 let participants = [];
 
 let socket_user = null
+let socket_user_receiver = null;
+
+let chanel_id = null;
 
 socket = io();
 
@@ -22,13 +25,61 @@ socket.on('acess_chat', (params) => {
 
 socket.emit('acess_chat_parcipant', { username , email });
 
+const listMessages = (idChanel) => {
+
+    socket.emit('list_messages', { idChanel }, messages => {
+
+        chanel_id = idChanel;
+
+        const containerChat = document.getElementById('containerChat');
+
+        console.log(messages);
+
+        messages.map(item => {
+
+            const divMessageUser = document.createElement('div');
+
+            if(item.user_sender.id === id){
+
+                divMessageUser.className = "messageUserLoged";
+
+                const containerMessage = document.createElement('div');
+                containerMessage.className = "containerMessage userLoged";
+                containerMessage.innerHTML += `<span class="usernameLoged">${item.user_sender.name}</span>`
+                containerMessage.innerHTML += `<span class="messageBox">${item.message}</span>`
+                containerMessage.innerHTML += `<span class='date_message'>${item.createdAt}</span>`; 
+
+                divMessageUser.appendChild(containerMessage);
+                
+            }else{
+
+                divMessageUser.className = "messageOtherUser";
+
+                const containerMessage = document.createElement('div');
+                containerMessage.className = "containerMessage otherUser";
+                containerMessage.innerHTML += `<span class="usernameLoged">${item.user_sender.name}</span>`
+                containerMessage.innerHTML += `<span class="messageBox">${item.message}</span>`
+                containerMessage.innerHTML += `<span class='date_message'>${item.createdAt}</span>`; 
+
+                divMessageUser.appendChild(containerMessage);
+
+            }
+
+            containerChat.appendChild(divMessageUser);
+
+        })
+
+    });
+
+}
+
 socket.on('participants_list_all', connections => {
 
     const newParticipants = connections.filter(participant => participant.name !== username && participant.socket_id !== null);
 
     const informationUser = connections.filter(participant => participant.name == username);
 
-    socket_user = localStorage.setItem('user_socket', JSON.stringify(informationUser[0].socket_id));
+    socket_user = informationUser[0].socket_id;
 
     participants = newParticipants;
 
@@ -63,14 +114,25 @@ socket.on('participants_list_all', connections => {
         divPeople.append(divImagePeople);
         divPeople.append(informationPeople);
 
-        let socket_id = participant.socket_id;
-
         divPeople.addEventListener('click', () => {
+
+            socket_user_receiver = participant.socket_id;
+
+            //Criar uma chamada de socket para criar o canal e retornar esse id do socket para fazer a listagem e criar as mensagens para esse canal
+            const params = {
+                descChanel: `chanel_${username}_${participant.name}`, 
+                fkUser: id,
+                fkUserParticipant: participant.user_id
+            }
+
+            socket.emit('entry_chanel', params, idChanel => {
+                
+                listMessages(idChanel);
+            })
 
             divLoadingSelectChat.style.display = "none";
             divContainerChat.style.display = "flex";
             document.getElementById('containerChat').innerHTML = "";
-            localStorage.setItem('user_sender', JSON.stringify(socket_id));
 
         })
 
@@ -85,13 +147,11 @@ document.getElementById('buttonSubmitMessage').addEventListener('click', () => {
 
     const text = document.getElementById('messageUser');
 
-    const socket_id = JSON.parse(localStorage.getItem('user_sender'));
-    const socket_user_send = JSON.parse(localStorage.getItem('user_socket'));
-
     const params = {
         text: text.value,
-        socket_id,
-        socket_user_send,
+        socket_user,
+        socket_user_receiver,
+        chanel_id,
         username_message: username,
     }
 
@@ -118,9 +178,7 @@ socket.on('user_receiver_message', message => {
     document.getElementById('chat_loading_chat').style.display = "none"
     document.getElementById('chat_container').style.display = "flex";
 
-    const { text, socket_user_send, username_message } = message;
-
-    localStorage.setItem('user_sender', JSON.stringify(socket_user_send));
+    const { text, username_message } = message;
 
     Toastify({
         text: `${username_message} mandou uma mensagem pra você!`,

@@ -2,6 +2,7 @@ const { CreateUserService } = require('../services/CreateUserService');
 const { FindAllConnectionsService } = require('../services/FindAllConnectionsService');
 const { CreateMessageService } = require('../services/CreateMessageService');
 const { ListMessagesService } = require('../services/ListMessagesService');
+const { WithSocketConnectionService } = require('../services/WithSocketConnectionService')
 class UserController { 
     
     async create(req, res){
@@ -20,8 +21,9 @@ class UserController {
     async connectionsUsers(req, res) {
 
         const findAllConnectionsService = new FindAllConnectionsService();
+        const withSocketConnectionService = new WithSocketConnectionService();
 
-        const connection = await findAllConnectionsService.execute();
+        const connection = await withSocketConnectionService.execute();
 
         return res.status(200).json(connection);
 
@@ -41,9 +43,11 @@ class UserController {
 
     async listMessages(req, res){
 
+        const { fkUserSender, fkUserReceiver } = req.body;
+
         const listMessagesService = new ListMessagesService();
 
-        const messages = await listMessagesService.execute();
+        const messages = await listMessagesService.execute({ fkUserSender, fkUserReceiver });
 
         return res.status(200).json(messages);
 

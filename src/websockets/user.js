@@ -7,10 +7,9 @@ const { WithSocketConnectionService } = require('../services/WithSocketConnectio
 const { FindBySocketIDService } = require('../services/FindBySocketIDService');
 const { CreateMessageService } = require('../services/CreateMessageService');
 const { ListMessagesService } = require('../services/ListMessagesService');
-const { CreateChanelService } = require('../services/CreateChanelService');
-const { FindChanelByUserCreateService } = require('../services/FindChanelByUserCreateService');
 
 const { ConnectionsSerialize } = require('../serializes/ConnectionsSerialize');
+const { MessagesSerialize } = require('../serializes/MessagesSerialize');
 
 module.exports = () => {
 
@@ -24,11 +23,10 @@ module.exports = () => {
         const whithSocketConnectionService = new WithSocketConnectionService();
         const findBySocketIDService = new FindBySocketIDService();
         const createMessageService = new CreateMessageService();
-        const createChanelService = new CreateChanelService();
-        const findChanelByUserCreateService = new FindChanelByUserCreateService();
         const listMessagesService = new ListMessagesService();
 
         const connectionsSerialize = new ConnectionsSerialize();
+        const messagesSerialize = new MessagesSerialize();
 
         socket.on('acess_chat_parcipant', async(params) => {
 
@@ -61,28 +59,6 @@ module.exports = () => {
 
         });
 
-        socket.on('entry_chanel', async(params, callback) => {
-            const { descChanel, fkUser, fkUserParticipant } = params;
-
-            const chanelExists = await findChanelByUserCreateService.execute({ fkUser, fkUserParticipant });
-
-            if(!chanelExists){
-
-                const data = {
-                    descChanel, 
-                    fkUserCreate: fkUser
-                }
-
-                const chanel = await createChanelService.execute(data);
-
-                callback(chanel.id);
-
-            }else{
-
-                callback(chanelExists.id);
-            }
-        })
-
         socket.on('logout_parcipant', async( user_id ) => {
 
             await updateUserConnectionService.execute({ user_id, socket_id: null });
@@ -97,7 +73,7 @@ module.exports = () => {
 
         socket.on('user_send_message', async(params) => {
 
-            const { text, socket_user, socket_user_receiver, chanel_id, username_message } = params;
+            const { text, socket_user, socket_user_receiver, username_message } = params;
 
             const user_receiver = await findBySocketIDService.execute(socket_user_receiver);
 
@@ -106,7 +82,6 @@ module.exports = () => {
             await createMessageService.execute({ 
                 fkUserReceiver: user_receiver.id, 
                 fkUserSender: user_sender.id, 
-                fkChanel: chanel_id,
                 message: text 
             })
 
@@ -116,9 +91,25 @@ module.exports = () => {
 
         socket.on('list_messages', async (params, callback) => {
 
-            const { idChanel } = params;
+            const { fkUser, fkUserParticipant } = params;
 
-            const messages = await listMessagesService.execute(idChanel);
+            const paramsUserSender = {
+                fkUserSender: fkUser, 
+                fkUserReceiver: fkUserParticipant,
+            }
+
+            const paramsUserReceiver = {
+                fkUserSender: fkUserParticipant, 
+                fkUserReceiver: fkUser,
+            }
+
+            const messagesUserSender = await listMessagesService.execute(paramsUserSender);
+
+            const messagesUserReceiver = await listMessagesService.execute(paramsUserReceiver);
+
+            const messagesObject = messagesUserSender.concat(messagesUserReceiver)
+
+            const messages = messagesSerialize.listAllMessages(messagesObject);
 
             callback(messages);
         })

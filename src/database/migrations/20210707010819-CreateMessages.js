@@ -27,13 +27,6 @@ module.exports = {
         onUpdate: 'SET NULL',
         onDeleted: 'SET NULL'
       },
-      fkChanel: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: 'tbChanels', key: 'id' },
-        onUpdate: 'SET NULL',
-        onDeleted: 'SET NULL'
-      },
       createdAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW

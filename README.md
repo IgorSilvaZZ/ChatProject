@@ -7,7 +7,7 @@
     <img src="https://pics.freeicons.io/uploads/icons/png/3585995681551952104-512.png" width="45px"/>
     <img src="https://pics.freeicons.io/uploads/icons/png/17839680241551942828-512.png" width="45px"/>
     <img src="https://img.icons8.com/color/48/000000/java-web-token.png"/>
-    <img src="https://pics.freeicons.io/uploads/icons/png/8416740941580802960-512.png" width="45px"/>
+    <img src="https://cdn.icon-icons.com/icons2/2699/PNG/512/expressjs_logo_icon_169185.png" width="45px"/>
     <img src="https://pics.freeicons.io/uploads/icons/png/8804286661557996995-512.png" width="45px"/>
     <img src="https://pics.freeicons.io/uploads/icons/png/632690741557997006-512.png" width="45px"/>
     <img src="https://pics.freeicons.io/uploads/icons/png/21088442871540553614-512.png" width="45px"/>

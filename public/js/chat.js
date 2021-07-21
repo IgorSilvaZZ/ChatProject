@@ -9,8 +9,6 @@ let participants = [];
 let socket_user = null
 let socket_user_receiver = null;
 
-let chanel_id = null;
-
 socket = io();
 
 socket.on('acess_chat', (params) => {
@@ -25,11 +23,9 @@ socket.on('acess_chat', (params) => {
 
 socket.emit('acess_chat_parcipant', { username , email });
 
-const listMessages = (idChanel) => {
+const listMessages = (params) => {
 
-    socket.emit('list_messages', { idChanel }, messages => {
-
-        chanel_id = idChanel;
+    socket.emit('list_messages', params, messages => {
 
         const containerChat = document.getElementById('containerChat');
 
@@ -39,25 +35,25 @@ const listMessages = (idChanel) => {
 
             const divMessageUser = document.createElement('div');
 
-            if(item.user_sender.id === id){
+            if(item.idUserSender === id){
 
                 divMessageUser.className = "messageUserLoged";
 
                 const containerMessage = document.createElement('div');
                 containerMessage.className = "containerMessage userLoged";
-                containerMessage.innerHTML += `<span class="usernameLoged">${item.user_sender.name}</span>`
+                containerMessage.innerHTML += `<span class="usernameLoged">${item.nameUserSender}</span>`
                 containerMessage.innerHTML += `<span class="messageBox">${item.message}</span>`
                 containerMessage.innerHTML += `<span class='date_message'>${item.createdAt}</span>`; 
 
                 divMessageUser.appendChild(containerMessage);
-                
             }else{
 
+                
                 divMessageUser.className = "messageOtherUser";
 
                 const containerMessage = document.createElement('div');
                 containerMessage.className = "containerMessage otherUser";
-                containerMessage.innerHTML += `<span class="usernameLoged">${item.user_sender.name}</span>`
+                containerMessage.innerHTML += `<span class="usernameLoged">${item.nameUserSender}</span>`
                 containerMessage.innerHTML += `<span class="messageBox">${item.message}</span>`
                 containerMessage.innerHTML += `<span class='date_message'>${item.createdAt}</span>`; 
 
@@ -68,6 +64,38 @@ const listMessages = (idChanel) => {
             containerChat.appendChild(divMessageUser);
 
         })
+
+       /*  messages.messagesUserSender.map(item => {
+
+            const divMessageUser = document.createElement('div');
+            divMessageUser.className = "messageUserLoged";
+
+            const containerMessage = document.createElement('div');
+            containerMessage.className = "containerMessage userLoged";
+            containerMessage.innerHTML += `<span class="usernameLoged">${item.user_name}</span>`
+            containerMessage.innerHTML += `<span class="messageBox">${item.message}</span>`
+            containerMessage.innerHTML += `<span class='date_message'>${item.createdAt}</span>`; 
+
+            divMessageUser.appendChild(containerMessage);
+            containerChat.appendChild(divMessageUser);
+        })
+
+        messages.messagesUserReceiver.map(item => {
+
+            const divMessageUser = document.createElement('div');
+            divMessageUser.className = "messageOtherUser";
+
+            const containerMessage = document.createElement('div');
+            containerMessage.className = "containerMessage otherUser";
+            containerMessage.innerHTML += `<span class="usernameLoged">${item.user_name}</span>`
+            containerMessage.innerHTML += `<span class="messageBox">${item.message}</span>`
+            containerMessage.innerHTML += `<span class='date_message'>${item.createdAt}</span>`; 
+
+            divMessageUser.appendChild(containerMessage);
+            containerChat.appendChild(divMessageUser);
+
+        }) */
+        
 
     });
 
@@ -118,17 +146,12 @@ socket.on('participants_list_all', connections => {
 
             socket_user_receiver = participant.socket_id;
 
-            //Criar uma chamada de socket para criar o canal e retornar esse id do socket para fazer a listagem e criar as mensagens para esse canal
             const params = {
-                descChanel: `chanel_${username}_${participant.name}`, 
                 fkUser: id,
                 fkUserParticipant: participant.user_id
             }
 
-            socket.emit('entry_chanel', params, idChanel => {
-                
-                listMessages(idChanel);
-            })
+            listMessages(params);
 
             divLoadingSelectChat.style.display = "none";
             divContainerChat.style.display = "flex";
@@ -151,7 +174,6 @@ document.getElementById('buttonSubmitMessage').addEventListener('click', () => {
         text: text.value,
         socket_user,
         socket_user_receiver,
-        chanel_id,
         username_message: username,
     }
 

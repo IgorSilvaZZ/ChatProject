@@ -64,37 +64,6 @@ const listMessages = (params) => {
             containerChat.appendChild(divMessageUser);
 
         })
-
-       /*  messages.messagesUserSender.map(item => {
-
-            const divMessageUser = document.createElement('div');
-            divMessageUser.className = "messageUserLoged";
-
-            const containerMessage = document.createElement('div');
-            containerMessage.className = "containerMessage userLoged";
-            containerMessage.innerHTML += `<span class="usernameLoged">${item.user_name}</span>`
-            containerMessage.innerHTML += `<span class="messageBox">${item.message}</span>`
-            containerMessage.innerHTML += `<span class='date_message'>${item.createdAt}</span>`; 
-
-            divMessageUser.appendChild(containerMessage);
-            containerChat.appendChild(divMessageUser);
-        })
-
-        messages.messagesUserReceiver.map(item => {
-
-            const divMessageUser = document.createElement('div');
-            divMessageUser.className = "messageOtherUser";
-
-            const containerMessage = document.createElement('div');
-            containerMessage.className = "containerMessage otherUser";
-            containerMessage.innerHTML += `<span class="usernameLoged">${item.user_name}</span>`
-            containerMessage.innerHTML += `<span class="messageBox">${item.message}</span>`
-            containerMessage.innerHTML += `<span class='date_message'>${item.createdAt}</span>`; 
-
-            divMessageUser.appendChild(containerMessage);
-            containerChat.appendChild(divMessageUser);
-
-        }) */
         
 
     });
@@ -197,8 +166,7 @@ document.getElementById('buttonSubmitMessage').addEventListener('click', () => {
 
 socket.on('user_receiver_message', message => {
 
-    document.getElementById('chat_loading_chat').style.display = "none"
-    document.getElementById('chat_container').style.display = "flex";
+    const containerChat = document.getElementById('containerChat');
 
     const { text, username_message } = message;
 

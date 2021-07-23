@@ -41,13 +41,24 @@
                         <input type="password" id="password" placeholder="Password">
                     </div>
                 </div>
-                <button class="buttonSubmit" id="btnSubmit">Entrar</button>
+                <div class="containerButtons">
+                    <button class="buttonSubmit" id="btnSubmit">Entrar</button>
+                    <button class="buttonSubmit" id="btnRegister">Registrar</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="../js/login.js"></script>
-    
+
+    <script>
+
+        document.getElementById('btnRegister').addEventListener('click', () => {
+            window.location = '/register'
+        })
+
+    </script>
+
 </body>
 </html>

@@ -26,4 +26,8 @@ router.get('/chat', (req, res) => {
     return res.render('html/chat.html');
 });
 
+router.get('/register', (req, res) => {
+    return res.render('html/register.html')
+})
+
 module.exports = { router };

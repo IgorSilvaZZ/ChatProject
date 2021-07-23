@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../images/chat-box.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <title>Register</title>
+    <link rel="stylesheet" href="../css/register.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="imageContainer">
+            <div class="containerImage">
+                <img src="../images/registerImg.svg">
+            </div>
+        </div>
+        <div class="containerForm">
+            <div class="inputsContainer">
+                <div class="headerForm">
+                    <h3>Register</h3>
+                </div>
+                <div class="formContainer">
+                    <div class="rowInput">
+                        <div class="inputContainer fullWidth">
+                            <div class="imageInput">
+                                <img src="../images/email.png">
+                            </div>
+                            <div class="containerInput">
+                                <input type="text" id="email" placeholder="Email">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rowInput">
+                        <div class="inputContainer">
+                            <div class="imageInput widthImage">
+                                <img src="../images/userInput.svg">
+                            </div>
+                            <div class="containerInput">
+                                <input type="text" id="email" placeholder="Email">
+                            </div>
+                        </div>
+                        <div class="inputContainer">
+                            <div class="imageInput widthImage">
+                                <img src="../images/padlock.png">
+                            </div>
+                            <div class="containerInput">
+                                <input type="password" id="password" placeholder="Password">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="containerButtons">
+                        <button class="buttonSubmit" id="btnBack">Voltar</button>
+                        <button class="buttonSubmit" id="btnSubmit">Registrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script>
+
+        document.getElementById('btnBack').addEventListener('click', () => {
+            window.location = '/index'
+        })
+
+    </script>
+    
+</body>
+</html>

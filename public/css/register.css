@@ -1,4 +1,4 @@
-*{
+* {
     padding: 0;
     margin: 0;
     font-family: 'Poppins', sans-serif;
@@ -13,7 +13,7 @@ body{
 }
 .container {
     display: flex;
-    height: 80%;
+    height: 85%;
     width: 80%;
     border-radius: 10px;
     background: rgba(0, 0, 0, 0.5);
@@ -23,64 +23,75 @@ body{
     justify-content: center;
     align-items: center;
     height: 100%;
-    width: 50%;
+    width: 40%;
 }
 .containerImage{
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(73,80,87, 0.5);
     height: 50%;
-    width: 50%;
-    border-radius: 50%;
-    -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.43);
-    -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.43);
-    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.43);
+    width: 90%;
 }
 .imageContainer img{
-    width: 40%;
+    width: 90%;
 }
 .containerForm {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100%;
-    width: 50%;
+    width: 60%;
+}
+.inputsContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 85%;
+    width: 85%;
+    border-radius: 10px;
+    background: rgba(73,80,87, 0.5);
+    -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.43);
+    -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.43);
+    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.43);
 }
 .headerForm{
     display: flex;
     align-items: center;
     justify-content: center;
     width: 70%;
-    height: 20%;
+    height: 10%;
 }
-.headerForm h1{
+.headerForm h3{
     color: white;
     font-weight: 600;
 }
 .formContainer {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
     flex-direction: column;
-    width: 70%;
-    height: 50%;
+    width: 95%;
+    height: 80%;
+}
+.rowInput {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    height: 55px;
 }
 .inputContainer {
     display: flex;
     border-radius: 20px;
-    width: 100%;
-    height: 35%;
-    margin-bottom: 30px;
+    width: 45%;
+    height: 100%;
     background: rgba(73,80,87, 0.5);
 }
 .containerInput{
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 85%;
-    height: 95%;
 }
 .imageInput{
     display: flex;
@@ -94,8 +105,6 @@ body{
     width: 50%;
 }
 .containerInput input{
-    height: 60%;
-    width: 90%;
     font-size: 15px;
     background: none;
     border: none;
@@ -105,12 +114,12 @@ body{
 .containerButtons {
     display: flex;
     justify-content: space-evenly;
-    height: 20%;
+    height: 12%;
     width: 95%;
 }
 .buttonSubmit {
     padding: 10px;
-    width: 45%;
+    width: 35%;
     background: #5f27cd;
     color: white;
     border-radius: 10px;
@@ -121,4 +130,10 @@ body{
 }
 .buttonSubmit:hover{
     background: #341f97;
+}
+.fullWidth {
+    width: 95%;
+}
+.widthImage img {
+    width: 70%;
 }

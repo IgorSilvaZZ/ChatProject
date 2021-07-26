@@ -90,8 +90,7 @@ body{
 }
 .containerInput{
     display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 80%;
 }
 .imageInput{
     display: flex;
@@ -110,6 +109,7 @@ body{
     border: none;
     outline: none;
     color: #636e72;
+    width: 100%;
 }
 .containerButtons {
     display: flex;

@@ -8,6 +8,7 @@ document.getElementById('btnSubmit').addEventListener('click', () => {
             password: document.getElementById('password').value
         })
     }).then(res => {
+        console.log(res);
         if(res.status === 200){
             res.json().then(response => {
 
@@ -26,6 +27,13 @@ document.getElementById('btnSubmit').addEventListener('click', () => {
                     window.location = '/chat'
                 }, 2000);
             })
+        }
+        if(res.status === 400){
+            Toastify({
+                text: "Usuario ou Senha incorretos!", 
+                backgroundColor: "linear-gradient(to right, #e74c3c, #c0392b)",
+                duration: 2000,
+            }).showToast();    
         }
     }).catch(err => {
         console.log(err);

@@ -23,6 +23,62 @@ socket.on('acess_chat', (params) => {
 
 socket.emit('acess_chat_parcipant', { username , email });
 
+const listPeoples = peoples => {
+
+    const listDivPeople = document.querySelector('.listPeoples');
+    listDivPeople.innerHTML = "";
+
+    const divLoadingSelectChat = document.getElementById('chat_loading_chat');
+
+    const divContainerChat = document.getElementById('chat_container');
+
+    peoples.map(participant => {
+
+        const divPeople = document.createElement('div');
+        divPeople.className = "people";
+
+        const divImagePeople = document.createElement('div');
+        divImagePeople.className = "peopleImage"
+
+        const imagePeople = document.createElement('img');
+        imagePeople.src = "../images/user3.png";
+
+        divImagePeople.append(imagePeople);
+
+        const informationPeople = document.createElement('div');
+        informationPeople.className = "peopleInformations";
+
+        const namePeople = document.createElement('p');
+        namePeople.innerHTML = participant.name;
+
+        informationPeople.append(namePeople);
+
+        divPeople.append(divImagePeople);
+        divPeople.append(informationPeople);
+
+        divPeople.addEventListener('click', () => {
+
+            socket_user_receiver = participant.socket_id;
+
+            const params = {
+                fkUser: id,
+                fkUserParticipant: participant.user_id
+            }
+
+            listMessages(params);
+
+            divLoadingSelectChat.style.display = "none";
+            divContainerChat.style.display = "flex";
+            document.getElementById('containerChat').innerHTML = "";
+
+        })
+
+        listDivPeople.append(divPeople);
+
+    });
+
+}
+
 const listMessages = (params) => {
 
     socket.emit('list_messages', params, messages => {
@@ -80,57 +136,7 @@ socket.on('participants_list_all', connections => {
 
     participants = newParticipants;
 
-    const listDivPeople = document.querySelector('.listPeoples');
-    listDivPeople.innerHTML = "";
-
-    const divLoadingSelectChat = document.getElementById('chat_loading_chat');
-
-    const divContainerChat = document.getElementById('chat_container');
-
-    participants.map(participant => {
-
-        const divPeople = document.createElement('div');
-        divPeople.className = "people";
-
-        const divImagePeople = document.createElement('div');
-        divImagePeople.className = "peopleImage"
-
-        const imagePeople = document.createElement('img');
-        imagePeople.src = "../images/user3.png";
-
-        divImagePeople.append(imagePeople);
-
-        const informationPeople = document.createElement('div');
-        informationPeople.className = "peopleInformations";
-
-        const namePeople = document.createElement('p');
-        namePeople.innerHTML = participant.name;
-
-        informationPeople.append(namePeople);
-
-        divPeople.append(divImagePeople);
-        divPeople.append(informationPeople);
-
-        divPeople.addEventListener('click', () => {
-
-            socket_user_receiver = participant.socket_id;
-
-            const params = {
-                fkUser: id,
-                fkUserParticipant: participant.user_id
-            }
-
-            listMessages(params);
-
-            divLoadingSelectChat.style.display = "none";
-            divContainerChat.style.display = "flex";
-            document.getElementById('containerChat').innerHTML = "";
-
-        })
-
-        listDivPeople.append(divPeople);
-
-    });
+    listPeoples(participants);
 })
 
 document.getElementById('buttonSubmitMessage').addEventListener('click', () => {
@@ -201,6 +207,25 @@ document.getElementById('logout').addEventListener('click', () => {
     
     window.location = "/index";
 });
+
+document.getElementById('searchValue').addEventListener('keyup', (event) => {
+
+    const nameParticipant = event.currentTarget.value;
+
+    const participantSearch = participants.filter(participant => participant.name.includes(nameParticipant));
+
+    const listDivPeople = document.querySelector('.listPeoples');
+    listDivPeople.innerHTML = "";
+
+    if(participantSearch.length > 0){
+        listPeoples(participantSearch);
+    }
+
+    if(nameParticipant === ""){
+        listPeoples(participants);
+    }
+
+})
 
 
 window.addEventListener('load', () => {

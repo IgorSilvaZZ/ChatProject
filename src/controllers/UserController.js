@@ -2,7 +2,8 @@ const { CreateUserService } = require('../services/CreateUserService');
 const { FindAllConnectionsService } = require('../services/FindAllConnectionsService');
 const { CreateMessageService } = require('../services/CreateMessageService');
 const { ListMessagesService } = require('../services/ListMessagesService');
-const { WithSocketConnectionService } = require('../services/WithSocketConnectionService')
+const { WithSocketConnectionService } = require('../services/WithSocketConnectionService');
+const { FindByIdUserService } = require('../services/FindByIdUserService');
 class UserController { 
     
     async create(req, res){
@@ -50,6 +51,19 @@ class UserController {
         const messages = await listMessagesService.execute({ fkUserSender, fkUserReceiver });
 
         return res.status(200).json(messages);
+
+    }
+
+    async listUser(req, res){
+
+        const { id } = req.params;
+
+        const findByIdUserService = new FindByIdUserService();
+
+        const user = await findByIdUserService.execute({ id });
+
+        return res.status(200).json(user);
+
 
     }
 

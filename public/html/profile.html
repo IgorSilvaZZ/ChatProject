@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../images/chat-box.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <title>Profile</title>
+    <link rel="stylesheet" href="../css/profile.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="navbar">
+            <div class="imageContainer">
+                <img src="../images/cup.png">
+            </div>
+            <div class="optionsMenu" id="chat">
+                <div class="options">
+                    <img src="../images/comment.svg">
+                </div>
+                <div class="options">
+                    <img src="../images/favorite.svg">
+                </div>
+                <div class="options" id="optionsSelected">
+                    <img src="../images/user.svg">
+                </div>
+                <div class="options" id="logout">
+                    <img src="../images/logout.png">
+                </div>
+            </div>
+            <div class="containerUser">
+                <img src="../images/user3.png">
+            </div>
+        </div>
+        <div class="main">
+            <div class="containerPhotoUser">
+                <div class="photoUser">
+                    <p>Olá, Igor Silva</p>
+                    <img src="../images/account.png">
+                </div>
+            </div>
+            <div class="profileMain">
+                <div class="headerProfile">
+                    <div class="itemHeader">
+                        <div class="headerItemImage justifyItems">
+                            <img src="../images/chat-box.png">
+                        </div>
+                        <div class="headerInformation justifyItems">
+                            <p style="opacity: 0.5;">igor@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="itemHeader">
+                        <div class="headerInformation justifyItems">
+                            <p style="opacity: 0.5;">Logado como Igor Silva</p>
+                        </div>
+                        <div class="headerItemImage justifyItems">
+                            <img src="../images/user3.png">
+                        </div>
+                    </div>
+                </div>
+                <div class="informationUserContainer">
+                    <div class="itemInformationUser">
+                        <h3 id="titleInformation">Editar Conta</h3>
+                        <div class="labels-Informations">
+                            <h4>Nome</h4>
+                            <input type="text" value="Igor" class="labels-InformationsInput">
+                        </div>
+                        <div class="labels-Informations">
+                            <h4>Email</h4>
+                            <input type="text" value="igor@gmail.com" class="labels-InformationsInput">
+                        </div>
+                        <div class="labels-Informations">
+                            <h4>Senha</h4>
+                            <input type="password" value="123" class="labels-InformationsInput">
+                        </div>
+                    </div>
+                    <div class="itemInformationUser">
+                        <div class="imageProfile">
+                            <img src="../images/account.png">
+                        </div>
+                    </div>
+                </div>
+                <div class="settingsProfile">
+                    <h3 id="titleInformation">Preferencias</h3>
+                    <div class="labels-Informations" style="height: 30%;">
+                        <h4>Tema Escuro</h4>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="labels-Informations" style="height: 30%;">
+                        <h4>Notificações</h4>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="js/profile.js"></script>
+    
+</body>
+</html>

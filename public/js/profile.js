@@ -2,6 +2,10 @@ const username = JSON.parse(localStorage.getItem('username'));
 const id = JSON.parse(localStorage.getItem('id'));
 const token = JSON.parse(localStorage.getItem('token'));
 
+let socket = null;
+
+socket = io();
+
 const getDataUser = async() => {
 
     try{
@@ -9,13 +13,20 @@ const getDataUser = async() => {
         const res = await fetch(`http://localhost:3333/user/${id}`, {
             headers: {
                 'Content-type': 'application/json',
-                authorization: String(token)
+                authorization: `Bearer ${token}`
             }
         });
 
         const user = await res.json();
 
-        console.log(user);
+        document.getElementById('presentationProfile').innerHTML = `Olá, ${user.name}`;
+
+        //Header
+        document.getElementById('emailLoged').innerHTML = user.email;
+        document.getElementById('userLoged').innerHTML = `Logado como ${user.name}`;
+
+        document.getElementById('name').value = user.name;
+        document.getElementById('email').value = user.email;
 
     }catch(err) {
         Toastify({
@@ -32,9 +43,6 @@ document.getElementById('chat').addEventListener('click', () => {
 })
 
 document.getElementById('logout').addEventListener('click', () => {
-
-    document.getElementById('chat_loading_chat').style.display = "flex"
-    document.getElementById('chat_container').style.display = "none";
 
     socket.emit('logout_parcipant', id);
 

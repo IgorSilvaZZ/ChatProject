@@ -196,6 +196,29 @@ body {
     outline: none;
     color: white;
 }
+.containerButtons {
+    display: flex;
+    justify-content: flex-start;
+    height: 12%;
+    width: 95%;
+}
+.buttonSubmit {
+    padding: 6px;
+    width: 35%;
+    background: #5f27cd;
+    color: white;
+    border-radius: 8px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.buttonSubmit:hover{
+    background: #341f97;
+}
+#btnPreferences {
+    background: #353b48;
+}
 .imageProfile {
     display: flex;
     justify-content: center;

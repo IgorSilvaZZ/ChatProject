@@ -9,7 +9,6 @@ class FindByIdUserService {
             attributes: [ 
                 'name',
                 'email',
-                'password',
             ] 
         });
         

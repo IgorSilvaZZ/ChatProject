@@ -196,6 +196,10 @@ socket.on('user_receiver_message', message => {
 
 })
 
+document.getElementById('profile').addEventListener('click', () => {
+    window.location = "/profile";
+})
+
 document.getElementById('logout').addEventListener('click', () => {
 
     document.getElementById('chat_loading_chat').style.display = "flex"

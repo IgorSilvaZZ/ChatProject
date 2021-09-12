@@ -1,0 +1,28 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+* ::-webkit-scrollbar {
+    width: 8px;
+    background: #171717;
+}
+* ::-webkit-scrollbar-thumb {
+    background: #5f27cd;
+    border-radius: 5px;
+}
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #353b48;
+    overflow-y: hidden;
+}
+.container {
+    display: flex;
+    height: 85%;
+    width: 85%;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+}

@@ -5,11 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../images/chat-box.png" type="image/x-icon">
-    <link rel="stylesheet" href="../css/chat.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <title>Chat</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/menu.css">
+    <link rel="stylesheet" href="../css/chat.css">
 </head>
 <body>
     <div class="container">
@@ -37,40 +39,26 @@
         </div>
         <div class="main">
             <div class="participants">
-                <div class="participantsHeader">
-                    <p>Participantes</p>
-                </div>
+                <h2 class="participants_title">Participantes</h2>
                 <div class="participantsMain">
                     <div class="searchContainer">
-                        <div class="searchImage">
-                            <img src="../images/loupe.svg">
-                        </div>
-                        <div class="inputContainer">
-                            <input type="text" placeholder="Search" id="searchValue">
-                        </div>
+                        <img class="searchContainer_img" src="../images/loupe.svg" alt="Image Search Participants">
+                        <input class="searchContainer_input" type="text" placeholder="Search" id="searchValue">
                     </div>
                     <span class="listPeoples">
                         <!-- <div class="people">
-                            <div class="peopleImage">
-                                <img src="../images/user3.png">
-                            </div>
-                            <div class="peopleInformations">
-                                <p>Igor Silva</p>
-                            </div>
+                            <img class="people_icon" src="../images/user3.png">
+                            <p class="people_text">Igor Silva</p>
                         </div> -->
                     </span>
                 </div>
             </div>
-            <div class="chat chatLoadingSelect" id="chat_loading_chat">
-                <div class="selectUserLoading">
-                    <img src="../images/chat-select.png">
-                    <p>Escolha um usuario ao lado para começar a conversa</p>
-                </div>
+            <div class="chat chatLoadingSelect" id="chat_loading_chat" >
+                <img class="chatLoadingSelect_icon" src="../images/chat-select.png">
+                <p class="chatLoadingSelect_text">Escolha um usuario ao lado para começar a conversa</p>
             </div>
             <div class="chat" id="chat_container" style="display: none;">
-                <div class="headerChat">
-                    <p>Mensagens</p>
-                </div>
+                <p class="chat_title">Mensagens</p>
                 <div class="containerChat" id="containerChat">
                     <!-- <div class="messageUserLoged">
                         <div class="containerMessage userLoged">
@@ -100,12 +88,8 @@
                     </div> -->
                 </div>
                 <div class="footerChat">
-                    <div class="sendMessage">
-                        <input type="text" placeholder="Escreva mensagem" id="messageUser" name="messageUser">
-                    </div>
-                    <div class="buttonSendMessage" id="buttonSubmitMessage"> 
-                        <img src="../images/email.svg">
-                    </div>
+                    <input class="footerChat_input" type="text" placeholder="Escreva mensagem" id="messageUser" name="messageUser">
+                    <div class="buttonSendMessage" id="buttonSubmitMessage"></div>
                 </div>
             </div>
             

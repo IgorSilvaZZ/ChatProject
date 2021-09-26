@@ -37,26 +37,18 @@ const listPeoples = peoples => {
         const divPeople = document.createElement('div');
         divPeople.className = "people";
 
-        const divImagePeople = document.createElement('div');
-        divImagePeople.className = "peopleImage"
-
         const imagePeople = document.createElement('img');
+        imagePeople.className = "people_icon"
         imagePeople.src = "../images/user3.png";
 
-        divImagePeople.append(imagePeople);
-
-        const informationPeople = document.createElement('div');
-        informationPeople.className = "peopleInformations";
-
         const namePeople = document.createElement('p');
+        namePeople.className = "people_text";
         namePeople.innerHTML = participant.name;
 
-        informationPeople.append(namePeople);
+        divPeople.append(imagePeople);
+        divPeople.append(namePeople);
 
-        divPeople.append(divImagePeople);
-        divPeople.append(informationPeople);
-
-        divPeople.addEventListener('click', () => {
+        /* divPeople.addEventListener('click', () => {
 
             socket_user_receiver = participant.socket_id;
 
@@ -71,7 +63,7 @@ const listPeoples = peoples => {
             divContainerChat.style.display = "flex";
             document.getElementById('containerChat').innerHTML = "";
 
-        })
+        }) */
 
         listDivPeople.append(divPeople);
 
@@ -139,7 +131,7 @@ socket.on('participants_list_all', connections => {
     listPeoples(participants);
 })
 
-document.getElementById('buttonSubmitMessage').addEventListener('click', () => {
+/* document.getElementById('buttonSubmitMessage').addEventListener('click', () => {
 
     const containerChat = document.getElementById('containerChat');
 
@@ -168,7 +160,7 @@ document.getElementById('buttonSubmitMessage').addEventListener('click', () => {
 
     text.value = "";
 
-})
+}) */
 
 socket.on('user_receiver_message', message => {
 

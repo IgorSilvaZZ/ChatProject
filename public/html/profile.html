@@ -40,70 +40,49 @@
         </div>
         <div class="main">
             <div class="containerPhotoUser">
-                <div class="photoUser">
-                    <p id="presentationProfile"></p>
-                    <img src="../images/account.png">
-                </div>
+                <p class="containerPhotoUser_text" id="presentationProfile"></p>
+                <img class="containerPhotoUser_image" src="../images/account.png">
             </div>
             <div class="profileMain">
                 <div class="headerProfile">
                     <div class="itemHeader">
-                        <div class="headerItemImage justifyItems">
-                            <img src="../images/chat-box.png">
-                        </div>
-                        <div class="headerInformation justifyItems">
-                            <p id="emailLoged" style="opacity: 0.5;"></p>
-                        </div>
+                        <img class="itemHeader_image" src="../images/chat-box.png">
+                        <p class="itemHeader_text" id="emailLoged"></p>
                     </div>
                     <div class="itemHeader">
-                        <div class="headerInformation justifyItems">
-                            <p id="userLoged" style="opacity: 0.5;"></p>
-                        </div>
-                        <div class="headerItemImage justifyItems">
-                            <img src="../images/user3.png">
-                        </div>
+                        <p class="itemHeader_text" id="userLoged"></p>
+                        <img class="itemHeader_image" src="../images/user3.png">
                     </div>
                 </div>
                 <div class="informationUserContainer">
                     <div class="itemInformationUser">
                         <h3 id="titleInformation">Editar Conta</h3>
-                        <div class="labels-Informations">
-                            <h4>Nome</h4>
-                            <input type="text" id="name" value="Igor" class="labels-InformationsInput">
-                        </div>
-                        <div class="labels-Informations">
-                            <h4>Email</h4>
-                            <input type="text" id="email" value="igor@gmail.com" class="labels-InformationsInput">
-                        </div>
-                        <div class="containerButtons">
-                            <button class="buttonSubmit" id="btnEdit">Editar</button>
-                        </div>
+
+                        <h4>Nome</h4>
+                        <input type="text" id="name" value="Igor" class="labels-InformationsInput">
+
+                        <h4>Email</h4>
+                        <input type="text" id="email" value="igor@gmail.com" class="labels-InformationsInput">
+                        
+                        <button class="buttonSubmit" id="btnEdit">Editar</button>
                     </div>
-                    <div class="itemInformationUser">
-                        <div class="imageProfile">
-                            <img src="../images/account.png">
-                        </div>
+                    <div class="itemInformationUser justify">
+                        <img src="../images/account.png">
                     </div>
                 </div>
                 <div class="settingsProfile">
                     <h3 id="titleInformation">Preferencias</h3>
-                    <div class="labels-Informations" style="height: 30%;">
-                        <h4>Tema Escuro</h4>
-                        <label class="switch">
-                            <input type="checkbox">
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-                    <div class="labels-Informations" style="height: 30%;">
-                        <h4>Notificações</h4>
-                        <label class="switch">
-                            <input type="checkbox">
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-                    <div class="containerButtons" style="width: 60%;">
-                        <button class="buttonSubmit" id="btnPreferences">Editar Preferencias</button>
-                    </div>
+                    <h4 id="titleInformation">Tema Escuro</h4>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                    <h4 id="titleInformation">Notificações</h4>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                    <button class="buttonSubmit" id="btnPreferences">Editar Preferencias</button>
                 </div>
             </div>
         </div>

@@ -11,6 +11,7 @@ let socket_user_receiver = null;
 
 socket = io();
 
+//Participante de chat entrando na sessão
 socket.on("acess_chat", (params) => {
   Toastify({
     text: `${params.username} entrou no chat!`,
@@ -19,8 +20,10 @@ socket.on("acess_chat", (params) => {
   }).showToast();
 });
 
+//Emitindo evento de quando entramos no chat para os usuarios
 socket.emit("acess_chat_parcipant", { username, email });
 
+//Listando todos os usuarios execeto VC na lista de participantes na pagina
 socket.on("participants_list_all", (connections) => {
   const newParticipants = connections.filter(
     (participant) =>
@@ -49,6 +52,7 @@ socket.on("participants_list_all", (connections) => {
   });
 });
 
+//Listando mensagens enviadas e recebidas co participante especifico e sendo renderizado na tela com seu container html especifico
 const listMessagesUsersSender = (params, templateName, idSocketParticipant) => {
   const containerChat = document.getElementById(
     `chatContainer${idSocketParticipant}`
@@ -65,6 +69,7 @@ const listMessagesUsersSender = (params, templateName, idSocketParticipant) => {
   containerChat.innerHTML += rendered;
 };
 
+//Função para renderizar as mensagens daquele participante especifico e poder conversar com ele
 const talk = (idSocketParticipant) => {
   const divContainerChat = document.getElementById("chat_container");
 
@@ -122,6 +127,7 @@ const talk = (idSocketParticipant) => {
   });
 };
 
+//Função para mandar mensagem para o participante especifico
 const sendMessage = (id) => {
   const text = document.getElementById(`messageUser${id}`);
 
@@ -145,6 +151,7 @@ const sendMessage = (id) => {
   text.value = "";
 };
 
+//Evento de escuta de quando recebe mensagem e renderiza a mensagem no container html do usuario ativo
 socket.on("user_receiver_message", (message) => {
   const { text, username_message, idUserSender } = message;
 
@@ -167,10 +174,12 @@ socket.on("user_receiver_message", (message) => {
   );
 });
 
+//Click para ir até a rota de perfil
 document.getElementById("profile").addEventListener("click", () => {
   window.location = "/profile";
 });
 
+//Função de deslogar do sistema
 document.getElementById("logout").addEventListener("click", () => {
   document.getElementById("chat_loading_chat").style.display = "flex";
   document.getElementById("chat_container").style.display = "none";
@@ -182,6 +191,7 @@ document.getElementById("logout").addEventListener("click", () => {
   window.location = "/index";
 });
 
+//Função de pesquisa de participante PRECISA SER REFEITA COM MUSTACHE
 document.getElementById("searchValue").addEventListener("keyup", (event) => {
   const nameParticipant = event.currentTarget.value;
 

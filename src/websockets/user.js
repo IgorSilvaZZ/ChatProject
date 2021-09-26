@@ -1,118 +1,132 @@
-const { CreateConnectionService } = require('../services/CreateConnectionService');
-const { FindAllConnectionsService } = require('../services/FindAllConnectionsService');
-const { FinByEmailUserService } = require('../services/FinByEmailUserService');
-const { FindByIdUserConnectionService } = require('../services/FindByIdUserConnectionService');
-const { UpdateUserConnectionService } = require('../services/UpdateUserConnectionService');
-const { WithSocketConnectionService } = require('../services/WithSocketConnectionService');
-const { FindBySocketIDService } = require('../services/FindBySocketIDService');
-const { CreateMessageService } = require('../services/CreateMessageService');
-const { ListMessagesService } = require('../services/ListMessagesService');
+const {
+  CreateConnectionService,
+} = require("../services/CreateConnectionService");
+const {
+  FindAllConnectionsService,
+} = require("../services/FindAllConnectionsService");
+const { FinByEmailUserService } = require("../services/FinByEmailUserService");
+const {
+  FindByIdUserConnectionService,
+} = require("../services/FindByIdUserConnectionService");
+const {
+  UpdateUserConnectionService,
+} = require("../services/UpdateUserConnectionService");
+const {
+  WithSocketConnectionService,
+} = require("../services/WithSocketConnectionService");
+const { FindBySocketIDService } = require("../services/FindBySocketIDService");
+const { CreateMessageService } = require("../services/CreateMessageService");
+const { ListMessagesService } = require("../services/ListMessagesService");
 
-const { ConnectionsSerialize } = require('../serializes/ConnectionsSerialize');
-const { MessagesSerialize } = require('../serializes/MessagesSerialize');
+const { ConnectionsSerialize } = require("../serializes/ConnectionsSerialize");
+const { MessagesSerialize } = require("../serializes/MessagesSerialize");
 
 module.exports = () => {
+  global.io.on("connect", (socket) => {
+    const createConnectionService = new CreateConnectionService();
+    const findyEmailUserService = new FinByEmailUserService();
+    const findyIdUserConnectionService = new FindByIdUserConnectionService();
+    const updateUserConnectionService = new UpdateUserConnectionService();
+    const findAllConnectionsService = new FindAllConnectionsService();
+    const whithSocketConnectionService = new WithSocketConnectionService();
+    const findBySocketIDService = new FindBySocketIDService();
+    const createMessageService = new CreateMessageService();
+    const listMessagesService = new ListMessagesService();
 
-    global.io.on('connect', (socket) => {
+    const connectionsSerialize = new ConnectionsSerialize();
+    const messagesSerialize = new MessagesSerialize();
 
-        const createConnectionService = new CreateConnectionService();
-        const findyEmailUserService = new FinByEmailUserService();
-        const findyIdUserConnectionService = new FindByIdUserConnectionService();
-        const updateUserConnectionService = new UpdateUserConnectionService();
-        const findAllConnectionsService = new FindAllConnectionsService();
-        const whithSocketConnectionService = new WithSocketConnectionService();
-        const findBySocketIDService = new FindBySocketIDService();
-        const createMessageService = new CreateMessageService();
-        const listMessagesService = new ListMessagesService();
+    socket.on("acess_chat_parcipant", async (params) => {
+      const { email } = params;
 
-        const connectionsSerialize = new ConnectionsSerialize();
-        const messagesSerialize = new MessagesSerialize();
+      const socket_id = socket.id;
 
-        socket.on('acess_chat_parcipant', async(params) => {
+      const user = await findyEmailUserService.execute({ email });
 
-            const { email } = params;
+      if (user) {
+        const connection = await findyIdUserConnectionService.execute(user.id);
 
-            const socket_id = socket.id;
+        if (!connection) {
+          await createConnectionService.execute({
+            socket_id,
+            user_id: user.id,
+          });
+        } else {
+          await updateUserConnectionService.execute({
+            user_id: user.id,
+            socket_id,
+          });
+        }
 
-            const user = await findyEmailUserService.execute({ email });
+        const connections = await findAllConnectionsService.execute();
 
-            if(user){
+        const allParticipants =
+          connectionsSerialize.listAllConnetionsUser(connections);
 
-                const connection = await findyIdUserConnectionService.execute(user.id);
+        global.io.emit("participants_list_all", allParticipants);
+      }
+    });
 
-                if(!connection){
-                    await createConnectionService.execute({
-                        socket_id,
-                        user_id: user.id
-                    })
-                }else{
-                    await updateUserConnectionService.execute({ user_id: user.id, socket_id });
-                }
+    socket.on("logout_parcipant", async (user_id) => {
+      await updateUserConnectionService.execute({ user_id, socket_id: null });
 
-                const connections = await findAllConnectionsService.execute();
+      const connections = await whithSocketConnectionService.execute();
 
-                const allParticipants = connectionsSerialize.listAllConnetionsUser(connections);
+      const newParticipants =
+        connectionsSerialize.listAllConnetionsUser(connections);
 
-                global.io.emit('participants_list_all', allParticipants);
+      global.io.emit("participants_list_all", newParticipants);
+    });
 
-            }
+    socket.on("user_send_message", async (params) => {
+      const { text, socket_user, socket_user_receiver, username_message } =
+        params;
 
-        });
+      const user_receiver = await findBySocketIDService.execute(
+        socket_user_receiver
+      );
 
-        socket.on('logout_parcipant', async( user_id ) => {
+      const user_sender = await findBySocketIDService.execute(socket_user);
 
-            await updateUserConnectionService.execute({ user_id, socket_id: null });
+      await createMessageService.execute({
+        fkUserReceiver: user_receiver.id,
+        fkUserSender: user_sender.id,
+        message: text,
+      });
 
-            const connections = await whithSocketConnectionService.execute();
+      global.io.to(socket_user_receiver).emit("user_receiver_message", {
+        text,
+        username_message,
+        idUserSender: socket_user,
+      });
+    });
 
-            const newParticipants = connectionsSerialize.listAllConnetionsUser(connections);
+    socket.on("list_messages", async (params, callback) => {
+      const { fkUser, fkUserParticipant } = params;
 
-            global.io.emit('participants_list_all', newParticipants);            
+      const paramsUserSender = {
+        fkUserSender: fkUser,
+        fkUserReceiver: fkUserParticipant,
+      };
 
-        })
+      const paramsUserReceiver = {
+        fkUserSender: fkUserParticipant,
+        fkUserReceiver: fkUser,
+      };
 
-        socket.on('user_send_message', async(params) => {
+      const messagesUserSender = await listMessagesService.execute(
+        paramsUserSender
+      );
 
-            const { text, socket_user, socket_user_receiver, username_message } = params;
+      const messagesUserReceiver = await listMessagesService.execute(
+        paramsUserReceiver
+      );
 
-            const user_receiver = await findBySocketIDService.execute(socket_user_receiver);
+      const messagesObject = messagesUserSender.concat(messagesUserReceiver);
 
-            const user_sender = await findBySocketIDService.execute(socket_user);
+      const messages = messagesSerialize.listAllMessages(messagesObject);
 
-            await createMessageService.execute({ 
-                fkUserReceiver: user_receiver.id, 
-                fkUserSender: user_sender.id, 
-                message: text 
-            })
-
-            global.io.to(socket_user_receiver).emit('user_receiver_message', { text, username_message })
-
-        })
-
-        socket.on('list_messages', async (params, callback) => {
-
-            const { fkUser, fkUserParticipant } = params;
-
-            const paramsUserSender = {
-                fkUserSender: fkUser, 
-                fkUserReceiver: fkUserParticipant,
-            }
-
-            const paramsUserReceiver = {
-                fkUserSender: fkUserParticipant, 
-                fkUserReceiver: fkUser,
-            }
-
-            const messagesUserSender = await listMessagesService.execute(paramsUserSender);
-
-            const messagesUserReceiver = await listMessagesService.execute(paramsUserReceiver);
-
-            const messagesObject = messagesUserSender.concat(messagesUserReceiver)
-
-            const messages = messagesSerialize.listAllMessages(messagesObject);
-
-            callback(messages);
-        })
-
-    })
-}
+      callback(messages);
+    });
+  });
+};

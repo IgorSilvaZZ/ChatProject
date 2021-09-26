@@ -40,57 +40,77 @@
         <div class="main">
             <div class="participants">
                 <h2 class="participants_title">Participantes</h2>
+
                 <div class="participantsMain">
                     <div class="searchContainer">
                         <img class="searchContainer_img" src="../images/loupe.svg" alt="Image Search Participants">
                         <input class="searchContainer_input" type="text" placeholder="Search" id="searchValue">
                     </div>
-                    <span class="listPeoples">
-                        <!-- <div class="people">
+
+                    <span class="listPeoples" id="list_participants"></span>
+                    <script id="template_participants" type="x-tmpl-mustache">
+                        <div class="people" id="user{{idSocketParticipant}}" onclick="talk('{{idSocketParticipant}}')">
                             <img class="people_icon" src="../images/user3.png">
-                            <p class="people_text">Igor Silva</p>
-                        </div> -->
-                    </span>
+                            <p class="people_text">{{nameParticipant}}</p>
+                        </div>
+                    </script>
+
                 </div>
             </div>
+
             <div class="chat chatLoadingSelect" id="chat_loading_chat" >
                 <img class="chatLoadingSelect_icon" src="../images/chat-select.png">
                 <p class="chatLoadingSelect_text">Escolha um usuario ao lado para começar a conversa</p>
             </div>
+
             <div class="chat" id="chat_container" style="display: none;">
                 <p class="chat_title">Mensagens</p>
                 <div class="containerChat" id="containerChat">
-                    <!-- <div class="messageUserLoged">
+                </div>
+                
+                <script id="template_all_messages" type="x-tmpl-mustache">
+                    <div style="height: 100%;: 100%; width: 100%;" id="chatContainer{{idSocketParticipant}}">
+                    </div>
+                </script>
+
+                <script id="template_user_send_message" type="x-tmpl-mustache">
+                    <div class="messageUserLoged">
                         <div class="containerMessage userLoged">
                             <span class="usernameLoged">
-                                Igor
+                                {{name}}
                             </span>
                             <span class="messageBox">
-                                Oi tudo bem?
+                                {{message}}
                             </span>
                             <span class="date_message">
-                                16:32
+                                {{date}}
                             </span>
                         </div>
                     </div>
-                    <div class="messageOtherUser">
-                        <div class="containerMessage otherUser">
-                            <span class="otherUsername">
-                                Vitoria
-                            </span>
-                            <span class="messageBox">
-                                Tudo sim e você?
-                            </span>
-                            <span class="date_message">
-                                16:32
-                            </span>
-                        </div>
-                    </div> -->
+                </script>
+
+                <script id="template_user_receiver_message" type="x-tmpl-mustache">
+                    <div class="containerMessage otherUser">
+                        <span class="otherUsername">
+                            {{name}}
+                        </span>
+                        <span class="messageBox">
+                            {{message}}
+                        </span>
+                        <span class="date_message">
+                            {{date}}
+                        </span>
+                    </div>
                 </div>
+                </script>
+
                 <div class="footerChat">
-                    <input class="footerChat_input" type="text" placeholder="Escreva mensagem" id="messageUser" name="messageUser">
-                    <div class="buttonSendMessage" id="buttonSubmitMessage"></div>
                 </div>
+                <script id="template_send_message" type="x-tmpl-mustache">
+                    <input class="footerChat_input" type="text" placeholder="Escreva mensagem" id="messageUser{{idUserSocket}}" name="messageUser">
+                    <div class="buttonSendMessage" id="buttonSubmitMessage" onclick="sendMessage('{{idUserSocket}}')"></div>
+                </script>
+
             </div>
             
         </div>
@@ -98,6 +118,7 @@
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.4/dayjs.min.js"></script>
+    <script src="https://unpkg.com/mustache@latest"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/chat.js"></script>
 

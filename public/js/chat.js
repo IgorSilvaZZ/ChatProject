@@ -1,232 +1,218 @@
-const username = JSON.parse(localStorage.getItem('username'));
-const email = JSON.parse(localStorage.getItem('email'));
-const id = JSON.parse(localStorage.getItem('id'));
-const token = JSON.parse(localStorage.getItem('token'));
+const username = JSON.parse(localStorage.getItem("username"));
+const email = JSON.parse(localStorage.getItem("email"));
+const id = JSON.parse(localStorage.getItem("id"));
+const token = JSON.parse(localStorage.getItem("token"));
 
 let socket = null;
 let participants = [];
 
-let socket_user = null
+let socket_user = null;
 let socket_user_receiver = null;
 
 socket = io();
 
-socket.on('acess_chat', (params) => {
-
-    Toastify({
-        text: `${params.username} entrou no chat!`,
-        backgroundColor: "linear-gradient(to right, #6d23b6, #47126b)",
-        duration: 2000,
-    }).showToast();
-
+//Participante de chat entrando na sessão
+socket.on("acess_chat", (params) => {
+  Toastify({
+    text: `${params.username} entrou no chat!`,
+    backgroundColor: "linear-gradient(to right, #6d23b6, #47126b)",
+    duration: 2000,
+  }).showToast();
 });
 
-socket.emit('acess_chat_parcipant', { username , email });
+//Emitindo evento de quando entramos no chat para os usuarios
+socket.emit("acess_chat_parcipant", { username, email });
 
-const listPeoples = peoples => {
+//Listando todos os usuarios execeto VC na lista de participantes na pagina
+socket.on("participants_list_all", (connections) => {
+  const newParticipants = connections.filter(
+    (participant) =>
+      participant.name !== username && participant.socket_id !== null
+  );
 
-    const listDivPeople = document.querySelector('.listPeoples');
-    listDivPeople.innerHTML = "";
+  const informationUser = connections.filter(
+    (participant) => participant.name == username
+  );
 
-    const divLoadingSelectChat = document.getElementById('chat_loading_chat');
+  socket_user = informationUser[0].socket_id;
 
-    const divContainerChat = document.getElementById('chat_container');
+  participants = newParticipants;
 
-    peoples.map(participant => {
+  document.getElementById("list_participants").innerHTML = "";
 
-        const divPeople = document.createElement('div');
-        divPeople.className = "people";
+  let template = document.getElementById("template_participants").innerHTML;
 
-        const imagePeople = document.createElement('img');
-        imagePeople.className = "people_icon"
-        imagePeople.src = "../images/user3.png";
-
-        const namePeople = document.createElement('p');
-        namePeople.className = "people_text";
-        namePeople.innerHTML = participant.name;
-
-        divPeople.append(imagePeople);
-        divPeople.append(namePeople);
-
-        /* divPeople.addEventListener('click', () => {
-
-            socket_user_receiver = participant.socket_id;
-
-            const params = {
-                fkUser: id,
-                fkUserParticipant: participant.user_id
-            }
-
-            listMessages(params);
-
-            divLoadingSelectChat.style.display = "none";
-            divContainerChat.style.display = "flex";
-            document.getElementById('containerChat').innerHTML = "";
-
-        }) */
-
-        listDivPeople.append(divPeople);
-
+  participants.forEach((participant) => {
+    const rendered = Mustache.render(template, {
+      idSocketParticipant: participant.socket_id,
+      nameParticipant: participant.name,
     });
 
-}
+    document.getElementById("list_participants").innerHTML += rendered;
+  });
+});
 
-const listMessages = (params) => {
+//Listando mensagens enviadas e recebidas co participante especifico e sendo renderizado na tela com seu container html especifico
+const listMessagesUsersSender = (params, templateName, idSocketParticipant) => {
+  const containerChat = document.getElementById(
+    `chatContainer${idSocketParticipant}`
+  );
 
-    socket.emit('list_messages', params, messages => {
+  const template = document.getElementById(templateName).innerHTML;
 
-        const containerChat = document.getElementById('containerChat');
+  const rendered = Mustache.render(template, {
+    name: params.nameUserSender,
+    message: params.message,
+    date: dayjs(params.createdAt).format("DD/MM/YY HH:mm:ss"),
+  });
 
-        console.log(messages);
+  containerChat.innerHTML += rendered;
+};
 
-        messages.map(item => {
+//Função para renderizar as mensagens daquele participante especifico e poder conversar com ele
+const talk = (idSocketParticipant) => {
+  const divContainerChat = document.getElementById("chat_container");
 
-            const divMessageUser = document.createElement('div');
+  const divLoadingSelectChat = document.getElementById("chat_loading_chat");
 
-            if(item.idUserSender === id){
+  divLoadingSelectChat.style.display = "none";
+  divContainerChat.style.display = "flex";
 
-                divMessageUser.className = "messageUserLoged";
+  document.getElementById("containerChat").innerHTML = "";
+  document.querySelector(".footerChat").innerHTML = "";
 
-                const containerMessage = document.createElement('div');
-                containerMessage.className = "containerMessage userLoged";
-                containerMessage.innerHTML += `<span class="usernameLoged">${item.nameUserSender}</span>`
-                containerMessage.innerHTML += `<span class="messageBox">${item.message}</span>`
-                containerMessage.innerHTML += `<span class='date_message'>${item.createdAt}</span>`; 
+  const connection = participants.find(
+    (participant) => participant.socket_id === idSocketParticipant
+  );
 
-                divMessageUser.appendChild(containerMessage);
-            }else{
+  const templateChatContainer = document.getElementById(
+    "template_all_messages"
+  ).innerHTML;
 
-                
-                divMessageUser.className = "messageOtherUser";
+  const renderedChatContainer = Mustache.render(templateChatContainer, {
+    idSocketParticipant,
+  });
 
-                const containerMessage = document.createElement('div');
-                containerMessage.className = "containerMessage otherUser";
-                containerMessage.innerHTML += `<span class="usernameLoged">${item.nameUserSender}</span>`
-                containerMessage.innerHTML += `<span class="messageBox">${item.message}</span>`
-                containerMessage.innerHTML += `<span class='date_message'>${item.createdAt}</span>`; 
+  document.getElementById("containerChat").innerHTML += renderedChatContainer;
 
-                divMessageUser.appendChild(containerMessage);
+  const template = document.getElementById("template_send_message").innerHTML;
 
-            }
+  const rendered = Mustache.render(template, {
+    idUserSocket: connection.socket_id,
+  });
 
-            containerChat.appendChild(divMessageUser);
+  document.querySelector(".footerChat").innerHTML += rendered;
 
-        })
-        
+  const params = {
+    fkUser: id,
+    fkUserParticipant: connection.user_id,
+  };
 
+  socket.emit("list_messages", params, (messages) => {
+    messages.map((item) => {
+      if (item.idUserSender === id) {
+        listMessagesUsersSender(
+          item,
+          "template_user_send_message",
+          idSocketParticipant
+        );
+      } else {
+        listMessagesUsersSender(
+          item,
+          "template_user_receiver_message",
+          idSocketParticipant
+        );
+      }
     });
+  });
+};
 
-}
+//Função para mandar mensagem para o participante especifico
+const sendMessage = (id) => {
+  const text = document.getElementById(`messageUser${id}`);
 
-socket.on('participants_list_all', connections => {
+  const params = {
+    text: text.value,
+    socket_user,
+    socket_user_receiver: id,
+    username_message: username,
+  };
 
-    const newParticipants = connections.filter(participant => participant.name !== username && participant.socket_id !== null);
+  socket.emit("user_send_message", params);
 
-    const informationUser = connections.filter(participant => participant.name == username);
+  const paramsRender = {
+    name: username,
+    message: params.text,
+    date: dayjs().format("DD/MM/YY HH:mm:ss"),
+  };
 
-    socket_user = informationUser[0].socket_id;
+  listMessagesUsersSender(paramsRender, "template_user_send_message", id);
 
-    participants = newParticipants;
+  text.value = "";
+};
 
+//Evento de escuta de quando recebe mensagem e renderiza a mensagem no container html do usuario ativo
+socket.on("user_receiver_message", (message) => {
+  const { text, username_message, idUserSender } = message;
+
+  Toastify({
+    text: `${username_message} mandou uma mensagem pra você!`,
+    backgroundColor: "linear-gradient(to right, #6d23b6, #47126b)",
+    duration: 2000,
+  }).showToast();
+
+  const paramsRender = {
+    name: username_message,
+    message: text,
+    date: dayjs().format("DD/MM/YY HH:mm:ss"),
+  };
+
+  listMessagesUsersSender(
+    paramsRender,
+    "template_user_receiver_message",
+    idUserSender
+  );
+});
+
+//Click para ir até a rota de perfil
+document.getElementById("profile").addEventListener("click", () => {
+  window.location = "/profile";
+});
+
+//Função de deslogar do sistema
+document.getElementById("logout").addEventListener("click", () => {
+  document.getElementById("chat_loading_chat").style.display = "flex";
+  document.getElementById("chat_container").style.display = "none";
+
+  socket.emit("logout_parcipant", id);
+
+  localStorage.clear();
+
+  window.location = "/index";
+});
+
+//Função de pesquisa de participante PRECISA SER REFEITA COM MUSTACHE
+document.getElementById("searchValue").addEventListener("keyup", (event) => {
+  const nameParticipant = event.currentTarget.value;
+
+  const participantSearch = participants.filter((participant) =>
+    participant.name.includes(nameParticipant)
+  );
+
+  /* const listDivPeople = document.querySelector(".listPeoples");
+  listDivPeople.innerHTML = "";
+
+  if (participantSearch.length > 0) {
+    listPeoples(participantSearch);
+  }
+
+  if (nameParticipant === "") {
     listPeoples(participants);
-})
-
-/* document.getElementById('buttonSubmitMessage').addEventListener('click', () => {
-
-    const containerChat = document.getElementById('containerChat');
-
-    const text = document.getElementById('messageUser');
-
-    const params = {
-        text: text.value,
-        socket_user,
-        socket_user_receiver,
-        username_message: username,
-    }
-
-    socket.emit('user_send_message', params);
-
-    const divMessageUser = document.createElement('div');
-    divMessageUser.className = "messageUserLoged";
-
-    const containerMessage = document.createElement('div');
-    containerMessage.className = "containerMessage userLoged";
-    containerMessage.innerHTML += `<span class="usernameLoged">${username}</span>`
-    containerMessage.innerHTML += `<span class="messageBox">${params.text}</span>`
-    containerMessage.innerHTML += `<span class='date_message'>${dayjs().format("DD/MM/YY HH:mm:ss")}</span>`; 
-
-    divMessageUser.appendChild(containerMessage);
-    containerChat.appendChild(divMessageUser);
-
-    text.value = "";
-
-}) */
-
-socket.on('user_receiver_message', message => {
-
-    const containerChat = document.getElementById('containerChat');
-
-    const { text, username_message } = message;
-
-    Toastify({
-        text: `${username_message} mandou uma mensagem pra você!`,
-        backgroundColor: "linear-gradient(to right, #6d23b6, #47126b)",
-        duration: 2000,
-    }).showToast();
-
-    const divMessageUser = document.createElement('div');
-    divMessageUser.className = "messageOtherUser";
-
-    const containerMessage = document.createElement('div');
-    containerMessage.className = "containerMessage otherUser";
-    containerMessage.innerHTML += `<span class="usernameLoged">${username_message}</span>`
-    containerMessage.innerHTML += `<span class="messageBox">${text}</span>`
-    containerMessage.innerHTML += `<span class='date_message'>${dayjs().format("DD/MM/YY HH:mm:ss")}</span>`; 
-
-    divMessageUser.appendChild(containerMessage);
-    containerChat.appendChild(divMessageUser);
-
-})
-
-document.getElementById('profile').addEventListener('click', () => {
-    window.location = "/profile";
-})
-
-document.getElementById('logout').addEventListener('click', () => {
-
-    document.getElementById('chat_loading_chat').style.display = "flex"
-    document.getElementById('chat_container').style.display = "none";
-
-    socket.emit('logout_parcipant', id);
-
-    localStorage.clear();
-    
-    window.location = "/index";
+  } */
 });
 
-document.getElementById('searchValue').addEventListener('keyup', (event) => {
-
-    const nameParticipant = event.currentTarget.value;
-
-    const participantSearch = participants.filter(participant => participant.name.includes(nameParticipant));
-
-    const listDivPeople = document.querySelector('.listPeoples');
-    listDivPeople.innerHTML = "";
-
-    if(participantSearch.length > 0){
-        listPeoples(participantSearch);
-    }
-
-    if(nameParticipant === ""){
-        listPeoples(participants);
-    }
-
-})
-
-
-window.addEventListener('load', () => {
-
-    if(!token || !username){
-        window.location = "/index";
-    }
-})
+window.addEventListener("load", () => {
+  if (!token || !username) {
+    window.location = "/index";
+  }
+});

@@ -1,19 +1,15 @@
-const { ConnectionsRepositories } = require('../repositories/ConnectionsRepositories');
+const {
+  ConnectionsRepositories,
+} = require("../repositories/ConnectionsRepositories");
 
 class FindAllConnectionsService {
+  async execute() {
+    const connections = await ConnectionsRepositories.findAll({
+      include: [{ association: "user" }],
+    });
 
-    async execute() {
-
-        const connections = await ConnectionsRepositories.findAll({
-            include: [
-                { association: 'user' }
-            ]
-        });
-
-        return connections;
-
-    }
-
+    return connections;
+  }
 }
 
 module.exports = { FindAllConnectionsService };

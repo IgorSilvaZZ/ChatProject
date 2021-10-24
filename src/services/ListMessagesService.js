@@ -7,7 +7,6 @@ class ListMessagesService {
     const { fkUserSender, fkUserReceiver } = params;
 
     const messages = await MessagesRepositories.findAll({
-      /* where: { [Op.and]: [{ fkUserSender }, { fkUserReceiver }] }, */
       include: [
         { association: "user_sender", where: { id: fkUserSender } },
         { association: "user_receiver", where: { id: fkUserReceiver } },

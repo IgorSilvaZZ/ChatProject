@@ -16,7 +16,10 @@ const {
 } = require("../services/WithSocketConnectionService");
 const { FindBySocketIDService } = require("../services/FindBySocketIDService");
 const { CreateMessageService } = require("../services/CreateMessageService");
-const { ListMessagesService } = require("../services/ListMessagesService");
+
+const {
+  MessagesServices,
+} = require("../modules/messages/services/MessagesServices");
 
 const { ConnectionsSerialize } = require("../serializes/ConnectionsSerialize");
 const { MessagesSerialize } = require("../serializes/MessagesSerialize");
@@ -31,10 +34,11 @@ module.exports = () => {
     const whithSocketConnectionService = new WithSocketConnectionService();
     const findBySocketIDService = new FindBySocketIDService();
     const createMessageService = new CreateMessageService();
-    const listMessagesService = new ListMessagesService();
 
     const connectionsSerialize = new ConnectionsSerialize();
     const messagesSerialize = new MessagesSerialize();
+
+    const messagesService = new MessagesServices();
 
     socket.on("acess_chat_parcipant", async (params) => {
       const { email } = params;
@@ -114,11 +118,11 @@ module.exports = () => {
         fkUserReceiver: fkUser,
       };
 
-      const messagesUserSender = await listMessagesService.execute(
+      const messagesUserSender = await messagesService.findAll(
         paramsUserSender
       );
 
-      const messagesUserReceiver = await listMessagesService.execute(
+      const messagesUserReceiver = await messagesService.findAll(
         paramsUserReceiver
       );
 

@@ -89,8 +89,8 @@ module.exports = () => {
       const user_sender = await findBySocketIDService.execute(socket_user);
 
       await createMessageService.execute({
-        fkUserReceiver: user_receiver.id,
-        fkUserSender: user_sender.id,
+        fkUserReceiver: user_receiver.user_id,
+        fkUserSender: user_sender.user_id,
         message: text,
       });
 

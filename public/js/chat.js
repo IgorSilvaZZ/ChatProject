@@ -7,7 +7,6 @@ let socket = null;
 let participants = [];
 
 let socket_user = null;
-let socket_user_receiver = null;
 
 socket = io();
 

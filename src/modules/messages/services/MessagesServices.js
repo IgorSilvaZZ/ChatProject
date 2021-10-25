@@ -7,6 +7,16 @@ class MessagesServices {
     this.messageRepository = new MessagesRepository();
   }
 
+  async createMessage({ fkUserSender, fkUserReceiver, message }) {
+    const messageSend = this.messageRepository.create({
+      fkUserSender,
+      fkUserReceiver,
+      message,
+    });
+
+    return messageSend;
+  }
+
   async findAll(params) {
     const { fkUserSender, fkUserReceiver } = params;
 

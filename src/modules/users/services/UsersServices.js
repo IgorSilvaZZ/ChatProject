@@ -60,6 +60,12 @@ class UsersServices {
 
     return { user, token };
   }
+
+  async findByEmailUser(email) {
+    const user = await this.userRepository.findByEmail(email);
+
+    return user;
+  }
 }
 
 module.exports = { UsersServices };

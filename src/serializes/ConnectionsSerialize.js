@@ -1,19 +1,18 @@
 class ConnectionsSerialize {
+  handle(connections) {
+    const serializedConnections = connections.map((connection) => {
+      const { socket_id } = connection;
+      const { id, name } = connection.user;
 
-    listAllConnetionsUser(connections){
+      return {
+        socket_id,
+        user_id: id,
+        name,
+      };
+    });
 
-        const serializedConnections = connections.map(connection => {
-            return {
-                socket_id: connection.socket_id,
-                user_id: connection.user.id,
-                name: connection.user.name
-            }
-        });
-
-        return serializedConnections;
-        
-    }
-
+    return serializedConnections;
+  }
 }
 
-module.exports = { ConnectionsSerialize }
+module.exports = { ConnectionsSerialize };

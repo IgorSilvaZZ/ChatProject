@@ -1,7 +1,9 @@
-const username = JSON.parse(localStorage.getItem("username"));
-const email = JSON.parse(localStorage.getItem("email"));
-const id = JSON.parse(localStorage.getItem("id"));
-const token = JSON.parse(localStorage.getItem("token"));
+const user = JSON.parse(localStorage.getItem("user"));
+
+const username = user.name;
+const email = user.email;
+const id = user.id;
+const token = user.token;
 
 let socket = null;
 let participants = [];
@@ -12,8 +14,9 @@ socket = io();
 
 //Participante de chat entrando na sessão
 socket.on("acess_chat", (params) => {
+  const { username } = params;
   Toastify({
-    text: `${params.username} entrou no chat!`,
+    text: `${username} entrou no chat!`,
     backgroundColor: "linear-gradient(to right, #6d23b6, #47126b)",
     duration: 2000,
   }).showToast();

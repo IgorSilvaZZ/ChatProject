@@ -4,18 +4,14 @@ const { sign } = require("jsonwebtoken");
 const { secret } = require("../../../config/auth.json");
 
 class UsersServices {
-  userRepository;
-
-  constructor() {
-    this.userRepository = new UsersRepository();
-  }
-
   async createUser({ name, email, password }) {
     if (!email) {
       throw new Error("Email is invalid!");
     }
 
-    const userAlreadyExists = await this.userRepository.exists(email);
+    const userAlreadyExists = await UsersRepository.findOne({
+      where: { email },
+    });
 
     if (userAlreadyExists) {
       throw new Error("User already exists!");
@@ -23,7 +19,7 @@ class UsersServices {
 
     const hashPassword = await hash(password, 8);
 
-    const user = await this.userRepository.create({
+    const user = await UsersRepository.create({
       name,
       email,
       password: hashPassword,
@@ -33,7 +29,10 @@ class UsersServices {
   }
 
   async findByIdUser(id) {
-    const user = await this.userRepository.findById(id);
+    const user = await UsersRepository.findOne({
+      where: { id },
+      attributes: ["name", "email"],
+    });
 
     if (!user) {
       throw new Error("User not found!");
@@ -43,7 +42,7 @@ class UsersServices {
   }
 
   async authenticateUser({ email, password }) {
-    const user = await this.userRepository.findByEmail(email);
+    const user = await UsersRepository.findOne({ where: { email } });
 
     if (!user) {
       throw new Error("User not Found!");
@@ -62,7 +61,7 @@ class UsersServices {
   }
 
   async findByEmailUser(email) {
-    const user = await this.userRepository.findByEmail(email);
+    const user = await UsersRepository.findOne({ where: { email } });
 
     return user;
   }

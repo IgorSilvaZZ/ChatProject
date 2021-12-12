@@ -2,15 +2,11 @@ const {
   ConnectionsRepostiory,
 } = require("../repositories/ConnectionsRepostiory");
 
+const { Op } = require("sequelize");
+
 class ConnectionsServices {
-  connectionRepository;
-
-  constructor() {
-    this.connectionRepository = new ConnectionsRepostiory();
-  }
-
   async createConnection({ user_id, socket_id }) {
-    const connection = await this.connectionRepository.create({
+    const connection = await ConnectionsRepostiory.create({
       user_id,
       socket_id,
     });
@@ -19,16 +15,18 @@ class ConnectionsServices {
   }
 
   async findByIdUserConnection(user_id) {
-    const connection = await this.connectionRepository.findByIdUser(user_id);
+    const connection = await ConnectionsRepostiory.findOne({
+      where: { user_id },
+    });
 
     return connection;
   }
 
   async updateUserConnection({ user_id, socket_id }) {
-    const connection = await this.connectionRepository.updateUser({
-      user_id,
-      socket_id,
-    });
+    const connection = await ConnectionsRepostiory.update(
+      { socket_id },
+      { where: { user_id }, returning: true }
+    );
 
     const connectionUpdated = { ...connection[1] };
 
@@ -36,21 +34,26 @@ class ConnectionsServices {
   }
 
   async findAllConnectionsUser() {
-    const connections = await this.connectionRepository.findAllUser();
+    const connections = await ConnectionsRepostiory.findAll({
+      include: [{ association: "user" }],
+    });
 
     return connections;
   }
 
   async findAllWithSocketConnection() {
-    const connections = await this.connectionRepository.withSocket();
+    const connections = await ConnectionsRepostiory.findAll({
+      where: { socket_id: { [Op.ne]: null } },
+      include: [{ association: "user" }],
+    });
 
     return connections;
   }
 
   async findBySockerIdConnection(socket_id) {
-    const connection = await this.connectionRepository.findBySocketId(
-      socket_id
-    );
+    const connection = await ConnectionsRepostiory.findOne({
+      where: { socket_id },
+    });
 
     return connection;
   }

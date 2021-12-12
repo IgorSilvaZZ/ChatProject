@@ -1,14 +1,9 @@
-const { MessagesRepository } = require("../repositories/MessagesRepository");
+/* const { MessagesRepository } = require("../repositories/MessagesRepository"); */
+const { MessageRepository } = require("../repositories/MessageRepository");
 
 class MessagesServices {
-  messageRepository;
-
-  constructor() {
-    this.messageRepository = new MessagesRepository();
-  }
-
   async createMessage({ fkUserSender, fkUserReceiver, message }) {
-    const messageSend = this.messageRepository.create({
+    const messageSend = MessageRepository.create({
       fkUserSender,
       fkUserReceiver,
       message,
@@ -20,9 +15,11 @@ class MessagesServices {
   async findAll(params) {
     const { fkUserSender, fkUserReceiver } = params;
 
-    const messages = await this.messageRepository.listByUsers({
-      fkUserReceiver,
-      fkUserSender,
+    const messages = await MessageRepository.findAll({
+      include: [
+        { association: "user_sender", where: { id: fkUserSender } },
+        { association: "user_receiver", where: { id: fkUserReceiver } },
+      ],
     });
 
     return messages;

@@ -1,4 +1,3 @@
-/* const { MessagesRepository } = require("../repositories/MessagesRepository"); */
 const { MessageRepository } = require("../repositories/MessageRepository");
 
 class MessagesServices {
@@ -21,6 +20,12 @@ class MessagesServices {
         { association: "user_receiver", where: { id: fkUserReceiver } },
       ],
     });
+
+    return messages;
+  }
+
+  async findListConversation(fkUser) {
+    const messages = await MessageRepository.listAllConversation(fkUser);
 
     return messages;
   }

@@ -45,6 +45,13 @@ module.exports = () => {
 
         const allParticipants = new ConnectionsSerialize().handle(connections);
 
+        const listConversations = await messagesServices.findListConversation(
+          user.id
+        );
+
+        /* Listagem de ultimas conversas, retornando apenas o nome, fazer com que retorne socket_id ou faça o que ConnectionsSerialize faz atualmente */
+        console.log(JSON.stringify(listConversations));
+
         global.io.emit("participants_list_all", allParticipants);
       }
     });

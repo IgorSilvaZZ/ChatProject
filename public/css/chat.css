@@ -219,3 +219,65 @@
 .buttonSendMessage:hover {
   background-color: #341f97;
 }
+
+.bg-modal {
+  width: 100%;
+  height: 100%;
+
+  top: -100%;
+  position: fixed;
+  display: block;
+
+  /* background: rgba(0, 0, 0, 0.75); */
+  
+  z-index: 2;
+
+  transition: 350ms;
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+
+  width: 30%;
+  height: 60%;
+
+  background: #1a1d24;
+  border: 3px solid #5f27cd;
+  border-radius: 5px;
+
+  margin: 150px auto 0 auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+
+  font-size: 10px;
+  color: white;
+
+  margin: 10px 10px;
+}
+
+.modal span {
+  font-size: 25px;
+  color: white;
+
+  cursor: pointer;
+}
+
+.modal span:hover {
+  color: #5f27cd;
+
+  transition: 350ms;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-wrap: wrap;
+
+  width: 100%;
+  height: 100%;
+}

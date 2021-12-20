@@ -34,7 +34,7 @@
               <img src="../images/user3.png" />
            </div>
            <div class="headerOptions">
-            <img src="../images/comment.png" alt="Nova conversa" title="Nova Conversa" />
+            <img src="../images/comment.png" class="open_modal" alt="Nova conversa" title="Nova Conversa" />
             <img src="../images/logout.png" alt="Desconectar" title="Desconectar" />
            </div>
          </div>
@@ -125,6 +125,41 @@
         </div>
       </div>
     </div>
+
+    <div class="bg-modal" id="modalSection">
+      <div class="modal">
+        <div class="modal-header">
+          <h1>Selecione o Contato</h1>
+          <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div class="people">
+            <img class="people_icon" src="../images/user3.png">
+            <p class="people_text">Igor Silva</p>
+          </div>
+          <div class="people">
+            <img class="people_icon" src="../images/user3.png">
+            <p class="people_text">Igor Silva</p>
+          </div>
+          <div class="people">
+            <img class="people_icon" src="../images/user3.png">
+            <p class="people_text">Igor Silva</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+
+      document.querySelector('.open_modal').addEventListener('click', () => {
+        document.getElementById('modalSection').style.top = "0";
+      })
+
+      document.querySelector('.close').addEventListener('click', () => {
+        document.getElementById('modalSection').style.top = "-100%";
+      })
+
+    </script>
 
     <script
       type="text/javascript"

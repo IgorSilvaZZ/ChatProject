@@ -21,8 +21,8 @@ body {
 }
 .container {
     display: flex;
-    height: 85%;
-    width: 85%;
+    height: 95%;
+    width: 95%;
     background: rgba(0, 0, 0, 0.5);
     border-radius: 20px;
 }

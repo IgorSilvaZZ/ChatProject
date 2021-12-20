@@ -12,19 +12,10 @@ let socket_user = null;
 
 socket = io();
 
-//Participante de chat entrando na sessão
-socket.on("acess_chat", (params) => {
-  const { username } = params;
-  Toastify({
-    text: `${username} entrou no chat!`,
-    backgroundColor: "linear-gradient(to right, #6d23b6, #47126b)",
-    duration: 2000,
-  }).showToast();
-});
-
 //Emitindo evento de quando entramos no chat para os usuarios
 socket.emit("acess_chat_parcipant", { username, email });
 
+//Tirar e colocar a parte de listagem de ultimas conversas
 //Listando todos os usuarios execeto VC na lista de participantes na pagina
 socket.on("participants_list_all", (connections) => {
   const newParticipants = connections.filter(

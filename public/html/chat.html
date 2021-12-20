@@ -21,60 +21,50 @@
     />
     <title>Chat</title>
     <link rel="stylesheet" href="../css/global.css" />
-    <link rel="stylesheet" href="../css/menu.css" />
+    <link rel="stylesheet" href="../css/navbar.css" />
     <link rel="stylesheet" href="../css/chat.css" />
   </head>
   <body>
     <div class="container">
-      <div class="navbar">
-        <div class="imageContainer">
-          <img src="../images/cup.png" />
-        </div>
-        <div class="optionsMenu">
-          <div class="options" id="optionsSelected">
-            <img src="../images/comment.svg" />
-          </div>
-          <div class="options">
-            <img src="../images/favorite.svg" />
-          </div>
-          <div class="options" id="profile">
-            <img src="../images/user.svg" />
-          </div>
-          <div class="options" id="logout">
-            <img src="../images/logout.png" />
-          </div>
-        </div>
-        <div class="containerUser">
-          <img src="../images/user3.png" />
-        </div>
-      </div>
       <div class="main">
-        <div class="participants">
-          <h2 class="participants_title">Participantes</h2>
 
-          <div class="participantsMain">
-            <div class="searchContainer">
-              <img
-                class="searchContainer_img"
-                src="../images/loupe.svg"
-                alt="Image Search Participants"
-              />
-              <input
-                class="searchContainer_input"
-                type="text"
-                placeholder="Search"
-                id="searchValue"
-              />
+        <div class="listUsers">
+         <div class="header">
+           <div class="headerImage">
+              <img src="../images/user3.png" />
+           </div>
+           <div class="headerOptions">
+            <img src="../images/comment.png" alt="Nova conversa" title="Nova Conversa" />
+            <img src="../images/logout.png" alt="Desconectar" title="Desconectar" />
+           </div>
+         </div>
+         <div class="listAll">
+          <div class="searchContainer">
+            <img
+              class="searchContainer_img"
+              src="../images/loupe.svg"
+              alt="Image Search Participants"
+            />
+            <input
+              class="searchContainer_input"
+              type="text"
+              placeholder="Pesquisar Conversa"
+              id="searchValue"
+            />
+          </div>
+          <span class="listPeoples" id="list_participants">
+            <div id="notFoundMessages">
+              <img src="../images/new-message.png">
+              <p>Clique em nova conversa para inicar uma nova conversa.</p>
             </div>
-
-            <span class="listPeoples" id="list_participants"></span>
             <script id="template_participants" type="x-tmpl-mustache">
               <div class="people" id="user{{idSocketParticipant}}" onclick="talk('{{idSocketParticipant}}')">
                   <img class="people_icon" src="../images/user3.png">
                   <p class="people_text">{{nameParticipant}}</p>
               </div>
             </script>
-          </div>
+          </span>
+         </div>
         </div>
 
         <div class="chat chatLoadingSelect" id="chat_loading_chat">
@@ -83,7 +73,7 @@
             src="../images/messageBackground.png"
           />
           <p class="chatLoadingSelect_text">
-            Escolha um usuario ao lado para começar a conversa
+            Envie e receba mensagens para qualquer pessoa cadastrada na nossa plataforma.
           </p>
         </div>
 
@@ -92,7 +82,7 @@
           <div class="containerChat" id="containerChat"></div>
 
           <script id="template_all_messages" type="x-tmpl-mustache">
-            <div style="height: 100%;: 100%; width: 100%;" id="chatContainer{{idSocketParticipant}}">
+            <div style="height: 100%; width: 100%;" id="chatContainer{{idSocketParticipant}}">
             </div>
           </script>
 
@@ -143,6 +133,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.4/dayjs.min.js"></script>
     <script src="https://unpkg.com/mustache@latest"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="js/chat.js"></script>
+    <!-- <script src="js/chat.js"></script> -->
   </body>
 </html>

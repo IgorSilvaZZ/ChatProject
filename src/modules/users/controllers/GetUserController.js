@@ -1,12 +1,10 @@
-const { UsersServices } = require("../services/UsersServices");
+const { FindByUserService } = require("../services/FindByUserService");
 
 class GetUserController {
-  async handle(req, res) {
+  async execute(req, res) {
     const { id } = req.params;
 
-    const service = new UsersServices();
-
-    const user = await service.findByIdUser(id);
+    const user = await new FindByUserService().handle(id);
 
     return res.json(user);
   }

@@ -8,6 +8,9 @@ const {
   ConnectionsServices,
 } = require("../modules/connections/services/ConnectionsServices");
 
+const accessChatUseCase = require("../modules/users/useCases/AccessChatUseCase");
+const listAllUsersUseCase = require("../modules/users/useCases/ListAllUsersUseCase");
+
 const { ConnectionsSerialize } = require("../serializes/ConnectionsSerialize");
 const { MessagesSerialize } = require("../serializes/MessagesSerialize");
 
@@ -17,41 +20,8 @@ module.exports = () => {
     const messagesServices = new MessagesServices();
     const connectionsServices = new ConnectionsServices();
 
-    socket.on("acess_chat_parcipant", async (params) => {
-      const { email } = params;
-
-      const socket_id = socket.id;
-
-      const user = await usersServices.findByEmailUser(email);
-
-      if (user) {
-        const connection = await connectionsServices.findByIdUserConnection(
-          user.id
-        );
-
-        if (!connection) {
-          await connectionsServices.createConnection({
-            socket_id,
-            user_id: user.id,
-          });
-        } else {
-          await connectionsServices.updateUserConnection({
-            user_id: user.id,
-            socket_id,
-          });
-        }
-
-        const connections = await connectionsServices.findAllConnectionsUser();
-
-        const allParticipants = new ConnectionsSerialize().handle(connections);
-
-        /* Listagem de ultimas conversas, retornando apenas o nome, fazer com que retorne socket_id ou faça o que ConnectionsSerialize faz atualmente */
-        /* const listConversations = await messagesServices.findListConversation(
-          user.id
-        ); */
-
-        global.io.emit("participants_list_all", allParticipants);
-      }
+    socket.on("access_chat", async (params) => {
+      await accessChatUseCase(socket, params);
     });
 
     socket.on("logout_parcipant", async (user_id) => {
@@ -67,6 +37,8 @@ module.exports = () => {
 
       global.io.emit("participants_list_all", newParticipants);
     });
+
+    socket.on("list_all_users", listAllUsersUseCase);
 
     socket.on("user_send_message", async (params) => {
       const { text, socket_user, socket_user_receiver, username_message } =

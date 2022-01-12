@@ -27,44 +27,52 @@
   <body>
     <div class="container">
       <div class="main">
-
         <div class="listUsers">
-         <div class="header">
-           <div class="headerImage">
+          <div class="header">
+            <div class="headerImage">
               <img src="../images/user3.png" />
-           </div>
-           <div class="headerOptions">
-            <img src="../images/comment.png" class="open_modal" alt="Nova conversa" title="Nova Conversa" />
-            <img src="../images/logout.png" alt="Desconectar" title="Desconectar" />
-           </div>
-         </div>
-         <div class="listAll">
-          <div class="searchContainer">
-            <img
-              class="searchContainer_img"
-              src="../images/loupe.svg"
-              alt="Image Search Participants"
-            />
-            <input
-              class="searchContainer_input"
-              type="text"
-              placeholder="Pesquisar Conversa"
-              id="searchValue"
-            />
-          </div>
-          <span class="listPeoples" id="list_participants">
-            <div id="notFoundMessages">
-              <img src="../images/new-message.png">
-              <p>Clique em nova conversa para inicar uma nova conversa.</p>
             </div>
-            <script id="template_participants" type="x-tmpl-mustache">
-              <div class="people" id="user{{idSocketParticipant}}" onclick="talk('{{idSocketParticipant}}')">
-                  <img class="people_icon" src="../images/user3.png">
-                  <p class="people_text">{{nameParticipant}}</p>
+            <div class="headerOptions">
+              <img
+                src="../images/comment.png"
+                class="open_modal"
+                alt="Nova conversa"
+                title="Nova Conversa"
+              />
+              <img
+                src="../images/logout.png"
+                alt="Desconectar"
+                title="Desconectar"
+              />
+            </div>
+          </div>
+          <div class="listAll">
+            <div class="searchContainer">
+              <img
+                class="searchContainer_img"
+                src="../images/loupe.svg"
+                alt="Image Search Participants"
+              />
+              <input
+                class="searchContainer_input"
+                type="text"
+                placeholder="Pesquisar Conversa"
+                id="searchValue"
+              />
+            </div>
+            <span class="listPeoples" id="list_participants">
+              <div id="notFoundMessages">
+                <img src="../images/new-message.png" />
+                <p>Clique em nova conversa para inicar uma nova conversa.</p>
               </div>
-            </script>
-          </span>
-         </div>
+              <script id="template_participants" type="x-tmpl-mustache">
+                <div class="people" id="user{{idSocketParticipant}}" onclick="talk('{{idSocketParticipant}}')">
+                    <img class="people_icon" src="../images/user3.png">
+                    <p class="people_text">{{nameParticipant}}</p>
+                </div>
+              </script>
+            </span>
+          </div>
         </div>
 
         <div class="chat chatLoadingSelect" id="chat_loading_chat">
@@ -73,7 +81,8 @@
             src="../images/messageBackground.png"
           />
           <p class="chatLoadingSelect_text">
-            Envie e receba mensagens para qualquer pessoa cadastrada na nossa plataforma.
+            Envie e receba mensagens para qualquer pessoa cadastrada na nossa
+            plataforma.
           </p>
         </div>
 
@@ -132,8 +141,14 @@
           <h1>Selecione o Contato</h1>
           <span class="close">&times;</span>
         </div>
-        <div class="modal-body">
-          <div class="people">
+        <div class="modal-body" id="list_users">
+          <script id="template_users" type="x-tmpl-mustache">
+              <div class="people" id="user{{idUser}}">
+                <img class="people_icon" src="../images/user3.png">
+                <p class="people_text">{{nameUser}}</p>
+            </div>>
+          </script>
+          <!-- <div class="people">
             <img class="people_icon" src="../images/user3.png">
             <p class="people_text">Igor Silva</p>
           </div>
@@ -144,12 +159,12 @@
           <div class="people">
             <img class="people_icon" src="../images/user3.png">
             <p class="people_text">Igor Silva</p>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
 
-    <script>
+    <!-- <script>
 
       document.querySelector('.open_modal').addEventListener('click', () => {
         document.getElementById('modalSection').style.top = "0";
@@ -159,7 +174,7 @@
         document.getElementById('modalSection').style.top = "-100%";
       })
 
-    </script>
+    </script> -->
 
     <script
       type="text/javascript"
@@ -168,6 +183,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.4/dayjs.min.js"></script>
     <script src="https://unpkg.com/mustache@latest"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <!-- <script src="js/chat.js"></script> -->
+    <script src="js/chat.js"></script>
   </body>
 </html>

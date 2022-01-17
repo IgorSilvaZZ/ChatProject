@@ -35,7 +35,6 @@
 #notFoundMessages img {
   width: 30%;
 
-
   margin-bottom: 20px;
 
   opacity: 0.5;
@@ -52,7 +51,7 @@
 
   border-radius: 10px;
   margin-bottom: 10px;
-  
+
   cursor: pointer;
 }
 .people_icon {
@@ -229,7 +228,7 @@
   display: block;
 
   /* background: rgba(0, 0, 0, 0.75); */
-  
+
   z-index: 2;
 
   transition: 350ms;

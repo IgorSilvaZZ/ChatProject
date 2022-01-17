@@ -6,11 +6,11 @@ class MessageRepository extends Message {
   static async listAllConversation(fkUser) {
     /* 
             # Query que precisa ser executada
-            select tbUsers.name
-            from tbMessages 
+            select tbUsers., tbUsers.name, tbUsers.email
+            from tbMessages
             inner join tbUsers
-            on tbMessages.fkUserSender = tbUsers.id
-            where tbMessages.fkUserReceiver = 1 or tbMessages.fkUserReceiver = 1
+            on tbMessages.fkUserReceiver = tbUsers.id
+            where tbMessages.fkUserSender = 1 or tbMessages.fkUserReceiver = 1
             group by tbUsers.id; 
         */
 
@@ -19,8 +19,8 @@ class MessageRepository extends Message {
             select tbUsers.name
             from tbMessages 
             inner join tbUsers
-            on tbMessages.fkUserSender = tbUsers.id
-            where tbMessages.fkUserReceiver = ${fkUser} or tbMessages.fkUserReceiver = ${fkUser}
+            on tbMessages.fkUserReceiver = tbUsers.id
+            where tbMessages.fkUserSender = ${fkUser} or tbMessages.fkUserReceiver = ${fkUser}
             group by tbUsers.id`,
       {
         type: QueryTypes.SELECT,

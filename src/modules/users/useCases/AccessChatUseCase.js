@@ -12,7 +12,11 @@ const {
   UpdateUserConnectionService,
 } = require("../../connections/services/UpdateUserConnectionService");
 
-module.exports = async (socket, params) => {
+const {
+  ListAllConversationMessagesService,
+} = require("../../messages/services/ListAllConversationMessagesService");
+
+module.exports = async (socket, params, callback) => {
   const { email } = params;
 
   const socket_id = socket.id;
@@ -36,11 +40,9 @@ module.exports = async (socket, params) => {
       });
     }
 
-    /* Listagem de ultimas conversas apenas para o usuario que está entrando, retornando apenas o nome, fazer com que retorne socket_id ou faça o que ConnectionsSerialize faz atualmente */
-    /* const listConversations = await messagesServices.findListConversation(
-          user.id
-        ); */
+    const allMessagesConversations =
+      await new ListAllConversationMessagesService().handle(user.id);
 
-    /* global.io.emit("list_all_users", allUsers); */
+    callback(allMessagesConversations);
   }
 };

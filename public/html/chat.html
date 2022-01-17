@@ -91,7 +91,7 @@
           <div class="containerChat" id="containerChat"></div>
 
           <script id="template_all_messages" type="x-tmpl-mustache">
-            <div style="height: 100%; width: 100%;" id="chatContainer{{idSocketParticipant}}">
+            <div style="height: 100%; width: 100%;" id="chatContainer{{idUser}}">
             </div>
           </script>
 
@@ -128,8 +128,8 @@
 
           <div class="footerChat"></div>
           <script id="template_send_message" type="x-tmpl-mustache">
-            <input class="footerChat_input" type="text" placeholder="Escreva mensagem" id="messageUser{{idUserSocket}}" name="messageUser">
-            <div class="buttonSendMessage" id="buttonSubmitMessage" onclick="sendMessage('{{idUserSocket}}')"></div>
+            <input class="footerChat_input" type="text" placeholder="Escreva mensagem" id="messageUser{{emailUser}}" name="messageUser">
+            <div class="buttonSendMessage" id="buttonSubmitMessage" onclick="sendMessage('{{paramsUser}}')"></div>
           </script>
         </div>
       </div>
@@ -143,7 +143,7 @@
         </div>
         <div class="modal-body" id="list_users">
           <script id="template_users" type="x-tmpl-mustache">
-              <div class="people" id="user{{idUser}}">
+              <div class="people" id="user{{idUser}}" onclick="talk('{{idUser}}')">
                 <img class="people_icon" src="../images/user3.png">
                 <p class="people_text">{{nameUser}}</p>
             </div>>

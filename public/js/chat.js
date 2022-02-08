@@ -7,6 +7,7 @@ const token = userLoged.token;
 
 let socket = null;
 let users = [];
+let allConversations = [];
 
 socket = io();
 
@@ -27,28 +28,63 @@ const listMessagesUsers = (params, templateName, idUser) => {
 };
 
 const openModal = () => {
-  socket.emit("list_all_users", { email }, (listUsers) => {
-    document.getElementById("modalSection").style.top = "0";
+  document.getElementById("modalSection").style.top = "0";
 
-    users = listUsers;
+  let template = document.getElementById("template_users").innerHTML;
 
-    let template = document.getElementById("template_users").innerHTML;
-
-    listUsers.forEach((user) => {
-      const renderedUsers = Mustache.render(template, {
-        idUser: user.id,
-        nameUser: user.name,
-      });
-
-      document.getElementById("list_users").innerHTML += renderedUsers;
+  users.forEach((user) => {
+    const renderedUsers = Mustache.render(template, {
+      idUser: user.id,
+      nameUser: user.name,
     });
+
+    document.getElementById("list_users").innerHTML += renderedUsers;
   });
 };
 
-//Emitindo evento de quando entramos no chat para os usuarios
-socket.emit("access_chat", { username, email }, (conversations) => {
-  console.log(conversations);
+socket.emit("list_all_users", { email }, (listUsers) => {
+  users = listUsers;
 });
+
+//Emitindo evento de quando entramos no chat para os usuarios
+socket.emit(
+  "access_chat",
+  { username, email },
+  (lastConversations, messagesStatusPending) => {
+    if (lastConversations.length > 0) {
+      document.getElementById("notFoundMessages").style.display = "none";
+
+      allConversations = lastConversations;
+
+      let templateListConversations = document.getElementById(
+        "template_conversations"
+      ).innerHTML;
+
+      lastConversations.forEach((user) => {
+        const renderedConversations = Mustache.render(
+          templateListConversations,
+          {
+            idUser: user.id,
+            nameUser: user.name,
+          }
+        );
+
+        document.getElementById("list_conversations").innerHTML +=
+          renderedConversations;
+      });
+    }
+    if (messagesStatusPending.length > 0) {
+      messagesStatusPending.map((messageUser) => {
+        Toastify({
+          text: `${messageUser.user_sender.name} enviou uma mensagem, enquanto estava offline!`,
+          backgroundColor: "#5f27cd",
+          duration: 2000,
+          onClick: () => talk(messageUser.user_sender.id),
+        }).showToast();
+      });
+    }
+  }
+);
 
 document.querySelector(".open_modal").addEventListener("click", openModal);
 

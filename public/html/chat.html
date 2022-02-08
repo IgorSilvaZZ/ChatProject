@@ -43,6 +43,7 @@
                 src="../images/logout.png"
                 alt="Desconectar"
                 title="Desconectar"
+                id="logoutButton"
               />
             </div>
           </div>
@@ -60,16 +61,16 @@
                 id="searchValue"
               />
             </div>
-            <span class="listPeoples" id="list_participants">
+            <span class="listPeoples" id="list_conversations">
               <div id="notFoundMessages">
                 <img src="../images/new-message.png" />
                 <p>Clique em nova conversa para inicar uma nova conversa.</p>
               </div>
-              <script id="template_participants" type="x-tmpl-mustache">
-                <div class="people" id="user{{idSocketParticipant}}" onclick="talk('{{idSocketParticipant}}')">
+              <script id="template_conversations" type="x-tmpl-mustache">
+                  <div class="people" id="user{{idUser}}" onclick="talk('{{idUser}}')">
                     <img class="people_icon" src="../images/user3.png">
-                    <p class="people_text">{{nameParticipant}}</p>
-                </div>
+                    <p class="people_text">{{nameUser}}</p>
+                </div>>
               </script>
             </span>
           </div>

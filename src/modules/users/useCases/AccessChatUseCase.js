@@ -16,6 +16,10 @@ const {
   ListAllConversationMessagesService,
 } = require("../../messages/services/ListAllConversationMessagesService");
 
+const {
+  ListStatusMessagesService,
+} = require("../../messages/services/ListStatusMessagesService");
+
 module.exports = async (socket, params, callback) => {
   const { email } = params;
 
@@ -40,9 +44,14 @@ module.exports = async (socket, params, callback) => {
       });
     }
 
-    const allMessagesConversations =
+    const messagesStatusPending = await new ListStatusMessagesService().handle({
+      statusMessage: false,
+      fkUserReceiver: user.id,
+    });
+
+    const messagesConversations =
       await new ListAllConversationMessagesService().handle(user.id);
 
-    callback(allMessagesConversations);
+    callback(messagesConversations, messagesStatusPending);
   }
 };

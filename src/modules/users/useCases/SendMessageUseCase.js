@@ -47,8 +47,7 @@ module.exports = async (params, callback) => {
       statusMessage: false,
     });
 
-    global
-      .io()
+    global.io
       .to(userReceiverConnection.socket_id)
       .emit("user_receiver_message", {
         text,

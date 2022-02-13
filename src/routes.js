@@ -27,7 +27,7 @@ router.get("/user/:id", ensureAuthenticated, new GetUserController().execute);
 
 router.get("/messages", new ListMessagesController().handle);
 
-router.get("/index", (req, res) => {
+router.get("/", (req, res) => {
   return res.render("html/index.html");
 });
 

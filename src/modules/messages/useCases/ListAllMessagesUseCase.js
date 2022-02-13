@@ -1,6 +1,9 @@
 const {
   ListAllMessagesService,
 } = require("../services/ListAllMessagesService");
+
+const { UpdateMessageService } = require("../services/UpdateMessageService");
+
 const { MessagesSerialize } = require("../../../serializes/MessagesSerialize");
 
 module.exports = async (params, callback) => {
@@ -23,6 +26,12 @@ module.exports = async (params, callback) => {
   const messagesUserReceiver = await new ListAllMessagesService().handle(
     paramsUserReceiver
   );
+
+  await new UpdateMessageService().handle({
+    statusMessage: true,
+    fkUserReceiver: fkUser,
+    fkUserSender: fkUserParticipant,
+  });
 
   const messagesConcated = messagesUserSender.concat(messagesUserReceiver);
 

@@ -14,7 +14,9 @@ socket = io();
 let socket_user = null;
 
 const listMessagesUsers = (params, templateName, idUser) => {
-  const containerChat = document.getElementById(`chatContainer${idUser}`);
+  const containerChat = document.getElementById(`containerChat`);
+
+  const chatContainer = document.getElementById(`chatContainer${idUser}`);
 
   const template = document.getElementById(templateName).innerHTML;
 
@@ -24,7 +26,9 @@ const listMessagesUsers = (params, templateName, idUser) => {
     date: dayjs(params.createdAt).format("DD/MM/YY HH:mm:ss"),
   });
 
-  containerChat.innerHTML += rendered;
+  chatContainer.innerHTML += rendered;
+
+  containerChat.scrollTo(0, containerChat.scrollHeight);
 };
 
 const openModal = () => {
@@ -42,56 +46,6 @@ const openModal = () => {
   });
 };
 
-socket.emit("list_all_users", { email }, (listUsers) => {
-  users = listUsers;
-});
-
-//Emitindo evento de quando entramos no chat para os usuarios
-socket.emit(
-  "access_chat",
-  { username, email },
-  (lastConversations, messagesStatusPending) => {
-    if (lastConversations.length > 0) {
-      document.getElementById("notFoundMessages").style.display = "none";
-
-      allConversations = lastConversations;
-
-      let templateListConversations = document.getElementById(
-        "template_conversations"
-      ).innerHTML;
-
-      lastConversations.forEach((user) => {
-        const renderedConversations = Mustache.render(
-          templateListConversations,
-          {
-            idUser: user.id,
-            nameUser: user.name,
-          }
-        );
-
-        document.getElementById("list_conversations").innerHTML +=
-          renderedConversations;
-      });
-    }
-    if (messagesStatusPending.length > 0) {
-      messagesStatusPending.map((messageUser) => {
-        Toastify({
-          text: `${messageUser.user_sender.name} enviou uma mensagem, enquanto estava offline!`,
-          backgroundColor: "#5f27cd",
-          duration: 2000,
-          onClick: () => talk(messageUser.user_sender.id),
-        }).showToast();
-      });
-    }
-  }
-);
-
-document.querySelector(".open_modal").addEventListener("click", openModal);
-
-document.querySelector(".close").addEventListener("click", () => {
-  document.getElementById("modalSection").style.top = "-100%";
-});
-
 const talk = (idUser) => {
   document.getElementById("modalSection").style.top = "-100%";
 
@@ -99,10 +53,12 @@ const talk = (idUser) => {
 
   const divLoadingSelectChat = document.getElementById("chat_loading_chat");
 
+  const containerChat = document.getElementById(`containerChat`);
+
   divLoadingSelectChat.style.display = "none";
   divContainerChat.style.display = "flex";
 
-  document.getElementById("containerChat").innerHTML = "";
+  containerChat.innerHTML = "";
   document.querySelector(".footerChat").innerHTML = "";
 
   const user = users.find((userFind) => userFind.id === Number(idUser));
@@ -115,7 +71,7 @@ const talk = (idUser) => {
     idUser,
   });
 
-  document.getElementById("containerChat").innerHTML += renderedChatContainer;
+  containerChat.innerHTML += renderedChatContainer;
 
   const templateFooter = document.getElementById(
     "template_send_message"
@@ -173,5 +129,87 @@ const sendMessage = (paramsUser) => {
 
   listMessagesUsers(paramsRender, "template_user_send_message", Number(idUser));
 
+  const containerChat = document.getElementById(`containerChat`);
+
+  containerChat.scrollTo(0, containerChat.scrollHeight);
+
   text.value = "";
 };
+
+socket.emit("list_all_users", { email }, (listUsers) => {
+  users = listUsers;
+});
+
+//Emitindo evento de quando entramos no chat para os usuarios
+socket.emit(
+  "access_chat",
+  { username, email },
+  (lastConversations, messagesStatusPending) => {
+    if (lastConversations.length > 0) {
+      document.getElementById("notFoundMessages").style.display = "none";
+
+      lastConversations.forEach((user) => {
+        var dupicated =
+          allConversations.findIndex((item) => {
+            return user.id == item.id;
+          }) > -1;
+
+        if (!dupicated) {
+          allConversations.push(user);
+        }
+      });
+
+      let templateListConversations = document.getElementById(
+        "template_conversations"
+      ).innerHTML;
+
+      allConversations.forEach((user) => {
+        const renderedConversations = Mustache.render(
+          templateListConversations,
+          {
+            idUser: user.id,
+            nameUser: user.name,
+          }
+        );
+
+        document.getElementById("list_conversations").innerHTML +=
+          renderedConversations;
+      });
+    }
+    if (messagesStatusPending.length > 0) {
+      messagesStatusPending.map((messageUser) => {
+        Toastify({
+          text: `${messageUser.user_sender.name} enviou uma mensagem, enquanto estava offline!`,
+          backgroundColor: "#5f27cd",
+          duration: 2000,
+          onClick: () => talk(messageUser.user_sender.id),
+        }).showToast();
+      });
+    }
+  }
+);
+
+socket.on("user_receiver_message", (params) => {
+  const { text, usernameSender, idUser } = params;
+
+  Toastify({
+    text: `${usernameSender} mandou uma mensagem pra você!`,
+    backgroundColor: "linear-gradient(to right, #6d23b6, #47126b)",
+    duration: 2000,
+    onClick: () => talk(idUser),
+  }).showToast();
+});
+
+document.querySelector(".open_modal").addEventListener("click", openModal);
+
+document.querySelector(".close").addEventListener("click", () => {
+  document.getElementById("modalSection").style.top = "-100%";
+});
+
+document.getElementById("logoutButton").addEventListener("click", () => {
+  socket.emit("logout_user", id);
+
+  localStorage.clear();
+
+  window.location = "/";
+});

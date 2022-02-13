@@ -1,12 +1,15 @@
-const { UsersServices } = require("../services/UsersServices");
+const {
+  AutheticateUserService,
+} = require("../services/AutheticateUserService");
 
 class AuthenticateUserController {
-  async handle(req, res) {
+  async execute(req, res) {
     const { email, password } = req.body;
 
-    const service = new UsersServices();
-
-    const { user, token } = await service.authenticateUser({ email, password });
+    const { user, token } = await new AutheticateUserService().handle({
+      email,
+      password,
+    });
 
     const username = user.name;
 

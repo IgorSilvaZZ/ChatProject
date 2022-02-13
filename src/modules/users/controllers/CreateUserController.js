@@ -1,12 +1,15 @@
 const { UsersServices } = require("../services/UsersServices");
+const { CreateUserService } = require("../services/CreateUserService");
 
 class CreateUserController {
-  async handle(req, res) {
+  async execute(req, res) {
     const { name, email, password } = req.body;
 
-    const service = new UsersServices();
-
-    const user = await service.createUser({ name, email, password });
+    const user = await new CreateUserService().handle({
+      name,
+      email,
+      password,
+    });
 
     return res.status(201).json(user);
   }

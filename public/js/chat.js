@@ -1,64 +1,22 @@
-const user = JSON.parse(localStorage.getItem("user"));
+const userLoged = JSON.parse(localStorage.getItem("user"));
 
-const username = user.name;
-const email = user.email;
-const id = user.id;
-const token = user.token;
+const username = userLoged.name;
+const email = userLoged.email;
+const id = userLoged.id;
+const token = userLoged.token;
 
 let socket = null;
-let participants = [];
-
-let socket_user = null;
+let users = [];
+let allConversations = [];
 
 socket = io();
 
-//Participante de chat entrando na sessão
-socket.on("acess_chat", (params) => {
-  const { username } = params;
-  Toastify({
-    text: `${username} entrou no chat!`,
-    backgroundColor: "linear-gradient(to right, #6d23b6, #47126b)",
-    duration: 2000,
-  }).showToast();
-});
+let socket_user = null;
 
-//Emitindo evento de quando entramos no chat para os usuarios
-socket.emit("acess_chat_parcipant", { username, email });
+const listMessagesUsers = (params, templateName, idUser) => {
+  const containerChat = document.getElementById(`containerChat`);
 
-//Listando todos os usuarios execeto VC na lista de participantes na pagina
-socket.on("participants_list_all", (connections) => {
-  const newParticipants = connections.filter(
-    (participant) =>
-      participant.name !== username && participant.socket_id !== null
-  );
-
-  const informationUser = connections.filter(
-    (participant) => participant.name == username
-  );
-
-  socket_user = informationUser[0].socket_id;
-
-  participants = newParticipants;
-
-  document.getElementById("list_participants").innerHTML = "";
-
-  let template = document.getElementById("template_participants").innerHTML;
-
-  participants.forEach((participant) => {
-    const rendered = Mustache.render(template, {
-      idSocketParticipant: participant.socket_id,
-      nameParticipant: participant.name,
-    });
-
-    document.getElementById("list_participants").innerHTML += rendered;
-  });
-});
-
-//Listando mensagens enviadas e recebidas co participante especifico e sendo renderizado na tela com seu container html especifico
-const listMessagesUsersSender = (params, templateName, idSocketParticipant) => {
-  const containerChat = document.getElementById(
-    `chatContainer${idSocketParticipant}`
-  );
+  const chatContainer = document.getElementById(`chatContainer${idUser}`);
 
   const template = document.getElementById(templateName).innerHTML;
 
@@ -68,153 +26,190 @@ const listMessagesUsersSender = (params, templateName, idSocketParticipant) => {
     date: dayjs(params.createdAt).format("DD/MM/YY HH:mm:ss"),
   });
 
-  containerChat.innerHTML += rendered;
+  chatContainer.innerHTML += rendered;
+
+  containerChat.scrollTo(0, containerChat.scrollHeight);
 };
 
-//Função para renderizar as mensagens daquele participante especifico e poder conversar com ele
-const talk = (idSocketParticipant) => {
+const openModal = () => {
+  document.getElementById("modalSection").style.top = "0";
+
+  let template = document.getElementById("template_users").innerHTML;
+
+  users.forEach((user) => {
+    const renderedUsers = Mustache.render(template, {
+      idUser: user.id,
+      nameUser: user.name,
+    });
+
+    document.getElementById("list_users").innerHTML += renderedUsers;
+  });
+};
+
+const talk = (idUser) => {
+  document.getElementById("modalSection").style.top = "-100%";
+
   const divContainerChat = document.getElementById("chat_container");
 
   const divLoadingSelectChat = document.getElementById("chat_loading_chat");
 
+  const containerChat = document.getElementById(`containerChat`);
+
   divLoadingSelectChat.style.display = "none";
   divContainerChat.style.display = "flex";
 
-  document.getElementById("containerChat").innerHTML = "";
+  containerChat.innerHTML = "";
   document.querySelector(".footerChat").innerHTML = "";
 
-  const connection = participants.find(
-    (participant) => participant.socket_id === idSocketParticipant
-  );
+  const user = users.find((userFind) => userFind.id === Number(idUser));
 
   const templateChatContainer = document.getElementById(
     "template_all_messages"
   ).innerHTML;
 
   const renderedChatContainer = Mustache.render(templateChatContainer, {
-    idSocketParticipant,
+    idUser,
   });
 
-  document.getElementById("containerChat").innerHTML += renderedChatContainer;
+  containerChat.innerHTML += renderedChatContainer;
 
-  const template = document.getElementById("template_send_message").innerHTML;
+  const templateFooter = document.getElementById(
+    "template_send_message"
+  ).innerHTML;
 
-  const rendered = Mustache.render(template, {
-    idUserSocket: connection.socket_id,
+  const rendereFooter = Mustache.render(templateFooter, {
+    emailUser: user.email,
+    paramsUser: JSON.stringify({
+      emailUser: user.email,
+      idUser,
+    }),
   });
 
-  document.querySelector(".footerChat").innerHTML += rendered;
+  document.querySelector(".footerChat").innerHTML += rendereFooter;
 
-  const params = {
+  const paramsListMessages = {
     fkUser: id,
-    fkUserParticipant: connection.user_id,
+    fkUserParticipant: user.id,
   };
 
-  socket.emit("list_messages", params, (messages) => {
-    messages.map((item) => {
-      if (item.idUserSender === id) {
-        listMessagesUsersSender(
-          item,
-          "template_user_send_message",
-          idSocketParticipant
-        );
-      } else {
-        listMessagesUsersSender(
-          item,
-          "template_user_receiver_message",
-          idSocketParticipant
-        );
-      }
-    });
+  socket.emit("list_messages", paramsListMessages, (messages) => {
+    if (messages.length > 0) {
+      messages.map((item) => {
+        if (item.idUserSender === id) {
+          listMessagesUsers(item, "template_user_send_message", idUser);
+        } else {
+          listMessagesUsers(item, "template_user_receiver_message", idUser);
+        }
+      });
+    }
   });
 };
 
-//Função para mandar mensagem para o participante especifico
-const sendMessage = (id) => {
-  const text = document.getElementById(`messageUser${id}`);
+const sendMessage = (paramsUser) => {
+  const { emailUser, idUser } = JSON.parse(paramsUser);
+
+  const text = document.getElementById(`messageUser${emailUser}`);
 
   const params = {
     text: text.value,
-    socket_user,
-    socket_user_receiver: id,
-    username_message: username,
+    emailUserSender: email,
+    emailUserReceiver: emailUser,
+    usernameSender: username,
   };
 
-  socket.emit("user_send_message", params);
+  socket.emit("user_send_message", params, (conversations) => {
+    console.log(conversations);
+  });
 
   const paramsRender = {
-    name: username,
+    nameUserSender: username,
     message: params.text,
     date: dayjs().format("DD/MM/YY HH:mm:ss"),
   };
 
-  listMessagesUsersSender(paramsRender, "template_user_send_message", id);
+  listMessagesUsers(paramsRender, "template_user_send_message", Number(idUser));
+
+  const containerChat = document.getElementById(`containerChat`);
+
+  containerChat.scrollTo(0, containerChat.scrollHeight);
 
   text.value = "";
 };
 
-//Evento de escuta de quando recebe mensagem e renderiza a mensagem no container html do usuario ativo
-socket.on("user_receiver_message", (message) => {
-  const { text, username_message, idUserSender } = message;
+socket.emit("list_all_users", { email }, (listUsers) => {
+  users = listUsers;
+});
+
+//Emitindo evento de quando entramos no chat para os usuarios
+socket.emit(
+  "access_chat",
+  { username, email },
+  (lastConversations, messagesStatusPending) => {
+    if (lastConversations.length > 0) {
+      document.getElementById("notFoundMessages").style.display = "none";
+
+      lastConversations.forEach((user) => {
+        var dupicated =
+          allConversations.findIndex((item) => {
+            return user.id == item.id;
+          }) > -1;
+
+        if (!dupicated) {
+          allConversations.push(user);
+        }
+      });
+
+      let templateListConversations = document.getElementById(
+        "template_conversations"
+      ).innerHTML;
+
+      allConversations.forEach((user) => {
+        const renderedConversations = Mustache.render(
+          templateListConversations,
+          {
+            idUser: user.id,
+            nameUser: user.name,
+          }
+        );
+
+        document.getElementById("list_conversations").innerHTML +=
+          renderedConversations;
+      });
+    }
+    if (messagesStatusPending.length > 0) {
+      messagesStatusPending.map((messageUser) => {
+        Toastify({
+          text: `${messageUser.user_sender.name} enviou uma mensagem, enquanto estava offline!`,
+          backgroundColor: "#5f27cd",
+          duration: 2000,
+          onClick: () => talk(messageUser.user_sender.id),
+        }).showToast();
+      });
+    }
+  }
+);
+
+socket.on("user_receiver_message", (params) => {
+  const { text, usernameSender, idUser } = params;
 
   Toastify({
-    text: `${username_message} mandou uma mensagem pra você!`,
+    text: `${usernameSender} mandou uma mensagem pra você!`,
     backgroundColor: "linear-gradient(to right, #6d23b6, #47126b)",
     duration: 2000,
+    onClick: () => talk(idUser),
   }).showToast();
-
-  const paramsRender = {
-    name: username_message,
-    message: text,
-    date: dayjs().format("DD/MM/YY HH:mm:ss"),
-  };
-
-  listMessagesUsersSender(
-    paramsRender,
-    "template_user_receiver_message",
-    idUserSender
-  );
 });
 
-//Click para ir até a rota de perfil
-document.getElementById("profile").addEventListener("click", () => {
-  window.location = "/profile";
+document.querySelector(".open_modal").addEventListener("click", openModal);
+
+document.querySelector(".close").addEventListener("click", () => {
+  document.getElementById("modalSection").style.top = "-100%";
 });
 
-//Função de deslogar do sistema
-document.getElementById("logout").addEventListener("click", () => {
-  document.getElementById("chat_loading_chat").style.display = "flex";
-  document.getElementById("chat_container").style.display = "none";
-
-  socket.emit("logout_parcipant", id);
+document.getElementById("logoutButton").addEventListener("click", () => {
+  socket.emit("logout_user", id);
 
   localStorage.clear();
 
-  window.location = "/index";
-});
-
-//Função de pesquisa de participante PRECISA SER REFEITA COM MUSTACHE
-document.getElementById("searchValue").addEventListener("keyup", (event) => {
-  const nameParticipant = event.currentTarget.value;
-
-  const participantSearch = participants.filter((participant) =>
-    participant.name.includes(nameParticipant)
-  );
-
-  /* const listDivPeople = document.querySelector(".listPeoples");
-  listDivPeople.innerHTML = "";
-
-  if (participantSearch.length > 0) {
-    listPeoples(participantSearch);
-  }
-
-  if (nameParticipant === "") {
-    listPeoples(participants);
-  } */
-});
-
-window.addEventListener("load", () => {
-  if (!token || !username) {
-    window.location = "/index";
-  }
+  window.location = "/";
 });

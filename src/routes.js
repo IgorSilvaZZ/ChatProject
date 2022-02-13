@@ -21,13 +21,13 @@ const {
   ListMessagesController,
 } = require("./modules/messages/controllers/ListMessagesController");
 
-router.post("/createUser", new CreateUserController().handle);
-router.post("/authenticate", new AuthenticateUserController().handle);
-router.get("/user/:id", ensureAuthenticated, new GetUserController().handle);
+router.post("/createUser", new CreateUserController().execute);
+router.post("/authenticate", new AuthenticateUserController().execute);
+router.get("/user/:id", ensureAuthenticated, new GetUserController().execute);
 
 router.get("/messages", new ListMessagesController().handle);
 
-router.get("/index", (req, res) => {
+router.get("/", (req, res) => {
   return res.render("html/index.html");
 });
 

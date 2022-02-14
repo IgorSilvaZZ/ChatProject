@@ -1,8 +1,10 @@
 const { Router } = require("express");
+const multer = require('multer');
 
 const router = Router();
 
 const { ensureAuthenticated } = require("./middlewares/AuthMiddleware");
+const { upload } = require('./config/upload');
 
 //Implementaçoes Nova
 const {
@@ -20,6 +22,8 @@ const {
 const {
   ListMessagesController,
 } = require("./modules/messages/controllers/ListMessagesController");
+
+const avatarUpload = multer(upload('./tmp/avatar'))
 
 router.post("/createUser", new CreateUserController().execute);
 router.post("/authenticate", new AuthenticateUserController().execute);
@@ -41,6 +45,10 @@ router.get("/register", (req, res) => {
 
 router.get("/profile", (req, res) => {
   return res.render("html/profile.html");
+});
+
+router.patch('/avatar', ensureAuthenticated, avatarUpload.single('avatar'), (req, res) => {
+  return res.status(200).send();
 });
 
 module.exports = { router };

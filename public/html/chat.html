@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -30,7 +30,7 @@
         <div class="listUsers">
           <div class="header">
             <div class="headerImage">
-              <img src="../images/user3.png" />
+              <img src="../images/user3.png" id="imageUser" />
             </div>
             <div class="headerOptions">
               <img
@@ -139,16 +139,28 @@
     <div class="bg-modal" id="modalSection">
       <div class="modal">
         <div class="modal-header">
-          <h1>Selecione o Contato</h1>
+          <h1>Selecionar Contato</h1>
           <span class="close">&times;</span>
         </div>
         <div class="modal-body" id="list_users">
           <script id="template_users" type="x-tmpl-mustache">
-              <div class="people" id="user{{idUser}}" onclick="talk('{{idUser}}')">
-                <img class="people_icon" src="../images/user3.png">
-                <p class="people_text">{{nameUser}}</p>
-            </div>>
+            <div class="people" id="user{{idUser}}" onclick="talk('{{idUser}}')">
+              <img class="people_icon" src="../images/user3.png">
+              <p class="people_text">{{nameUser}}</p>
+            </div>
           </script>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-modal" id="modalUpdateSection">
+      <div class="modal">
+        <div class="modal-header">
+          <h1>Atualizar Avatar</h1>
+          <span class="close">&times;</span>
+        </div>
+        <div class="modal-body" id="list_users">
+          <input type="file" class="update_file" />
         </div>
       </div>
     </div>

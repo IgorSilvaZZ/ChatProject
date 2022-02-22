@@ -33,7 +33,6 @@ const listMessagesUsers = (params, templateName, idUser) => {
 
 const openModal = () => {
   document.getElementById("modalSection").style.top = "0";
-
   let template = document.getElementById("template_users").innerHTML;
 
   users.forEach((user) => {
@@ -44,6 +43,12 @@ const openModal = () => {
 
     document.getElementById("list_users").innerHTML += renderedUsers;
   });
+};
+
+const openModalUpdateAvatar = () => {
+  document.getElementById("modalUpdateSection").style.top = "0";
+
+  document.querySelector(".modal").style.height = "30%";
 };
 
 const talk = (idUser) => {
@@ -198,11 +203,27 @@ socket.on("user_receiver_message", (params) => {
     duration: 2000,
     onClick: () => talk(idUser),
   }).showToast();
+
+  const paramsRender = {
+    name: usernameSender,
+    message: text,
+    date: dayjs().format("DD/MM/YY HH:mm:ss"),
+  };
+
+  listMessagesUsers(
+    paramsRender,
+    "template_user_receiver_message",
+    Number(idUser)
+  );
 });
 
 document.querySelector(".open_modal").addEventListener("click", openModal);
+document
+  .getElementById("imageUser")
+  .addEventListener("click", openModalUpdateAvatar);
 
 document.querySelector(".close").addEventListener("click", () => {
+  document.getElementById("template_users").innerHTML = "";
   document.getElementById("modalSection").style.top = "-100%";
 });
 

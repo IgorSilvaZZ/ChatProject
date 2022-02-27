@@ -14,6 +14,7 @@ const handleLogin = async () => {
       name: data.user.name,
       email: data.user.email,
       token: data.token,
+      avatar: data.user.avatar,
     };
 
     localStorage.setItem("user", JSON.stringify(user));

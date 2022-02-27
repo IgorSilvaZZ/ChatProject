@@ -4,6 +4,7 @@ const username = userLoged.name;
 const email = userLoged.email;
 const id = userLoged.id;
 const token = userLoged.token;
+const avatar = userLoged.avatar;
 
 let socket = null;
 let users = [];
@@ -13,7 +14,9 @@ socket = io();
 
 let socket_user = null;
 
-const listMessagesUsers = (params, templateName, idUser) => {
+/* ======= FUNÇÕES USADA NO RESTANTE DO CODIGO ======== */
+
+function listMessagesUsers(params, templateName, idUser) {
   const containerChat = document.getElementById(`containerChat`);
 
   const chatContainer = document.getElementById(`chatContainer${idUser}`);
@@ -29,9 +32,9 @@ const listMessagesUsers = (params, templateName, idUser) => {
   chatContainer.innerHTML += rendered;
 
   containerChat.scrollTo(0, containerChat.scrollHeight);
-};
+}
 
-const openModal = () => {
+function openModal() {
   document.getElementById("modalSection").style.top = "0";
   let template = document.getElementById("template_users").innerHTML;
 
@@ -43,15 +46,9 @@ const openModal = () => {
 
     document.getElementById("list_users").innerHTML += renderedUsers;
   });
-};
+}
 
-const openModalUpdateAvatar = () => {
-  document.getElementById("modalUpdateSection").style.top = "0";
-
-  document.querySelector(".modal").style.height = "30%";
-};
-
-const talk = (idUser) => {
+function talk(idUser) {
   document.getElementById("modalSection").style.top = "-100%";
 
   const divContainerChat = document.getElementById("chat_container");
@@ -108,9 +105,9 @@ const talk = (idUser) => {
       });
     }
   });
-};
+}
 
-const sendMessage = (paramsUser) => {
+function sendMessage(paramsUser) {
   const { emailUser, idUser } = JSON.parse(paramsUser);
 
   const text = document.getElementById(`messageUser${emailUser}`);
@@ -139,7 +136,28 @@ const sendMessage = (paramsUser) => {
   containerChat.scrollTo(0, containerChat.scrollHeight);
 
   text.value = "";
-};
+}
+
+async function updateAvatarUser(file) {
+  const baseURL = "http://localhost:3333";
+
+  const bodyFormData = new FormData();
+
+  bodyFormData.append("avatar", file);
+
+  const { data } = await axios.patch(`${baseURL}/avatar`, bodyFormData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  localStorage.setItem("user", JSON.stringify(data));
+}
+
+/* =========================== */
+
+/* ======= EMISSAÕ/ESCUTA DE EVENTOS ======== */
 
 socket.emit("list_all_users", { email }, (listUsers) => {
   users = listUsers;
@@ -217,15 +235,32 @@ socket.on("user_receiver_message", (params) => {
   );
 });
 
+/* =========================== */
+
+/* ======= ACESSO AO DOM ======== */
+
 document.querySelector(".open_modal").addEventListener("click", openModal);
-document
-  .getElementById("imageUser")
-  .addEventListener("click", openModalUpdateAvatar);
 
 document.querySelector(".close").addEventListener("click", () => {
   document.getElementById("template_users").innerHTML = "";
   document.getElementById("modalSection").style.top = "-100%";
 });
+
+document
+  .getElementById("file-input")
+  .addEventListener("change", ({ target }) => {
+    const file = target.files[target.files.length - 1];
+
+    updateAvatarUser(file);
+  });
+
+let image = document.getElementById("imageUser");
+
+image.src = avatar
+  ? `http://localhost:3333/images/${avatar}`
+  : "../images/user3.png";
+
+image.style.borderRadius = avatar ? "50%" : "0px";
 
 document.getElementById("logoutButton").addEventListener("click", () => {
   socket.emit("logout_user", id);
@@ -234,3 +269,5 @@ document.getElementById("logoutButton").addEventListener("click", () => {
 
   window.location = "/";
 });
+
+/* =========================== */

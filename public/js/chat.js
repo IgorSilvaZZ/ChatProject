@@ -9,6 +9,7 @@ const avatar = userLoged.avatar;
 let socket = null;
 let users = [];
 let allConversations = [];
+const baseURL = "http://localhost:3333";
 
 socket = io();
 
@@ -42,6 +43,9 @@ function openModal() {
     const renderedUsers = Mustache.render(template, {
       idUser: user.id,
       nameUser: user.name,
+      avatarUser: user.avatar
+        ? `${baseURL}/images/${user.avatar}`
+        : "../images/user3.png",
     });
 
     document.getElementById("list_users").innerHTML += renderedUsers;
@@ -139,8 +143,6 @@ function sendMessage(paramsUser) {
 }
 
 async function updateAvatarUser(file) {
-  const baseURL = "http://localhost:3333";
-
   const bodyFormData = new FormData();
 
   bodyFormData.append("avatar", file);
@@ -153,6 +155,8 @@ async function updateAvatarUser(file) {
   });
 
   localStorage.setItem("user", JSON.stringify(data));
+
+  window.location.reload();
 }
 
 /* =========================== */
@@ -192,11 +196,18 @@ socket.emit(
           {
             idUser: user.id,
             nameUser: user.name,
+            avatarUser: user.avatar
+              ? `${baseURL}/images/${user.avatar}`
+              : "../images/user3.png",
           }
         );
 
         document.getElementById("list_conversations").innerHTML +=
           renderedConversations;
+
+        document.querySelector(".people_icon").style.borderRadius = user.avatar
+          ? "50%"
+          : "0px";
       });
     }
     if (messagesStatusPending.length > 0) {
@@ -256,9 +267,7 @@ document
 
 let image = document.getElementById("imageUser");
 
-image.src = avatar
-  ? `http://localhost:3333/images/${avatar}`
-  : "../images/user3.png";
+image.src = avatar ? `${baseURL}/images/${avatar}` : "../images/user3.png";
 
 image.style.borderRadius = avatar ? "50%" : "0px";
 

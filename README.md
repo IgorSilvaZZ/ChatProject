@@ -59,7 +59,7 @@ $ npm run dev
 
 <h1>📜Sobre</h1>
 <div>
-    Estudante de Analise e Desenvolvimento de Sistemas (3° Semestre), e estagiário na <a href="https://investflex.com.br/">InvestFlex</a>. <br> Estudando sempre <a href="https://nodejs.org/en/">NodeJS</a>, <a href="https://pt-br.reactjs.org/">ReactJS</a>, e treinando para ser um Back-End Developer e quem sabe um Fullstack <br>
+    Estudante de Analise e Desenvolvimento de Sistemas (4° Semestre), e estagiário na <a href="https://www.orama.com.br/">Orama Investimentos</a>. <br> Estudando sempre <a href="https://nodejs.org/en/">NodeJS</a>, <a href="https://pt-br.reactjs.org/">ReactJS</a>, e treinando para ser um Back-End Developer e quem sabe um Fullstack <br>
     Se caso gostarem dê uma estrela no projeto!✨ <br>
     Se caso precisarem entrar em contato comigo abaixo estão minhas redes socias 
     <p align="left">

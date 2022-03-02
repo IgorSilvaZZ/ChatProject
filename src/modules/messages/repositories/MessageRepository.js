@@ -7,7 +7,7 @@ class MessageRepository extends Message {
     const messages = await this.sequelize.query(
       `
         select 
-        tbUsers.id, tbUsers.name, tbUsers.email, tbMessages.createdAt
+        tbUsers.id, tbUsers.name, tbUsers.email, tbUsers.avatar, tbMessages.createdAt
         from tbMessages
         inner join tbUsers
         on tbMessages.fkUserSender = tbUsers.id
@@ -15,7 +15,7 @@ class MessageRepository extends Message {
         group by tbUsers.id
         union
         select 
-        tbUsers.id, tbUsers.name, tbUsers.email, tbMessages.createdAt
+        tbUsers.id, tbUsers.name, tbUsers.email, tbUsers.avatar, tbMessages.createdAt
         from tbMessages
         inner join tbUsers
         on tbMessages.fkUserReceiver = tbUsers.id

@@ -1,12 +1,13 @@
 class UsersSerialize {
   handle(users) {
     const usersSerializes = users.map((user) => {
-      const { id, name, email } = user;
+      const { id, name, email, avatar } = user;
 
       return {
         id,
         name,
         email,
+        avatar,
       };
     });
 

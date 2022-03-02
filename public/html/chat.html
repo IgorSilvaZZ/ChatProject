@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -30,7 +30,10 @@
         <div class="listUsers">
           <div class="header">
             <div class="headerImage">
-              <img src="../images/user3.png" />
+              <label for="file-input">
+                <img id="imageUser" title="Alterar Imagem" />
+              </label>
+              <input type="file" class="update_file" id="file-input" />
             </div>
             <div class="headerOptions">
               <img
@@ -66,9 +69,13 @@
                 <img src="../images/new-message.png" />
                 <p>Clique em nova conversa para inicar uma nova conversa.</p>
               </div>
+              <!--  <div class="people">
+                <img class="people_icon" src="../images/user3.png" />
+                <p class="people_text">Teste</p>
+              </div> -->
               <script id="template_conversations" type="x-tmpl-mustache">
                   <div class="people" id="user{{idUser}}" onclick="talk('{{idUser}}')">
-                    <img class="people_icon" src="../images/user3.png">
+                    <img class="people_icon" src="{{avatarUser}}">
                     <p class="people_text">{{nameUser}}</p>
                 </div>>
               </script>
@@ -137,17 +144,17 @@
     </div>
 
     <div class="bg-modal" id="modalSection">
-      <div class="modal">
+      <div class="modal" id="modal-users">
         <div class="modal-header">
-          <h1>Selecione o Contato</h1>
+          <h1>Selecionar Contato</h1>
           <span class="close">&times;</span>
         </div>
         <div class="modal-body" id="list_users">
           <script id="template_users" type="x-tmpl-mustache">
-              <div class="people" id="user{{idUser}}" onclick="talk('{{idUser}}')">
-                <img class="people_icon" src="../images/user3.png">
-                <p class="people_text">{{nameUser}}</p>
-            </div>>
+            <div class="people" id="user{{idUser}}" onclick="talk('{{idUser}}')">
+              <img class="people_icon" src="{{avatarUser}}">
+              <p class="people_text">{{nameUser}}</p>
+            </div>
           </script>
         </div>
       </div>
@@ -159,6 +166,7 @@
     ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.4/dayjs.min.js"></script>
     <script src="https://unpkg.com/mustache@latest"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/chat.js"></script>
   </body>

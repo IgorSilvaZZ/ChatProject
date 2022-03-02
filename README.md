@@ -33,6 +33,7 @@ O projeto consiste em um chat em tempo real. Para diversas pessoas que tiverem o
 - [Sequelize](https://sequelize.org/)
 - [Sqlite](https://www.sqlite.org/index.html)
 - [BcryptJS](https://github.com/dcodeIO/bcrypt.js#readme)
+- [Multer](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md)
 
 <br>
 

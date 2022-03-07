@@ -154,7 +154,9 @@ async function updateAvatarUser(file) {
     },
   });
 
-  localStorage.setItem("user", JSON.stringify(data));
+  const userUpdated = {...data, token};
+
+  localStorage.setItem("user", JSON.stringify(userUpdated));
 
   window.location.reload();
 }

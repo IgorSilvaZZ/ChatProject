@@ -13,7 +13,13 @@ const {
 } = require("../../messages/services/ListAllConversationMessagesService");
 
 module.exports = async (params, callback) => {
-  const { text, emailUserSender, emailUserReceiver, usernameSender } = params;
+  const {
+    text,
+    emailUserSender,
+    emailUserReceiver,
+    usernameSender,
+    updateListConversations,
+  } = params;
 
   // Da pessoa que está mandando mensagem não precisa fazer a validação do connection pois ele já está conectado na aplicação
   const userSenderConnection =
@@ -56,8 +62,10 @@ module.exports = async (params, callback) => {
       });
   }
 
-  const allMessagesConversations =
-    await new ListAllConversationMessagesService().handle(fkUserSender);
+  if (updateListConversations) {
+    const allMessagesConversations =
+      await new ListAllConversationMessagesService().handle(fkUserSender);
 
-  callback(allMessagesConversations);
+    callback(allMessagesConversations);
+  }
 };

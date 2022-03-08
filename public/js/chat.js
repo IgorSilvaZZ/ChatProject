@@ -52,6 +52,46 @@ function openModal() {
   });
 }
 
+function updateListAllConversations(lastConversations) {
+  if (lastConversations.length > 0) {
+    if (document.getElementById("notFoundMessages")) {
+      document.getElementById("notFoundMessages").style.display = "none";
+    }
+
+    lastConversations.forEach((user) => {
+      var dupicated =
+        allConversations.findIndex((item) => {
+          return user.id == item.id;
+        }) > -1;
+
+      if (!dupicated) {
+        allConversations.push(user);
+      }
+    });
+
+    let templateListConversations = document.getElementById(
+      "template_conversations"
+    ).innerHTML;
+
+    allConversations.forEach((user) => {
+      const renderedConversations = Mustache.render(templateListConversations, {
+        idUser: user.id,
+        nameUser: user.name,
+        avatarUser: user.avatar
+          ? `${baseURL}/images/${user.avatar}`
+          : "../images/user3.png",
+      });
+
+      document.getElementById("list_conversations").innerHTML +=
+        renderedConversations;
+
+      document.querySelector(".people_icon").style.borderRadius = user.avatar
+        ? "50%"
+        : "0px";
+    });
+  }
+}
+
 function talk(idUser) {
   document.getElementById("modalSection").style.top = "-100%";
 
@@ -93,22 +133,35 @@ function talk(idUser) {
 
   document.querySelector(".footerChat").innerHTML += rendereFooter;
 
+  const userExistsInConversation = allConversations.filter(
+    (conversation) => conversation.email === user.email
+  );
+
   const paramsListMessages = {
     fkUser: id,
     fkUserParticipant: user.id,
+    updateListConversations: userExistsInConversation.length > 0 ? false : true,
   };
 
-  socket.emit("list_messages", paramsListMessages, (messages) => {
-    if (messages.length > 0) {
-      messages.map((item) => {
-        if (item.idUserSender === id) {
-          listMessagesUsers(item, "template_user_send_message", idUser);
-        } else {
-          listMessagesUsers(item, "template_user_receiver_message", idUser);
-        }
-      });
+  socket.emit(
+    "list_messages",
+    paramsListMessages,
+    (messages, conversations) => {
+      if (messages.length > 0) {
+        messages.map((item) => {
+          if (item.idUserSender === id) {
+            listMessagesUsers(item, "template_user_send_message", idUser);
+          } else {
+            listMessagesUsers(item, "template_user_receiver_message", idUser);
+          }
+        });
+      }
+
+      if (conversations) {
+        updateListAllConversations(conversations);
+      }
     }
-  });
+  );
 }
 
 function sendMessage(paramsUser) {
@@ -116,15 +169,22 @@ function sendMessage(paramsUser) {
 
   const text = document.getElementById(`messageUser${emailUser}`);
 
+  const userExistsInConversation = allConversations.filter(
+    (conversation) => conversation.email === emailUser
+  );
+
   const params = {
     text: text.value,
     emailUserSender: email,
     emailUserReceiver: emailUser,
     usernameSender: username,
+    updateListConversations: userExistsInConversation.length > 0 ? false : true,
   };
 
   socket.emit("user_send_message", params, (conversations) => {
-    console.log(conversations);
+    if (conversations) {
+      updateListAllConversations(conversations);
+    }
   });
 
   const paramsRender = {
@@ -170,7 +230,7 @@ socket.emit("list_all_users", { email }, (listUsers) => {
 });
 
 socket.on("update_all_users", (listUsers) => {
-  const filteredUsers = listUsers.filter(user => user.email !== email);
+  const filteredUsers = listUsers.filter((user) => user.email !== email);
   users = filteredUsers;
 });
 
@@ -179,44 +239,7 @@ socket.emit(
   "access_chat",
   { username, email },
   (lastConversations, messagesStatusPending) => {
-    if (lastConversations.length > 0) {
-      document.getElementById("notFoundMessages").style.display = "none";
-
-      lastConversations.forEach((user) => {
-        var dupicated =
-          allConversations.findIndex((item) => {
-            return user.id == item.id;
-          }) > -1;
-
-        if (!dupicated) {
-          allConversations.push(user);
-        }
-      });
-
-      let templateListConversations = document.getElementById(
-        "template_conversations"
-      ).innerHTML;
-
-      allConversations.forEach((user) => {
-        const renderedConversations = Mustache.render(
-          templateListConversations,
-          {
-            idUser: user.id,
-            nameUser: user.name,
-            avatarUser: user.avatar
-              ? `${baseURL}/images/${user.avatar}`
-              : "../images/user3.png",
-          }
-        );
-
-        document.getElementById("list_conversations").innerHTML +=
-          renderedConversations;
-
-        document.querySelector(".people_icon").style.borderRadius = user.avatar
-          ? "50%"
-          : "0px";
-      });
-    }
+    updateListAllConversations(lastConversations);
     if (messagesStatusPending.length > 0) {
       messagesStatusPending.map((messageUser) => {
         Toastify({

@@ -40,6 +40,16 @@
   opacity: 0.5;
 }
 
+#list_peoples {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-wrap: wrap;
+
+  width: 100%;
+  height: 100%;
+}
+
 .people {
   display: flex;
   align-items: center;

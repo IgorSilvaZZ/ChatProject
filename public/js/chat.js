@@ -58,6 +58,8 @@ function updateListAllConversations(lastConversations) {
       document.getElementById("notFoundMessages").style.display = "none";
     }
 
+    document.getElementById("list_peoples").innerHTML = "";
+
     lastConversations.forEach((user) => {
       var dupicated =
         allConversations.findIndex((item) => {
@@ -82,7 +84,7 @@ function updateListAllConversations(lastConversations) {
           : "../images/user3.png",
       });
 
-      document.getElementById("list_conversations").innerHTML +=
+      document.getElementById("list_peoples").innerHTML +=
         renderedConversations;
 
       document.querySelector(".people_icon").style.borderRadius = user.avatar

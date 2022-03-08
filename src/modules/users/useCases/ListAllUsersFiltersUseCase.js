@@ -2,10 +2,14 @@ const { FindAllUsersService } = require("../services/FindAllUsersService");
 
 const { UsersSerialize } = require("../../../serializes/UsersSerialize");
 
-module.exports = async (params) => {
+module.exports = async (params, callback) => {
+  const { email } = params;
+
   const users = await new FindAllUsersService().handle();
 
   const allUsers = new UsersSerialize().handle(users);
 
-  global.io.emit("update_all_users", allUsers);
+  const allUsersFilters = allUsers.filter((user) => user.email != email);
+
+  callback(allUsersFilters);
 };

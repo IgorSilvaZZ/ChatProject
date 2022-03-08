@@ -154,7 +154,7 @@ async function updateAvatarUser(file) {
     },
   });
 
-  const userUpdated = {...data, token};
+  const userUpdated = { ...data, token };
 
   localStorage.setItem("user", JSON.stringify(userUpdated));
 
@@ -163,10 +163,15 @@ async function updateAvatarUser(file) {
 
 /* =========================== */
 
-/* ======= EMISSAÕ/ESCUTA DE EVENTOS ======== */
+/* ======= EMISSÃO/ESCUTA DE EVENTOS ======== */
 
 socket.emit("list_all_users", { email }, (listUsers) => {
   users = listUsers;
+});
+
+socket.on("update_all_users", (listUsers) => {
+  const filteredUsers = listUsers.filter(user => user.email !== email);
+  users = filteredUsers;
 });
 
 //Emitindo evento de quando entramos no chat para os usuarios

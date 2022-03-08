@@ -1,6 +1,6 @@
 const baseURL = "http://localhost:3333";
 
-const handleLogin = async () => {
+async function handleLogin() {
   const dataUser = {
     email: document.getElementById("email").value,
     password: document.getElementById("password").value,
@@ -44,7 +44,7 @@ const handleLogin = async () => {
       }).showToast();
     }
   }
-};
+}
 
 document.getElementById("btnSubmit").addEventListener("click", () => {
   handleLogin();

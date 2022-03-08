@@ -18,7 +18,9 @@ app.engine("html", require("ejs").renderFile);
 app.set("view engine", "html");
 
 const http = createServer(app);
-const io = new Server(http);
+const io = new Server(http, {
+  cors: "*",
+});
 
 io.on("connection", (socket) => {
   socket.on("disconnect", () => {});

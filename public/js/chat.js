@@ -223,18 +223,23 @@ async function updateAvatarUser(file) {
   window.location.reload();
 }
 
+const loadFilteredListUsers = (listUsers) => {
+  const filteredUsers = listUsers.filter((user) => user.email !== email);
+  return filteredUsers;
+};
+
 /* =========================== */
 
 /* ======= EMISSÃO/ESCUTA DE EVENTOS ======== */
 
-socket.emit("list_all_users", { email }, (listUsers) => {
-  users = listUsers;
+socket.emit("list_all_users", null, (listUsers) => {
+  users = loadFilteredListUsers(listUsers);
 });
 
-socket.on("update_all_users", (listUsers) => {
+/* socket.on("update_all_users", (listUsers) => {
   const filteredUsers = listUsers.filter((user) => user.email !== email);
   users = filteredUsers;
-});
+}); */
 
 //Emitindo evento de quando entramos no chat para os usuarios
 socket.emit(

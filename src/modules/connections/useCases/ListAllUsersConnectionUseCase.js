@@ -22,5 +22,9 @@ module.exports = async (params, callback) => {
 
   const allConnectionsUsers = new ConnectionsSerialize().handle(connections);
 
-  callback(allConnectionsUsers);
+  if (params) {
+    global.io.emit("update_all_users", allConnectionsUsers);
+  } else {
+    callback(allConnectionsUsers);
+  }
 };

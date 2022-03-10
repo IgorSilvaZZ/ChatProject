@@ -20,7 +20,12 @@ async function handleSubmit() {
       duration: 2000,
     }).showToast();
 
-    socket.emit("update_user", data);
+    const params = {
+      ...data,
+      new_user: true,
+    };
+
+    socket.emit("update_user", params);
 
     setTimeout(() => {
       window.location = "/";

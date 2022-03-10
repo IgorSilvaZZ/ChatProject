@@ -236,10 +236,9 @@ socket.emit("list_all_users", null, (listUsers) => {
   users = loadFilteredListUsers(listUsers);
 });
 
-/* socket.on("update_all_users", (listUsers) => {
-  const filteredUsers = listUsers.filter((user) => user.email !== email);
-  users = filteredUsers;
-}); */
+socket.on("update_all_users", (listUsers) => {
+  users = loadFilteredListUsers(listUsers);
+});
 
 //Emitindo evento de quando entramos no chat para os usuarios
 socket.emit(

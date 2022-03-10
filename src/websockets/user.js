@@ -20,6 +20,6 @@ module.exports = () => {
 
     socket.on("list_messages", listAllMessagesUseCase);
 
-    // socket.on("update_user", listAllUsersUseCase);
+    socket.on("update_user", listAllUsersConnectionUseCase);
   });
 };

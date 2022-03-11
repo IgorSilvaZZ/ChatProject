@@ -82,6 +82,7 @@ function updateListAllConversations(lastConversations) {
         avatarUser: user.avatar
           ? `${baseURL}/images/${user.avatar}`
           : "../images/user3.png",
+        conectedUser: user.socket_id !== null ? "#27ae60" : "#95a5a6",
       });
 
       document.getElementById("list_peoples").innerHTML +=
@@ -90,6 +91,9 @@ function updateListAllConversations(lastConversations) {
       document.querySelector(".people_icon").style.borderRadius = user.avatar
         ? "50%"
         : "0px";
+
+      /* document.querySelector(`.status_people`).style.backgroundColor =
+        user.socket_id !== null ? "#27ae60" : "#95a5a6"; */
     });
   }
 }
@@ -223,17 +227,21 @@ async function updateAvatarUser(file) {
   window.location.reload();
 }
 
+const loadFilteredListUsers = (listUsers) => {
+  const filteredUsers = listUsers.filter((user) => user.email !== email);
+  return filteredUsers;
+};
+
 /* =========================== */
 
 /* ======= EMISSÃO/ESCUTA DE EVENTOS ======== */
 
-socket.emit("list_all_users", { email }, (listUsers) => {
-  users = listUsers;
+socket.emit("list_all_users", null, (listUsers) => {
+  users = loadFilteredListUsers(listUsers);
 });
 
 socket.on("update_all_users", (listUsers) => {
-  const filteredUsers = listUsers.filter((user) => user.email !== email);
-  users = filteredUsers;
+  users = loadFilteredListUsers(listUsers);
 });
 
 //Emitindo evento de quando entramos no chat para os usuarios

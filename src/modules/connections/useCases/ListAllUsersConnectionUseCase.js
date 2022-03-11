@@ -11,7 +11,7 @@ const {
 } = require("../../../serializes/ConnectionsSerialize");
 
 module.exports = async (params, callback) => {
-  if (params) {
+  if (params && params.new_user) {
     await new CreateConnectionService().handle({
       user_id: params.id,
       socket_id: null,
@@ -22,7 +22,7 @@ module.exports = async (params, callback) => {
 
   const allConnectionsUsers = new ConnectionsSerialize().handle(connections);
 
-  if (params) {
+  if (params && params.new_user) {
     global.io.emit("update_all_users", allConnectionsUsers);
   } else {
     callback(allConnectionsUsers);

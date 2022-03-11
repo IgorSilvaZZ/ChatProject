@@ -70,6 +70,8 @@
   padding: 4px 9px;
 }
 .people_text {
+  width: 75%;
+
   font-size: 17px;
   font-weight: 300;
 
@@ -77,7 +79,13 @@
 
   padding: 16px 10px;
 
-  text-align: center;
+  text-align: left;
+}
+.status_people {
+  height: 10px;
+  width: 10px;
+
+  border-radius: 50%;
 }
 .chat {
   display: flex;

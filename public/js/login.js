@@ -1,5 +1,8 @@
 const baseURL = "http://localhost:3333";
 
+let socket = null;
+socket = io();
+
 async function handleLogin() {
   const dataUser = {
     email: document.getElementById("email").value,
@@ -46,6 +49,4 @@ async function handleLogin() {
   }
 }
 
-document.getElementById("btnSubmit").addEventListener("click", () => {
-  handleLogin();
-});
+document.getElementById("btnSubmit").addEventListener("click", handleLogin);

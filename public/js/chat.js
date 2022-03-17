@@ -244,12 +244,19 @@ socket.on("update_all_users", (listUsers) => {
   users = loadFilteredListUsers(listUsers);
 });
 
+socket.on("updated_users_status", () => {
+  socket.emit("update_conversations", { id }, (listUpdatedConversations) => {
+    updateListAllConversations(listUpdatedConversations);
+  });
+});
+
 //Emitindo evento de quando entramos no chat para os usuarios
 socket.emit(
   "access_chat",
   { username, email },
   (lastConversations, messagesStatusPending) => {
     updateListAllConversations(lastConversations);
+    socket.emit("new_user_logged", null);
     if (messagesStatusPending.length > 0) {
       messagesStatusPending.map((messageUser) => {
         Toastify({

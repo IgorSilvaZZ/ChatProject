@@ -3,7 +3,6 @@ const listAllMessagesUseCase = require("../modules/messages/useCases/ListAllMess
 const sendMessageUseCase = require("../modules/users/useCases/SendMessageUseCase");
 const logoutUserUseCase = require("../modules/users/useCases/LogoutUserUseCase");
 const listAllUsersConnectionUseCase = require("../modules/connections/useCases/ListAllUsersConnectionUseCase");
-const updateConversationsUseCase = require("../modules/messages/useCases/UpdateConversationsUseCase");
 
 module.exports = () => {
   global.io.on("connect", (socket) => {
@@ -19,12 +18,6 @@ module.exports = () => {
 
     socket.on("list_messages", listAllMessagesUseCase);
 
-    socket.on("update_user", listAllUsersConnectionUseCase);
-
-    socket.on("new_user_logged", (params, callback) => {
-      global.io.emit("updated_users_status", { update_users_status: true });
-    });
-
-    socket.on("update_conversations", updateConversationsUseCase);
+    // socket.on("update_user", listAllUsersConnectionUseCase);
   });
 };

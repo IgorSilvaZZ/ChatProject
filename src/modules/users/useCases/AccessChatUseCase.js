@@ -13,12 +13,12 @@ const {
 } = require("../../connections/services/UpdateUserConnectionService");
 
 const {
-  ListAllConversationMessagesService,
-} = require("../../messages/services/ListAllConversationMessagesService");
-
-const {
   ListStatusMessagesService,
 } = require("../../messages/services/ListStatusMessagesService");
+
+const {
+  ListAllConversationsUserService,
+} = require("../services/ListAllConversationsUserService");
 
 module.exports = async (socket, params, callback) => {
   const { email } = params;
@@ -49,6 +49,9 @@ module.exports = async (socket, params, callback) => {
       fkUserReceiver: user.id,
     });
 
-    callback(messagesStatusPending);
+    const lastConversations =
+      await new ListAllConversationsUserService().handle(user.id);
+
+    callback(messagesStatusPending, lastConversations);
   }
 };

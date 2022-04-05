@@ -4,6 +4,7 @@ class Conversation extends Model {
   static init(sequelize) {
     super.init(
       {
+        fkUserSender: DataTypes.INTEGER,
         fkUserReceiver: DataTypes.INTEGER,
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE,
@@ -17,6 +18,11 @@ class Conversation extends Model {
   }
 
   static associate(models) {
+    this.belongsTo(models.User, {
+      foreignKey: "fkUserSender",
+      as: "user_sender",
+    });
+
     this.belongsTo(models.User, {
       foreignKey: "fkUserReceiver",
       as: "user_receiver",

@@ -8,7 +8,7 @@ const {
   CreateMessageService,
 } = require("../../messages/services/CreateMessageService");
 
-module.exports = async (params, callback) => {
+module.exports = async (params) => {
   const { text, emailUserSender, emailUserReceiver, usernameSender } = params;
 
   // Da pessoa que está mandando mensagem não precisa fazer a validação do connection pois ele já está conectado na aplicação

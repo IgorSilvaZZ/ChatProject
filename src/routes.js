@@ -20,10 +20,6 @@ const {
 } = require("./modules/users/controllers/GetUserController");
 
 const {
-  ListMessagesController,
-} = require("./modules/messages/controllers/ListMessagesController");
-
-const {
   UpdateAvatarUserController,
 } = require("./modules/users/controllers/UpdateAvatarUserController");
 
@@ -32,8 +28,6 @@ const avatarUpload = multer(upload("./tmp/avatar"));
 router.post("/createUser", new CreateUserController().execute);
 router.post("/authenticate", new AuthenticateUserController().execute);
 router.get("/user/:id", ensureAuthenticated, new GetUserController().execute);
-
-router.get("/messages", new ListMessagesController().handle);
 
 router.get("/", (req, res) => {
   return res.render("html/index.html");

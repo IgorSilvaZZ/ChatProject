@@ -54,47 +54,7 @@ function openModal() {
 
 function updateListAllConversations(lastConversations) {
   if (lastConversations.length > 0) {
-    if (document.getElementById("notFoundMessages")) {
-      document.getElementById("notFoundMessages").style.display = "none";
-    }
-
-    document.getElementById("list_peoples").innerHTML = "";
-
-    lastConversations.forEach((user) => {
-      var dupicated =
-        allConversations.findIndex((item) => {
-          return user.id == item.id;
-        }) > -1;
-
-      if (!dupicated) {
-        allConversations.push(user);
-      }
-    });
-
-    let templateListConversations = document.getElementById(
-      "template_conversations"
-    ).innerHTML;
-
-    allConversations.forEach((user) => {
-      const renderedConversations = Mustache.render(templateListConversations, {
-        idUser: user.id,
-        nameUser: user.name,
-        avatarUser: user.avatar
-          ? `${baseURL}/images/${user.avatar}`
-          : "../images/user3.png",
-        conectedUser: user.socket_id !== null ? "#27ae60" : "#95a5a6",
-      });
-
-      document.getElementById("list_peoples").innerHTML +=
-        renderedConversations;
-
-      document.querySelector(".people_icon").style.borderRadius = user.avatar
-        ? "50%"
-        : "0px";
-
-      /* document.querySelector(`.status_people`).style.backgroundColor =
-        user.socket_id !== null ? "#27ae60" : "#95a5a6"; */
-    });
+    console.log(lastConversations);
   }
 }
 
@@ -149,21 +109,17 @@ function talk(idUser) {
     updateListConversations: userExistsInConversation.length > 0 ? false : true,
   };
 
-  socket.emit(
-    "list_messages",
-    paramsListMessages,
-    (messages, conversations) => {
-      if (messages.length > 0) {
-        messages.map((item) => {
-          if (item.idUserSender === id) {
-            listMessagesUsers(item, "template_user_send_message", idUser);
-          } else {
-            listMessagesUsers(item, "template_user_receiver_message", idUser);
-          }
-        });
-      }
+  socket.emit("list_messages", paramsListMessages, (messages) => {
+    if (messages.length > 0) {
+      messages.map((item) => {
+        if (item.idUserSender === id) {
+          listMessagesUsers(item, "template_user_send_message", idUser);
+        } else {
+          listMessagesUsers(item, "template_user_receiver_message", idUser);
+        }
+      });
     }
-  );
+  });
 }
 
 function sendMessage(paramsUser) {
@@ -228,18 +184,23 @@ socket.emit("list_all_users", null, (listUsers) => {
 });
 
 //Emitindo evento de quando entramos no chat para os usuarios
-socket.emit("access_chat", { username, email }, (messagesStatusPending) => {
-  if (messagesStatusPending.length > 0) {
-    messagesStatusPending.map((messageUser) => {
-      Toastify({
-        text: `${messageUser.user_sender.name} enviou uma mensagem, enquanto estava offline!`,
-        backgroundColor: "#5f27cd",
-        duration: 2000,
-        onClick: () => talk(messageUser.user_sender.id),
-      }).showToast();
-    });
+socket.emit(
+  "access_chat",
+  { username, email },
+  (messagesStatusPending, lastConversations) => {
+    updateListAllConversations(lastConversations);
+    if (messagesStatusPending.length > 0) {
+      messagesStatusPending.map((messageUser) => {
+        Toastify({
+          text: `${messageUser.user_sender.name} enviou uma mensagem, enquanto estava offline!`,
+          backgroundColor: "#5f27cd",
+          duration: 2000,
+          onClick: () => talk(messageUser.user_sender.id),
+        }).showToast();
+      });
+    }
   }
-});
+);
 
 socket.on("user_receiver_message", (params) => {
   const { text, usernameSender, idUser } = params;

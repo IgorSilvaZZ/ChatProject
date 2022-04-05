@@ -9,6 +9,13 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
       },
+      fkUserSender: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: "tbUsers", key: "id" },
+        onUpdate: "SET NULL",
+        onDeleted: "SET NULL",
+      },
       fkUserReceiver: {
         type: Sequelize.INTEGER,
         allowNull: false,

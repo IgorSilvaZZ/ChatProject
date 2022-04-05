@@ -162,10 +162,6 @@ function talk(idUser) {
           }
         });
       }
-
-      if (conversations) {
-        updateListAllConversations(conversations);
-      }
     }
   );
 }
@@ -232,23 +228,18 @@ socket.emit("list_all_users", null, (listUsers) => {
 });
 
 //Emitindo evento de quando entramos no chat para os usuarios
-socket.emit(
-  "access_chat",
-  { username, email },
-  (lastConversations, messagesStatusPending) => {
-    updateListAllConversations(lastConversations);
-    if (messagesStatusPending.length > 0) {
-      messagesStatusPending.map((messageUser) => {
-        Toastify({
-          text: `${messageUser.user_sender.name} enviou uma mensagem, enquanto estava offline!`,
-          backgroundColor: "#5f27cd",
-          duration: 2000,
-          onClick: () => talk(messageUser.user_sender.id),
-        }).showToast();
-      });
-    }
+socket.emit("access_chat", { username, email }, (messagesStatusPending) => {
+  if (messagesStatusPending.length > 0) {
+    messagesStatusPending.map((messageUser) => {
+      Toastify({
+        text: `${messageUser.user_sender.name} enviou uma mensagem, enquanto estava offline!`,
+        backgroundColor: "#5f27cd",
+        duration: 2000,
+        onClick: () => talk(messageUser.user_sender.id),
+      }).showToast();
+    });
   }
-);
+});
 
 socket.on("user_receiver_message", (params) => {
   const { text, usernameSender, idUser } = params;

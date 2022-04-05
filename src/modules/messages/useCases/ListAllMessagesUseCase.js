@@ -11,12 +11,7 @@ const { UpdateMessageService } = require("../services/UpdateMessageService");
 const { MessagesSerialize } = require("../../../serializes/MessagesSerialize");
 
 module.exports = async (params, callback) => {
-  const {
-    fkUser,
-    fkUserParticipant,
-    chat_loading_chat,
-    updateListConversations,
-  } = params;
+  const { fkUser, fkUserParticipant } = params;
 
   const paramsUserSender = {
     fkUserSender: fkUser,
@@ -46,12 +41,5 @@ module.exports = async (params, callback) => {
 
   const messages = new MessagesSerialize().handle(messagesConcated);
 
-  if (updateListConversations) {
-    const allMessagesConversations =
-      await new ListAllConversationMessagesService().handle(fkUser);
-
-    callback(messages, allMessagesConversations);
-  } else {
-    callback(messages);
-  }
+  callback(messages);
 };

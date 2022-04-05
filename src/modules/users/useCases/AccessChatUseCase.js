@@ -49,9 +49,6 @@ module.exports = async (socket, params, callback) => {
       fkUserReceiver: user.id,
     });
 
-    const messagesConversations =
-      await new ListAllConversationMessagesService().handle(user.id);
-
-    callback(messagesConversations, messagesStatusPending);
+    callback(messagesStatusPending);
   }
 };

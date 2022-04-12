@@ -54,7 +54,33 @@ function openModal() {
 
 function updateListAllConversations(lastConversations) {
   if (lastConversations.length > 0) {
-    console.log(lastConversations);
+    if (document.getElementById("notFoundMessages")) {
+      document.getElementById("notFoundMessages").style.display = "none";
+    }
+
+    document.getElementById("list_peoples").innerHTML = "";
+
+    let templateListConversations = document.getElementById(
+      "template_conversations"
+    ).innerHTML;
+
+    lastConversations.forEach((item) => {
+      const renderedConversations = Mustache.render(templateListConversations, {
+        idUser: item.user_receiver.id,
+        nameUser: item.user_receiver.name,
+        avatarUser: item.user_receiver.avatar
+          ? `${baseURL}/images/${item.user_receiver.avatar}`
+          : "../images/user3.png",
+      });
+
+      document.getElementById("list_peoples").innerHTML +=
+        renderedConversations;
+
+      document.querySelector(".people_icon").style.borderRadius = item
+        .user_receiver.avatar
+        ? "50%"
+        : "0px";
+    });
   }
 }
 

@@ -8,7 +8,19 @@ const {
   CreateMessageService,
 } = require("../../messages/services/CreateMessageService");
 
-module.exports = async (params) => {
+const {
+  CreateConversationUserService,
+} = require("../services/CreateConversationUserService");
+
+const {
+  FindConversationUserService,
+} = require("../services/FindConversationUserService");
+
+const {
+  ListAllConversationsUserService,
+} = require("../services/ListAllConversationsUserService");
+
+module.exports = async (params, callback) => {
   const { text, emailUserSender, emailUserReceiver, usernameSender } = params;
 
   // Da pessoa que está mandando mensagem não precisa fazer a validação do connection pois ele já está conectado na aplicação
@@ -26,6 +38,18 @@ module.exports = async (params) => {
 
     const fkUserReceiver = userReceiver.id;
 
+    const conversation = await new FindConversationUserService().handle({
+      fkUserSender,
+      fkUserReceiver,
+    });
+
+    if (!conversation) {
+      await new CreateConversationUserService().handle({
+        fkUserSender,
+        fkUserReceiver,
+      });
+    }
+
     await new CreateMessageService().handle({
       fkUserSender,
       fkUserReceiver,
@@ -35,6 +59,18 @@ module.exports = async (params) => {
   } else {
     // Caso o usuario esteja online
     const fkUserReceiver = userReceiverConnection.user_id;
+
+    const conversation = await new FindConversationUserService().handle({
+      fkUserSender,
+      fkUserReceiver,
+    });
+
+    if (!conversation) {
+      await new CreateConversationUserService().handle({
+        fkUserSender,
+        fkUserReceiver,
+      });
+    }
 
     await new CreateMessageService().handle({
       fkUserSender,
@@ -51,4 +87,8 @@ module.exports = async (params) => {
         idUser: fkUserSender,
       });
   }
+
+  /* const conversations = await new ListAllConversationsUserService().handle(fkUserSender);
+
+  callback(conversations); */
 };

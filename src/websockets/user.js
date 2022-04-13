@@ -17,7 +17,5 @@ module.exports = () => {
     socket.on("user_send_message", sendMessageUseCase);
 
     socket.on("list_messages", listAllMessagesUseCase);
-
-    // socket.on("update_user", listAllUsersConnectionUseCase);
   });
 };

@@ -20,6 +20,24 @@ const {
   ListAllConversationsUserService,
 } = require("../services/ListAllConversationsUserService");
 
+const verifyConversationUsers = async ({ fkUserSender, fkUserReceiver }) => {
+  const conversation = await new FindConversationUserService().handle({
+    fkUserSender,
+    fkUserReceiver,
+  });
+
+  return conversation;
+};
+
+const createConversationUser = async ({ fkUserSender, fkUserReceiver }) => {
+  const conversation = await new CreateConversationUserService().handle({
+    fkUserSender,
+    fkUserReceiver,
+  });
+
+  return conversation;
+};
+
 module.exports = async (params, callback) => {
   const { text, emailUserSender, emailUserReceiver, usernameSender } = params;
 
@@ -38,17 +56,23 @@ module.exports = async (params, callback) => {
 
     const fkUserReceiver = userReceiver.id;
 
-    const conversation = await new FindConversationUserService().handle({
+    // Verificando conversa existente para o usuario logado
+    const conversationUser = await verifyConversationUsers({
       fkUserSender,
       fkUserReceiver,
     });
 
-    if (!conversation) {
-      await new CreateConversationUserService().handle({
+    //Fazer veficação de conversa existente para o usuario não logado, ou seja o outro usuario que estou mandando mensagem
+
+    // Criando conversa que nao existe para o usuario logado
+    if (!conversationUser) {
+      await createConversationUser({
         fkUserSender,
         fkUserReceiver,
       });
     }
+
+    // Criar conversa que não existe para usuario nao logado, ou seja o outro usuario que estou mandandando mensagem
 
     await new CreateMessageService().handle({
       fkUserSender,
@@ -60,17 +84,23 @@ module.exports = async (params, callback) => {
     // Caso o usuario esteja online
     const fkUserReceiver = userReceiverConnection.user_id;
 
-    const conversation = await new FindConversationUserService().handle({
+    // Verificando conversa existente para o usuario logado
+    const conversationUser = await verifyConversationUsers({
       fkUserSender,
       fkUserReceiver,
     });
 
-    if (!conversation) {
-      await new CreateConversationUserService().handle({
+    //Fazer veficação de conversa existente para o usuario não logado, ou seja o outro usuario que estou mandando mensagem
+
+    // Criando conversa que nao existe para o usuario logado
+    if (!conversationUser) {
+      await createConversationUser({
         fkUserSender,
         fkUserReceiver,
       });
     }
+
+    // Criar conversa que não existe para usuario nao logado, ou seja o outro usuario que estou mandandando mensagem
 
     await new CreateMessageService().handle({
       fkUserSender,
@@ -88,7 +118,9 @@ module.exports = async (params, callback) => {
       });
   }
 
-  /* const conversations = await new ListAllConversationsUserService().handle(fkUserSender);
+  const conversations = await new ListAllConversationsUserService().handle(
+    fkUserSender
+  );
 
-  callback(conversations); */
+  callback(conversations);
 };

@@ -3,8 +3,8 @@ const {
 } = require("../services/ListAllMessagesService");
 
 const {
-  ListAllConversationMessagesService,
-} = require("../services/ListAllConversationMessagesService");
+  ListAllConversationsUserService,
+} = require("../../users/services/ListAllConversationsUserService");
 
 const { UpdateMessageService } = require("../services/UpdateMessageService");
 

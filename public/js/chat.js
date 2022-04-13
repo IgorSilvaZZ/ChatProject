@@ -8,7 +8,6 @@ const avatar = userLoged.avatar;
 
 let socket = null;
 let users = [];
-let allConversations = [];
 const baseURL = "http://localhost:3333";
 
 socket = io();
@@ -125,14 +124,9 @@ function talk(idUser) {
 
   document.querySelector(".footerChat").innerHTML += rendereFooter;
 
-  const userExistsInConversation = allConversations.filter(
-    (conversation) => conversation.email === user.email
-  );
-
   const paramsListMessages = {
     fkUser: id,
     fkUserParticipant: user.id,
-    updateListConversations: userExistsInConversation.length > 0 ? false : true,
   };
 
   socket.emit("list_messages", paramsListMessages, (messages) => {
@@ -160,7 +154,9 @@ function sendMessage(paramsUser) {
     usernameSender: username,
   };
 
-  socket.emit("user_send_message", params);
+  socket.emit("user_send_message", params, (lastConversations) => {
+    updateListAllConversations(lastConversations);
+  });
 
   const paramsRender = {
     nameUserSender: username,

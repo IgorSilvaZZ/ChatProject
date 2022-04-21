@@ -63,6 +63,10 @@ module.exports = async (params, callback) => {
     });
 
     //Fazer veficação de conversa existente para o usuario não logado, ou seja o outro usuario que estou mandando mensagem
+    const conversationOtherUser = await verifyConversationUsers({
+      fkUserSender: fkUserReceiver,
+      fkUserReceiver: fkUserSender,
+    });
 
     // Criando conversa que nao existe para o usuario logado
     if (!conversationUser) {
@@ -73,6 +77,12 @@ module.exports = async (params, callback) => {
     }
 
     // Criar conversa que não existe para usuario nao logado, ou seja o outro usuario que estou mandandando mensagem
+    if (!conversationOtherUser) {
+      await createConversationUser({
+        fkUserSender: fkUserReceiver,
+        fkUserReceiver: fkUserSender,
+      });
+    }
 
     await new CreateMessageService().handle({
       fkUserSender,
@@ -91,6 +101,10 @@ module.exports = async (params, callback) => {
     });
 
     //Fazer veficação de conversa existente para o usuario não logado, ou seja o outro usuario que estou mandando mensagem
+    const conversationOtherUser = await verifyConversationUsers({
+      fkUserSender: fkUserReceiver,
+      fkUserReceiver: fkUserSender,
+    });
 
     // Criando conversa que nao existe para o usuario logado
     if (!conversationUser) {
@@ -101,6 +115,12 @@ module.exports = async (params, callback) => {
     }
 
     // Criar conversa que não existe para usuario nao logado, ou seja o outro usuario que estou mandandando mensagem
+    if (!conversationOtherUser) {
+      await createConversationUser({
+        fkUserSender: fkUserReceiver,
+        fkUserReceiver: fkUserSender,
+      });
+    }
 
     await new CreateMessageService().handle({
       fkUserSender,

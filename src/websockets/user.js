@@ -3,6 +3,7 @@ const listAllMessagesUseCase = require("../modules/messages/useCases/ListAllMess
 const sendMessageUseCase = require("../modules/users/useCases/SendMessageUseCase");
 const logoutUserUseCase = require("../modules/users/useCases/LogoutUserUseCase");
 const listAllUsersConnectionUseCase = require("../modules/connections/useCases/ListAllUsersConnectionUseCase");
+const listLastConversationsUseCase = require("../modules/users/useCases/ListLastConversationUseCase");
 
 module.exports = () => {
   global.io.on("connect", (socket) => {
@@ -17,5 +18,7 @@ module.exports = () => {
     socket.on("user_send_message", sendMessageUseCase);
 
     socket.on("list_messages", listAllMessagesUseCase);
+
+    socket.on("list_last_conversations", listLastConversationsUseCase);
   });
 };

@@ -240,6 +240,14 @@ socket.on("user_receiver_message", (params) => {
     date: dayjs().format("DD/MM/YY HH:mm:ss"),
   };
 
+  socket.emit(
+    "list_last_conversations",
+    { fkUserSender: id },
+    (lastConversations) => {
+      updateListAllConversations(lastConversations);
+    }
+  );
+
   listMessagesUsers(
     paramsRender,
     "template_user_receiver_message",

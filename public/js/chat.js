@@ -255,6 +255,11 @@ socket.on("user_receiver_message", (params) => {
   );
 });
 
+socket.on("update_list_users", (listUsers) => {
+  console.log(listUsers);
+  users = loadFilteredListUsers(listUsers);
+});
+
 /* =========================== */
 
 /* ======= ACESSO AO DOM ======== */

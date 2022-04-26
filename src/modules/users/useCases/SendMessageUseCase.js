@@ -9,17 +9,37 @@ const {
 } = require("../../messages/services/CreateMessageService");
 
 const {
-  ListAllConversationMessagesService,
-} = require("../../messages/services/ListAllConversationMessagesService");
+  CreateConversationUserService,
+} = require("../services/CreateConversationUserService");
+
+const {
+  FindConversationUserService,
+} = require("../services/FindConversationUserService");
+
+const {
+  ListAllConversationsUserService,
+} = require("../services/ListAllConversationsUserService");
+
+const verifyConversationUsers = async ({ fkUserSender, fkUserReceiver }) => {
+  const conversation = await new FindConversationUserService().handle({
+    fkUserSender,
+    fkUserReceiver,
+  });
+
+  return conversation;
+};
+
+const createConversationUser = async ({ fkUserSender, fkUserReceiver }) => {
+  const conversation = await new CreateConversationUserService().handle({
+    fkUserSender,
+    fkUserReceiver,
+  });
+
+  return conversation;
+};
 
 module.exports = async (params, callback) => {
-  const {
-    text,
-    emailUserSender,
-    emailUserReceiver,
-    usernameSender,
-    updateListConversations,
-  } = params;
+  const { text, emailUserSender, emailUserReceiver, usernameSender } = params;
 
   // Da pessoa que está mandando mensagem não precisa fazer a validação do connection pois ele já está conectado na aplicação
   const userSenderConnection =
@@ -36,6 +56,34 @@ module.exports = async (params, callback) => {
 
     const fkUserReceiver = userReceiver.id;
 
+    // Verificando conversa existente para o usuario logado
+    const conversationUser = await verifyConversationUsers({
+      fkUserSender,
+      fkUserReceiver,
+    });
+
+    //Fazer veficação de conversa existente para o usuario não logado, ou seja o outro usuario que estou mandando mensagem
+    const conversationOtherUser = await verifyConversationUsers({
+      fkUserSender: fkUserReceiver,
+      fkUserReceiver: fkUserSender,
+    });
+
+    // Criando conversa que nao existe para o usuario logado
+    if (!conversationUser) {
+      await createConversationUser({
+        fkUserSender,
+        fkUserReceiver,
+      });
+    }
+
+    // Criar conversa que não existe para usuario nao logado, ou seja o outro usuario que estou mandandando mensagem
+    if (!conversationOtherUser) {
+      await createConversationUser({
+        fkUserSender: fkUserReceiver,
+        fkUserReceiver: fkUserSender,
+      });
+    }
+
     await new CreateMessageService().handle({
       fkUserSender,
       fkUserReceiver,
@@ -45,6 +93,34 @@ module.exports = async (params, callback) => {
   } else {
     // Caso o usuario esteja online
     const fkUserReceiver = userReceiverConnection.user_id;
+
+    // Verificando conversa existente para o usuario logado
+    const conversationUser = await verifyConversationUsers({
+      fkUserSender,
+      fkUserReceiver,
+    });
+
+    //Fazer veficação de conversa existente para o usuario não logado, ou seja o outro usuario que estou mandando mensagem
+    const conversationOtherUser = await verifyConversationUsers({
+      fkUserSender: fkUserReceiver,
+      fkUserReceiver: fkUserSender,
+    });
+
+    // Criando conversa que nao existe para o usuario logado
+    if (!conversationUser) {
+      await createConversationUser({
+        fkUserSender,
+        fkUserReceiver,
+      });
+    }
+
+    // Criar conversa que não existe para usuario nao logado, ou seja o outro usuario que estou mandandando mensagem
+    if (!conversationOtherUser) {
+      await createConversationUser({
+        fkUserSender: fkUserReceiver,
+        fkUserReceiver: fkUserSender,
+      });
+    }
 
     await new CreateMessageService().handle({
       fkUserSender,
@@ -62,10 +138,9 @@ module.exports = async (params, callback) => {
       });
   }
 
-  if (updateListConversations) {
-    const allMessagesConversations =
-      await new ListAllConversationMessagesService().handle(fkUserSender);
+  const conversations = await new ListAllConversationsUserService().handle(
+    fkUserSender
+  );
 
-    callback(allMessagesConversations);
-  }
+  callback(conversations);
 };

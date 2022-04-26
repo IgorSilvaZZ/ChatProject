@@ -8,7 +8,6 @@ const avatar = userLoged.avatar;
 
 let socket = null;
 let users = [];
-let allConversations = [];
 const baseURL = "http://localhost:3333";
 
 socket = io();
@@ -60,40 +59,26 @@ function updateListAllConversations(lastConversations) {
 
     document.getElementById("list_peoples").innerHTML = "";
 
-    lastConversations.forEach((user) => {
-      var dupicated =
-        allConversations.findIndex((item) => {
-          return user.id == item.id;
-        }) > -1;
-
-      if (!dupicated) {
-        allConversations.push(user);
-      }
-    });
-
     let templateListConversations = document.getElementById(
       "template_conversations"
     ).innerHTML;
 
-    allConversations.forEach((user) => {
+    lastConversations.forEach((item) => {
       const renderedConversations = Mustache.render(templateListConversations, {
-        idUser: user.id,
-        nameUser: user.name,
-        avatarUser: user.avatar
-          ? `${baseURL}/images/${user.avatar}`
+        idUser: item.user_receiver.id,
+        nameUser: item.user_receiver.name,
+        avatarUser: item.user_receiver.avatar
+          ? `${baseURL}/images/${item.user_receiver.avatar}`
           : "../images/user3.png",
-        conectedUser: user.socket_id !== null ? "#27ae60" : "#95a5a6",
       });
 
       document.getElementById("list_peoples").innerHTML +=
         renderedConversations;
 
-      document.querySelector(".people_icon").style.borderRadius = user.avatar
+      document.querySelector(".people_icon").style.borderRadius = item
+        .user_receiver.avatar
         ? "50%"
         : "0px";
-
-      /* document.querySelector(`.status_people`).style.backgroundColor =
-        user.socket_id !== null ? "#27ae60" : "#95a5a6"; */
     });
   }
 }
@@ -139,35 +124,22 @@ function talk(idUser) {
 
   document.querySelector(".footerChat").innerHTML += rendereFooter;
 
-  const userExistsInConversation = allConversations.filter(
-    (conversation) => conversation.email === user.email
-  );
-
   const paramsListMessages = {
     fkUser: id,
     fkUserParticipant: user.id,
-    updateListConversations: userExistsInConversation.length > 0 ? false : true,
   };
 
-  socket.emit(
-    "list_messages",
-    paramsListMessages,
-    (messages, conversations) => {
-      if (messages.length > 0) {
-        messages.map((item) => {
-          if (item.idUserSender === id) {
-            listMessagesUsers(item, "template_user_send_message", idUser);
-          } else {
-            listMessagesUsers(item, "template_user_receiver_message", idUser);
-          }
-        });
-      }
-
-      if (conversations) {
-        updateListAllConversations(conversations);
-      }
+  socket.emit("list_messages", paramsListMessages, (messages) => {
+    if (messages.length > 0) {
+      messages.map((item) => {
+        if (item.idUserSender === id) {
+          listMessagesUsers(item, "template_user_send_message", idUser);
+        } else {
+          listMessagesUsers(item, "template_user_receiver_message", idUser);
+        }
+      });
     }
-  );
+  });
 }
 
 function sendMessage(paramsUser) {
@@ -175,22 +147,15 @@ function sendMessage(paramsUser) {
 
   const text = document.getElementById(`messageUser${emailUser}`);
 
-  const userExistsInConversation = allConversations.filter(
-    (conversation) => conversation.email === emailUser
-  );
-
   const params = {
     text: text.value,
     emailUserSender: email,
     emailUserReceiver: emailUser,
     usernameSender: username,
-    updateListConversations: userExistsInConversation.length > 0 ? false : true,
   };
 
-  socket.emit("user_send_message", params, (conversations) => {
-    if (conversations) {
-      updateListAllConversations(conversations);
-    }
+  socket.emit("user_send_message", params, (lastConversations) => {
+    updateListAllConversations(lastConversations);
   });
 
   const paramsRender = {
@@ -240,23 +205,12 @@ socket.emit("list_all_users", null, (listUsers) => {
   users = loadFilteredListUsers(listUsers);
 });
 
-socket.on("update_all_users", (listUsers) => {
-  users = loadFilteredListUsers(listUsers);
-});
-
-socket.on("updated_users_status", () => {
-  socket.emit("update_conversations", { id }, (listUpdatedConversations) => {
-    updateListAllConversations(listUpdatedConversations);
-  });
-});
-
 //Emitindo evento de quando entramos no chat para os usuarios
 socket.emit(
   "access_chat",
   { username, email },
-  (lastConversations, messagesStatusPending) => {
+  (messagesStatusPending, lastConversations) => {
     updateListAllConversations(lastConversations);
-    socket.emit("new_user_logged", null);
     if (messagesStatusPending.length > 0) {
       messagesStatusPending.map((messageUser) => {
         Toastify({
@@ -285,6 +239,14 @@ socket.on("user_receiver_message", (params) => {
     message: text,
     date: dayjs().format("DD/MM/YY HH:mm:ss"),
   };
+
+  socket.emit(
+    "list_last_conversations",
+    { fkUserSender: id },
+    (lastConversations) => {
+      updateListAllConversations(lastConversations);
+    }
+  );
 
   listMessagesUsers(
     paramsRender,

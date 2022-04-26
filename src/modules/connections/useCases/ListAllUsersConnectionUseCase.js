@@ -20,7 +20,11 @@ module.exports = async (params, callback) => {
     const connectionsUpdateList =
       await new FindAllUsersConnectionService().handle();
 
-    global.io.emit("update_list_users", connectionsUpdateList);
+    const allConnectionsUsersUpdated = new ConnectionsSerialize().handle(
+      connectionsUpdateList
+    );
+
+    global.io.emit("update_list_users", allConnectionsUsersUpdated);
   } else {
     const connections = await new FindAllUsersConnectionService().handle();
 

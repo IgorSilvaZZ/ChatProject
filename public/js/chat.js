@@ -38,6 +38,15 @@ function openModal() {
   document.getElementById("modalSection").style.top = "0";
   let template = document.getElementById("template_users").innerHTML;
 
+  // Realizar com JS puro a renderização dos componentes, de acordo com essa estrutura:
+  /* 
+    <div class="people" id="user{{idUser}}" onclick="talk('{{idUser}}')">
+      <img class="people_icon" src="{{avatarUser}}">
+      <p class="people_text">{{nameUser}}</p>
+    </div> 
+  */
+
+  // Retirar essa parte!!
   users.forEach((user) => {
     const renderedUsers = Mustache.render(template, {
       idUser: user.id,
@@ -256,8 +265,21 @@ socket.on("user_receiver_message", (params) => {
 });
 
 socket.on("update_list_users", (listUsers) => {
-  console.log(listUsers);
   users = loadFilteredListUsers(listUsers);
+
+  /* let template = document.getElementById("template_users").innerHTML;
+
+  users.forEach((user) => {
+    const renderedUsers = Mustache.render(template, {
+      idUser: user.id,
+      nameUser: user.name,
+      avatarUser: user.avatar
+        ? `${baseURL}/images/${user.avatar}`
+        : "../images/user3.png",
+    });
+
+    document.getElementById("list_users").innerHTML += renderedUsers;
+  }); */
 });
 
 /* =========================== */

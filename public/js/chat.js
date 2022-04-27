@@ -36,28 +36,8 @@ function listMessagesUsers(params, templateName, idUser) {
 
 function openModal() {
   document.getElementById("modalSection").style.top = "0";
-  let template = document.getElementById("template_users").innerHTML;
 
-  // Realizar com JS puro a renderização dos componentes, de acordo com essa estrutura:
-  /* 
-    <div class="people" id="user{{idUser}}" onclick="talk('{{idUser}}')">
-      <img class="people_icon" src="{{avatarUser}}">
-      <p class="people_text">{{nameUser}}</p>
-    </div> 
-  */
-
-  // Retirar essa parte!!
-  users.forEach((user) => {
-    const renderedUsers = Mustache.render(template, {
-      idUser: user.id,
-      nameUser: user.name,
-      avatarUser: user.avatar
-        ? `${baseURL}/images/${user.avatar}`
-        : "../images/user3.png",
-    });
-
-    document.getElementById("list_users").innerHTML += renderedUsers;
-  });
+  createUsersModal(users);
 }
 
 function updateListAllConversations(lastConversations) {
@@ -206,6 +186,37 @@ const loadFilteredListUsers = (listUsers) => {
   return filteredUsers;
 };
 
+function createUsersModal(listUsers) {
+  const containerModalBody = document.getElementById("list_users");
+
+  containerModalBody.innerHTML = "";
+
+  listUsers.forEach((user) => {
+    const divPeople = document.createElement("div");
+
+    const imgPeople = document.createElement("img");
+
+    const namePeople = document.createElement("p");
+
+    divPeople.id = `user${id}`;
+    divPeople.className = "people";
+
+    namePeople.textContent = user.name;
+    namePeople.className = "people_text";
+
+    imgPeople.src = user.avatar
+      ? `${baseURL}/images/${user.avatar}`
+      : "../images/user3.png";
+
+    imgPeople.className = "people_icon";
+
+    divPeople.appendChild(imgPeople);
+    divPeople.appendChild(namePeople);
+
+    containerModalBody.appendChild(divPeople);
+  });
+}
+
 /* =========================== */
 
 /* ======= EMISSÃO/ESCUTA DE EVENTOS ======== */
@@ -267,19 +278,7 @@ socket.on("user_receiver_message", (params) => {
 socket.on("update_list_users", (listUsers) => {
   users = loadFilteredListUsers(listUsers);
 
-  /* let template = document.getElementById("template_users").innerHTML;
-
-  users.forEach((user) => {
-    const renderedUsers = Mustache.render(template, {
-      idUser: user.id,
-      nameUser: user.name,
-      avatarUser: user.avatar
-        ? `${baseURL}/images/${user.avatar}`
-        : "../images/user3.png",
-    });
-
-    document.getElementById("list_users").innerHTML += renderedUsers;
-  }); */
+  createUsersModal(users);
 });
 
 /* =========================== */
@@ -289,7 +288,6 @@ socket.on("update_list_users", (listUsers) => {
 document.querySelector(".open_modal").addEventListener("click", openModal);
 
 document.querySelector(".close").addEventListener("click", () => {
-  document.getElementById("template_users").innerHTML = "";
   document.getElementById("modalSection").style.top = "-100%";
 });
 

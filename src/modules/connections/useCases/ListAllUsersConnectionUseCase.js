@@ -16,11 +16,20 @@ module.exports = async (params, callback) => {
       user_id: params.id,
       socket_id: null,
     });
+
+    const connectionsUpdateList =
+      await new FindAllUsersConnectionService().handle();
+
+    const allConnectionsUsersUpdated = new ConnectionsSerialize().handle(
+      connectionsUpdateList
+    );
+
+    global.io.emit("update_list_users", allConnectionsUsersUpdated);
+  } else {
+    const connections = await new FindAllUsersConnectionService().handle();
+
+    const allConnectionsUsers = new ConnectionsSerialize().handle(connections);
+
+    callback(allConnectionsUsers);
   }
-
-  const connections = await new FindAllUsersConnectionService().handle();
-
-  const allConnectionsUsers = new ConnectionsSerialize().handle(connections);
-
-  callback(allConnectionsUsers);
 };

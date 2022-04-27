@@ -20,5 +20,9 @@ module.exports = () => {
     socket.on("list_messages", listAllMessagesUseCase);
 
     socket.on("list_last_conversations", listLastConversationsUseCase);
+
+    socket.on("update_users", (params) => {
+      listAllUsersConnectionUseCase(params);
+    });
   });
 };

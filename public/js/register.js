@@ -25,7 +25,7 @@ async function handleSubmit() {
       new_user: true,
     };
 
-    socket.emit("update_user", params);
+    socket.emit("update_users", params);
 
     setTimeout(() => {
       window.location = "/";

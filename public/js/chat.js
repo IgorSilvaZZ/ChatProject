@@ -8,6 +8,7 @@ const avatar = userLoged.avatar;
 
 let socket = null;
 let users = [];
+let allConversations = [];
 const baseURL = "http://localhost:3333";
 
 socket = io();
@@ -69,6 +70,8 @@ function updateListAllConversations(lastConversations) {
         ? "50%"
         : "0px";
     });
+  } else {
+    document.getElementById("list_peoples").innerHTML = "";
   }
 }
 
@@ -144,6 +147,7 @@ function sendMessage(paramsUser) {
   };
 
   socket.emit("user_send_message", params, (lastConversations) => {
+    allConversations = lastConversations;
     updateListAllConversations(lastConversations);
   });
 
@@ -213,6 +217,10 @@ function createUsersModal(listUsers) {
     divPeople.appendChild(imgPeople);
     divPeople.appendChild(namePeople);
 
+    divPeople.addEventListener("click", () => {
+      talk(user.id);
+    });
+
     containerModalBody.appendChild(divPeople);
   });
 }
@@ -230,6 +238,7 @@ socket.emit(
   "access_chat",
   { username, email },
   (messagesStatusPending, lastConversations) => {
+    allConversations = lastConversations;
     updateListAllConversations(lastConversations);
     if (messagesStatusPending.length > 0) {
       messagesStatusPending.map((messageUser) => {
@@ -264,6 +273,7 @@ socket.on("user_receiver_message", (params) => {
     "list_last_conversations",
     { fkUserSender: id },
     (lastConversations) => {
+      allConversations = lastConversations;
       updateListAllConversations(lastConversations);
     }
   );
@@ -298,6 +308,25 @@ document
 
     updateAvatarUser(file);
   });
+
+// Pesquisa de conversa na input
+document.getElementById("searchValue").addEventListener("keyup", (event) => {
+  const nameUser = event.target.value;
+
+  console.log(nameUser);
+  console.log(nameUser === "");
+
+  if (nameUser === "") {
+    updateListAllConversations(allConversations);
+    return;
+  }
+
+  const conversationsSearch = allConversations.filter(
+    ({ user_receiver: { name } }) => name.includes(nameUser)
+  );
+
+  updateListAllConversations(conversationsSearch);
+});
 
 let image = document.getElementById("imageUser");
 

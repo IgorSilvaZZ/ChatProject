@@ -100,7 +100,7 @@ module.exports = async (params, callback) => {
       fkUserReceiver,
     });
 
-    //Fazer veficação de conversa existente para o usuario não logado, ou seja o outro usuario que estou mandando mensagem
+    //Fazer verificação de conversa existente para o usuario não logado, ou seja o outro usuario que estou mandando mensagem
     const conversationOtherUser = await verifyConversationUsers({
       fkUserSender: fkUserReceiver,
       fkUserReceiver: fkUserSender,

@@ -329,6 +329,10 @@ document.getElementById("imageUser").addEventListener("click", () => {
   document.querySelector(".section-profile").style.left = "0";
 });
 
+document.getElementById("arrow-profile").addEventListener("click", () => {
+  document.querySelector(".section-profile").style.left = "-100vh";
+});
+
 document.getElementById("logoutButton").addEventListener("click", () => {
   socket.emit("logout_user", id);
 
@@ -342,8 +346,16 @@ document.getElementById("logoutButton").addEventListener("click", () => {
 /* ======= ENTRADA NA PAGINA ======== */
 let image = document.getElementById("imageUser");
 
+let imageProfile = document.getElementById("imageUserProfile");
+
 image.src = avatar ? `${baseURL}/images/${avatar}` : "../images/user3.png";
 
 image.style.borderRadius = avatar ? "50%" : "0px";
+
+imageProfile.src = avatar
+  ? `${baseURL}/images/${avatar}`
+  : "../images/user3.png";
+
+imageProfile.style.borderRadius = avatar ? "50%" : "0px";
 
 /* =========================== */

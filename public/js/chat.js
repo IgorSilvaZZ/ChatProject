@@ -301,20 +301,17 @@ document.querySelector(".close").addEventListener("click", () => {
   document.getElementById("modalSection").style.top = "-100%";
 });
 
-document
+/* document
   .getElementById("file-input")
   .addEventListener("change", ({ target }) => {
     const file = target.files[target.files.length - 1];
 
     updateAvatarUser(file);
-  });
+  }); */
 
 // Pesquisa de conversa na input
 document.getElementById("searchValue").addEventListener("keyup", (event) => {
   const nameUser = event.target.value;
-
-  console.log(nameUser);
-  console.log(nameUser === "");
 
   if (nameUser === "") {
     updateListAllConversations(allConversations);
@@ -328,11 +325,9 @@ document.getElementById("searchValue").addEventListener("keyup", (event) => {
   updateListAllConversations(conversationsSearch);
 });
 
-let image = document.getElementById("imageUser");
-
-image.src = avatar ? `${baseURL}/images/${avatar}` : "../images/user3.png";
-
-image.style.borderRadius = avatar ? "50%" : "0px";
+document.getElementById("imageUser").addEventListener("click", () => {
+  document.querySelector(".section-profile").style.left = "0";
+});
 
 document.getElementById("logoutButton").addEventListener("click", () => {
   socket.emit("logout_user", id);
@@ -341,5 +336,14 @@ document.getElementById("logoutButton").addEventListener("click", () => {
 
   window.location = "/";
 });
+
+/* =========================== */
+
+/* ======= ENTRADA NA PAGINA ======== */
+let image = document.getElementById("imageUser");
+
+image.src = avatar ? `${baseURL}/images/${avatar}` : "../images/user3.png";
+
+image.style.borderRadius = avatar ? "50%" : "0px";
 
 /* =========================== */

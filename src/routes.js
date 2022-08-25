@@ -41,10 +41,6 @@ router.get("/register", (req, res) => {
   return res.render("html/register.html");
 });
 
-router.get("/profile", (req, res) => {
-  return res.render("html/profile.html");
-});
-
 router.patch(
   "/avatar",
   ensureAuthenticated,

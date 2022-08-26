@@ -40,13 +40,6 @@
   cursor: pointer;
 }
 
-.headerImage > input {
-  width: 0;
-  height: 0;
-
-  visibility: hidden;
-}
-
 .headerOptions {
   display: flex;
   align-items: center;

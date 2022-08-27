@@ -10,7 +10,6 @@ let socket = null;
 let users = [];
 let allConversations = [];
 const baseURL = "http://localhost:3333";
-let editProfile = false;
 
 socket = io();
 
@@ -186,6 +185,24 @@ async function updateAvatarUser(file) {
   window.location.reload();
 }
 
+async function updateUser(name) {
+  const dataUser = {
+    name,
+  };
+
+  const { data } = await axios.patch(`${baseURL}/user`, dataUser, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const userUpdated = { ...data, token };
+
+  localStorage.setItem("user", JSON.stringify(userUpdated));
+
+  window.location.reload();
+}
+
 const loadFilteredListUsers = (listUsers) => {
   const filteredUsers = listUsers.filter((user) => user.email !== email);
   return filteredUsers;
@@ -296,6 +313,8 @@ socket.on("update_list_users", (listUsers) => {
 
 /* ======= ACESSO AO DOM ======== */
 
+let inputProfileName = document.getElementById("input-profile-name");
+
 document.querySelector(".open_modal").addEventListener("click", openModal);
 
 document.querySelector(".close").addEventListener("click", () => {
@@ -320,6 +339,8 @@ document.getElementById("searchValue").addEventListener("keyup", (event) => {
 
 document.getElementById("imageUser").addEventListener("click", () => {
   document.querySelector(".section-profile").style.left = "0";
+
+  inputProfileName.value = username;
 });
 
 document.getElementById("arrow-profile").addEventListener("click", () => {
@@ -334,16 +355,20 @@ document.getElementById("logoutButton").addEventListener("click", () => {
   window.location = "/";
 });
 
-document.getElementById("input-profile-name").addEventListener("blur", () => {
+inputProfileName.addEventListener("blur", () => {
   document.getElementById("image-profile-edit").src = "../images/edit.png";
 });
 
-document.getElementById("input-profile-name").addEventListener("focus", () => {
+inputProfileName.addEventListener("focus", () => {
   const imageChecked = document.getElementById("image-profile-edit");
 
   imageChecked.src = "../images/check.png";
 
-  imageChecked.addEventListener("click", () => {});
+  imageChecked.addEventListener("click", () => {
+    const name = inputProfileName.value;
+
+    updateUser(name);
+  });
 });
 
 document

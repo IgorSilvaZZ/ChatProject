@@ -1,174 +1,129 @@
-.main {
-  display: flex;
-  height: 100%;
-  width: 90%;
-  border-radius: 0px 20px 20px 0px;
-}
-.containerPhotoUser {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  flex-direction: column;
-  width: 20%;
-  border-right: 1px solid #636e72;
-}
-.containerPhotoUser_text {
-  color: white;
-  font-size: 12px;
-  font-weight: 500;
-  opacity: 0.4;
-}
-.containerPhotoUser_image {
-  opacity: 0.4;
-  width: 70%;
-  padding: 12px;
-}
-.profileMain {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 80%;
-}
-.headerProfile {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.section-profile {
+  position: absolute;
+
   width: 100%;
-  height: 8%;
-  border-radius: 0px 20px 0px 0px;
-  background: #3c096c;
+  height: 100%;
+
+  z-index: 2;
+
+  background: #111b21;
+
+  border-radius: 20px 0px 0px 20px;
+
+  left: -100vh;
+
+  transition: 350ms;
 }
-.itemHeader {
+
+.header-profile {
   display: flex;
   align-items: center;
-  height: 90%;
+
+  width: 100%;
+  height: 15%;
+
+  border-radius: 20px 0px 0px 0px;
+
+  background: #2c3e50;
 }
-.itemHeader_image {
-  width: 30px;
-  margin: 15px;
-}
-.itemHeader_text {
-  color: white;
-  font-size: 11px;
-  font-weight: 400;
-  opacity: 0.5;
-}
-.informationUserContainer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 45%;
-  width: 97%;
-  border-bottom: 1px solid #636e72;
-}
-#titleInformation {
-  color: white;
-  font-weight: 500;
-}
-.itemInformationUser {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  width: 45%;
-  height: 95%;
-}
-.itemInformationUser h4 {
-  line-height: 1px;
-  font-weight: 600;
-  color: #7b2cbf;
-}
-.labels-InformationsInput {
-  font-weight: 400;
-  font-size: 15px;
-  border: none;
-  background: none;
-  width: 35%;
-  outline: none;
+
+.header-profile p {
+  font-size: 25px;
+  font-weight: 700;
+
   color: white;
 }
-.buttonSubmit {
-  padding: 6px;
-  width: 30%;
-  background: #5f27cd;
-  color: white;
-  border-radius: 8px;
-  outline: none;
-  border: none;
+
+.header-profile img {
+  width: 5%;
+
+  margin: 0px 20px;
+
   cursor: pointer;
-  transition: all 0.3s;
 }
-.buttonSubmit:hover {
-  background: #341f97;
+
+.container-profile {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 30px;
+
+  width: 100%;
+  height: 85%;
+
+  border-radius: 0px 0px 0px 20px;
 }
-#btnPreferences {
-  background: #353b48;
-  width: 107px;
-}
-.justify {
+
+.container-profile label {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.itemInformationUser img {
-  width: 50%;
+
+.container-profile img {
+  margin: 30px 0px;
+
+  width: 40%;
+
+  cursor: pointer;
 }
-.settingsProfile {
-  display: flex;
-  flex-direction: column;
-  height: 40%;
-  width: 97%;
-}
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 25px;
-  margin-top: 6px;
-  padding: 12px 0px;
-}
-.switch input {
-  opacity: 0;
+
+.container-profile > input {
   width: 0;
   height: 0;
+
+  visibility: hidden;
 }
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #ccc;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
-  height: 28px;
-  width: 70px;
+
+.description-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 15px;
+
+  width: 85%;
 }
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 22px;
-  width: 24px;
-  left: 4px;
-  bottom: 4px;
-  background: white;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
+
+.description-profile h4 {
+  color: #47126b;
 }
-input:checked + .slider {
-  background: #7b2cbf;
+
+.section-edit-profile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  width: 100%;
+  height: 15%;
 }
-input:focus + .slider {
-  box-shadow: 0 0 1px #7b2cbf;
+
+.section-edit-profile input {
+  width: 85%;
+  padding: 5px;
+
+  color: white;
+
+  font-weight: 600;
+
+  outline: none;
+  background: none;
+  border: none;
 }
-input:checked + .slider:before {
-  -webkit-transform: translateX(36px);
-  -ms-transform: translateX(36px);
-  transform: translateX(36px);
+
+.section-edit-profile input:focus {
+  border-bottom: 2px solid #5f27cd;
 }
-.slider.round {
-  border-radius: 34px;
+
+.section-edit-profile img {
+  width: 5%;
+
+  transition: all 0.2s;
 }
-.slider.round::before {
-  border-radius: 50%;
+
+.description-profile p {
+  color: #3c096c;
+
+  font-weight: 600;
 }

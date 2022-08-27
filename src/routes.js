@@ -23,6 +23,10 @@ const {
   UpdateAvatarUserController,
 } = require("./modules/users/controllers/UpdateAvatarUserController");
 
+const {
+  UpdateUserController,
+} = require("./modules/users/controllers/UpdateUserController");
+
 const avatarUpload = multer(upload("./tmp/avatar"));
 
 router.post("/createUser", new CreateUserController().execute);
@@ -41,15 +45,13 @@ router.get("/register", (req, res) => {
   return res.render("html/register.html");
 });
 
-router.get("/profile", (req, res) => {
-  return res.render("html/profile.html");
-});
-
 router.patch(
   "/avatar",
   ensureAuthenticated,
   avatarUpload.single("avatar"),
   new UpdateAvatarUserController().execute
 );
+
+router.patch("/user", ensureAuthenticated, new UpdateUserController().execute);
 
 module.exports = { router };

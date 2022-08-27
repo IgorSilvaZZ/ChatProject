@@ -185,6 +185,24 @@ async function updateAvatarUser(file) {
   window.location.reload();
 }
 
+async function updateUser(name) {
+  const dataUser = {
+    name,
+  };
+
+  const { data } = await axios.patch(`${baseURL}/user`, dataUser, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const userUpdated = { ...data, token };
+
+  localStorage.setItem("user", JSON.stringify(userUpdated));
+
+  window.location.reload();
+}
+
 const loadFilteredListUsers = (listUsers) => {
   const filteredUsers = listUsers.filter((user) => user.email !== email);
   return filteredUsers;
@@ -295,26 +313,17 @@ socket.on("update_list_users", (listUsers) => {
 
 /* ======= ACESSO AO DOM ======== */
 
+let inputProfileName = document.getElementById("input-profile-name");
+
 document.querySelector(".open_modal").addEventListener("click", openModal);
 
 document.querySelector(".close").addEventListener("click", () => {
   document.getElementById("modalSection").style.top = "-100%";
 });
 
-document
-  .getElementById("file-input")
-  .addEventListener("change", ({ target }) => {
-    const file = target.files[target.files.length - 1];
-
-    updateAvatarUser(file);
-  });
-
 // Pesquisa de conversa na input
 document.getElementById("searchValue").addEventListener("keyup", (event) => {
   const nameUser = event.target.value;
-
-  console.log(nameUser);
-  console.log(nameUser === "");
 
   if (nameUser === "") {
     updateListAllConversations(allConversations);
@@ -328,11 +337,15 @@ document.getElementById("searchValue").addEventListener("keyup", (event) => {
   updateListAllConversations(conversationsSearch);
 });
 
-let image = document.getElementById("imageUser");
+document.getElementById("imageUser").addEventListener("click", () => {
+  document.querySelector(".section-profile").style.left = "0";
 
-image.src = avatar ? `${baseURL}/images/${avatar}` : "../images/user3.png";
+  inputProfileName.value = username;
+});
 
-image.style.borderRadius = avatar ? "50%" : "0px";
+document.getElementById("arrow-profile").addEventListener("click", () => {
+  document.querySelector(".section-profile").style.left = "-100vh";
+});
 
 document.getElementById("logoutButton").addEventListener("click", () => {
   socket.emit("logout_user", id);
@@ -341,5 +354,46 @@ document.getElementById("logoutButton").addEventListener("click", () => {
 
   window.location = "/";
 });
+
+inputProfileName.addEventListener("blur", () => {
+  document.getElementById("image-profile-edit").src = "../images/edit.png";
+});
+
+inputProfileName.addEventListener("focus", () => {
+  const imageChecked = document.getElementById("image-profile-edit");
+
+  imageChecked.src = "../images/check.png";
+
+  imageChecked.addEventListener("click", () => {
+    const name = inputProfileName.value;
+
+    updateUser(name);
+  });
+});
+
+document
+  .getElementById("file-input")
+  .addEventListener("change", ({ target }) => {
+    const file = target.files[target.files.length - 1];
+
+    updateAvatarUser(file);
+  });
+
+/* =========================== */
+
+/* ======= ENTRADA NA PAGINA ======== */
+let image = document.getElementById("imageUser");
+
+let imageProfile = document.getElementById("imageUserProfile");
+
+image.src = avatar ? `${baseURL}/images/${avatar}` : "../images/user3.png";
+
+image.style.borderRadius = avatar ? "50%" : "0px";
+
+imageProfile.src = avatar
+  ? `${baseURL}/images/${avatar}`
+  : "../images/user3.png";
+
+imageProfile.style.borderRadius = avatar ? "50%" : "0px";
 
 /* =========================== */

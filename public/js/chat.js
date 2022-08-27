@@ -10,6 +10,7 @@ let socket = null;
 let users = [];
 let allConversations = [];
 const baseURL = "http://localhost:3333";
+let editProfile = false;
 
 socket = io();
 
@@ -301,14 +302,6 @@ document.querySelector(".close").addEventListener("click", () => {
   document.getElementById("modalSection").style.top = "-100%";
 });
 
-/* document
-  .getElementById("file-input")
-  .addEventListener("change", ({ target }) => {
-    const file = target.files[target.files.length - 1];
-
-    updateAvatarUser(file);
-  }); */
-
 // Pesquisa de conversa na input
 document.getElementById("searchValue").addEventListener("keyup", (event) => {
   const nameUser = event.target.value;
@@ -340,6 +333,26 @@ document.getElementById("logoutButton").addEventListener("click", () => {
 
   window.location = "/";
 });
+
+document.getElementById("input-profile-name").addEventListener("blur", () => {
+  document.getElementById("image-profile-edit").src = "../images/edit.png";
+});
+
+document.getElementById("input-profile-name").addEventListener("focus", () => {
+  const imageChecked = document.getElementById("image-profile-edit");
+
+  imageChecked.src = "../images/check.png";
+
+  imageChecked.addEventListener("click", () => {});
+});
+
+document
+  .getElementById("file-input")
+  .addEventListener("change", ({ target }) => {
+    const file = target.files[target.files.length - 1];
+
+    updateAvatarUser(file);
+  });
 
 /* =========================== */
 

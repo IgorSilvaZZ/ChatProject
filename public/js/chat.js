@@ -243,6 +243,10 @@ function createUsersModal(listUsers) {
   });
 }
 
+function backForMain(idSection) {
+  document.getElementById(idSection).style.left = "-100vh";
+}
+
 /* =========================== */
 
 /* ======= EMISSÃO/ESCUTA DE EVENTOS ======== */
@@ -338,13 +342,13 @@ document.getElementById("searchValue").addEventListener("keyup", (event) => {
 });
 
 document.getElementById("imageUser").addEventListener("click", () => {
-  document.querySelector(".section-profile").style.left = "0";
+  document.getElementById("section-profile").style.left = "0";
 
   inputProfileName.value = username;
 });
 
-document.getElementById("arrow-profile").addEventListener("click", () => {
-  document.querySelector(".section-profile").style.left = "-100vh";
+document.getElementById("configButton").addEventListener("click", () => {
+  document.getElementById("section-config").style.left = "0";
 });
 
 document.getElementById("logoutButton").addEventListener("click", () => {

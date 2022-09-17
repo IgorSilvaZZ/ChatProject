@@ -23,27 +23,28 @@
     <link rel="stylesheet" href="../css/global.css" />
     <link rel="stylesheet" href="../css/navbar.css" />
     <link rel="stylesheet" href="../css/chat.css" />
-    <link rel="stylesheet" href="../css/profile.css" />
+    <link rel="stylesheet" href="../css/edit.css" />
   </head>
   <body>
     <div class="container">
       <div class="main">
         <div class="listUsers">
-          <div class="section-profile">
-            <div class="header-profile">
+          <div class="section-edit" id="section-profile">
+            <div class="header-section-edit">
               <img
-                id="arrow-profile"
+                id="arrow-edit"
                 src="../images/left-arrow.png"
                 alt="Icone de voltar"
+                onclick="backForMain('section-profile')"
               />
               <p>Perfil</p>
             </div>
-            <div class="container-profile">
+            <div class="container-edit">
               <label for="file-input">
                 <img id="imageUserProfile" title="Alterar Imagem" />
               </label>
               <input type="file" class="update_file" id="file-input" />
-              <div class="description-profile">
+              <div class="description-edit">
                 <h4>Seu nome</h4>
                 <div class="section-edit-profile">
                   <input type="text" id="input-profile-name" />
@@ -56,6 +57,20 @@
               </div>
             </div>
           </div>
+          <div class="section-edit" id="section-config">
+            <div class="header-section-edit">
+              <img
+                id="arrow-edit"
+                src="../images/left-arrow.png"
+                alt="Icone de voltar"
+                onclick="backForMain('section-config')"
+              />
+              <p>Configurações</p>
+            </div>
+            <div class="container-edit">
+              <p>PREFERENCIAS</p>
+            </div>
+          </div>
           <div class="header">
             <div class="headerImage">
               <img id="imageUser" title="Acessar perfil" />
@@ -66,6 +81,12 @@
                 class="open_modal"
                 alt="Nova conversa"
                 title="Nova Conversa"
+              />
+              <img
+                src="../images/settings.png"
+                alt="Configurações"
+                title="Configurações"
+                id="configButton"
               />
               <img
                 src="../images/logout.png"

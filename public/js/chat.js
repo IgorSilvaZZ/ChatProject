@@ -349,6 +349,8 @@ document.getElementById("imageUser").addEventListener("click", () => {
 
 document.getElementById("configButton").addEventListener("click", () => {
   document.getElementById("section-config").style.left = "0";
+
+  // socket.emit("list_preferences");
 });
 
 document.getElementById("logoutButton").addEventListener("click", () => {

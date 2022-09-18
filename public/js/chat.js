@@ -247,17 +247,16 @@ function backForMain(idSection) {
   document.getElementById(idSection).style.left = "-100vh";
 }
 
-function changePreferences(event, preference) {
+function changePreferences(checked, preference) {
   const preferenceDescription = preferencesUser[preference];
-
-  console.log(event);
+  const preferenceValue = checked;
 
   if (preferenceDescription) {
-    /* socket.emit("change_preference", {
+    socket.emit("change_preference", {
       user_id: id,
       preference: preferenceDescription,
-      preferenceValue
-    }); */
+      preferenceValue,
+    });
   }
 }
 
@@ -374,6 +373,22 @@ document.getElementById("logoutButton").addEventListener("click", () => {
 
   window.location = "/";
 });
+
+document
+  .getElementById("notification_preference")
+  .addEventListener("change", (e) => {
+    const checked = e.target.checked;
+
+    changePreferences(checked, "notification_check");
+  });
+
+  document
+  .getElementById("sound_preference")
+  .addEventListener("change", (e) => {
+    const checked = e.target.checked;
+
+    changePreferences(checked, "sound_check");
+  });
 
 inputProfileName.addEventListener("blur", () => {
   document.getElementById("image-profile-edit").src = "../images/edit.png";

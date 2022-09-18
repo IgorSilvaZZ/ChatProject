@@ -11,8 +11,6 @@ const {
 module.exports = async ({ user_id, preference, preferenceValue }) => {
   const preferencesExists = await new FindByPreferenceUserService().handle({
     user_id,
-    description: preference,
-    preferenceValue,
   });
 
   if (preferencesExists) {

@@ -77,7 +77,10 @@
                   <p>Mostrar Notificações de novas mensagens</p>
                 </div>
                 <label class="check-section">
-                  <input type="checkbox" />
+                  <input
+                    type="checkbox"
+                    onchange="changePreferences('notification_check')"
+                  />
                   <span></span>
                 </label>
               </div>
@@ -88,7 +91,10 @@
                   <p>Reproduzir sons ao receber mensagens</p>
                 </div>
                 <label class="check-section">
-                  <input type="checkbox" />
+                  <input
+                    type="checkbox"
+                    onchange="changePreferences('sound_check')"
+                  />
                   <span></span>
                 </label>
               </div>

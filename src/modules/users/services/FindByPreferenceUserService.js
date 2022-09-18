@@ -5,10 +5,11 @@ const {
 } = require("../repositories/PreferencesRepository");
 
 class FindByPreferenceUserService {
-  async handle(description, user_id) {
+  async handle({ user_id, description, preferenceValue }) {
     const preference = await PreferencesRepository.findOne({
       where: {
-        [Op.and]: [{ user_id }, { description }],
+        user_id,
+        [description]: preferenceValue,
       },
     });
 

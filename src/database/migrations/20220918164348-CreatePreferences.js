@@ -9,9 +9,13 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
       },
-      description: {
-        type: Sequelize.STRING,
-        allowNull: false,
+      notification_preference: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
+      },
+      sound_preference: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
       },
       user_id: {
         type: Sequelize.INTEGER,

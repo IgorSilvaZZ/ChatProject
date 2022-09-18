@@ -4,7 +4,8 @@ class Preferences extends Model {
   static init(sequelize) {
     super.init(
       {
-        description: DataTypes.STRING,
+        notification_preference: DataTypes.BOOLEAN,
+        sound_preference: DataTypes.BOOLEAN,
         user_id: DataTypes.INTEGER,
         created_at: DataTypes.DATE,
         updated_at: DataTypes.DATE,

@@ -1,15 +1,15 @@
 const userLoged = JSON.parse(localStorage.getItem("user"));
 
-const username = userLoged.name;
-const email = userLoged.email;
-const id = userLoged.id;
-const token = userLoged.token;
-const avatar = userLoged.avatar;
+const { username, email, id, token, avatar } = userLoged;
+const baseURL = "http://localhost:3333";
+const preferencesUser = {
+  notification_check: "notification_preference",
+  sound_check: "sound_preference",
+};
 
 let socket = null;
 let users = [];
 let allConversations = [];
-const baseURL = "http://localhost:3333";
 
 socket = io();
 
@@ -245,6 +245,17 @@ function createUsersModal(listUsers) {
 
 function backForMain(idSection) {
   document.getElementById(idSection).style.left = "-100vh";
+}
+
+function changePreferences(preference) {
+  const preferenceDescription = preferencesUser[preference];
+
+  if (preferenceDescription) {
+    socket.emit("change_preference", {
+      user_id: id,
+      description: preferenceDescription,
+    });
+  }
 }
 
 /* =========================== */

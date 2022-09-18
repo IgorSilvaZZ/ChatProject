@@ -247,14 +247,17 @@ function backForMain(idSection) {
   document.getElementById(idSection).style.left = "-100vh";
 }
 
-function changePreferences(preference) {
+function changePreferences(event, preference) {
   const preferenceDescription = preferencesUser[preference];
 
+  console.log(event);
+
   if (preferenceDescription) {
-    socket.emit("change_preference", {
+    /* socket.emit("change_preference", {
       user_id: id,
-      description: preferenceDescription,
-    });
+      preference: preferenceDescription,
+      preferenceValue
+    }); */
   }
 }
 

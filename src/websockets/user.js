@@ -5,6 +5,7 @@ const logoutUserUseCase = require("../modules/users/useCases/LogoutUserUseCase")
 const listAllUsersConnectionUseCase = require("../modules/connections/useCases/ListAllUsersConnectionUseCase");
 const listLastConversationsUseCase = require("../modules/users/useCases/ListLastConversationUseCase");
 const changePreferencesUseCase = require("../modules/users/useCases/ChangePreferencesUseCase");
+const litPreferencesUseCase = require("../modules/users/useCases/ListPreferencesUseCase");
 
 module.exports = () => {
   global.io.on("connect", (socket) => {
@@ -27,5 +28,7 @@ module.exports = () => {
     });
 
     socket.on("change_preference", changePreferencesUseCase);
+
+    socket.on("list_preferences", litPreferencesUseCase);
   });
 };

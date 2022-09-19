@@ -3,8 +3,8 @@ const userLoged = JSON.parse(localStorage.getItem("user"));
 const { username, email, id, token, avatar } = userLoged;
 const baseURL = "http://localhost:3333";
 const preferencesUser = {
-  notification_check: "notification_preference",
-  sound_check: "sound_preference",
+  notification_preference: false,
+  sound_preference: false,
 };
 
 let socket = null;
@@ -248,16 +248,13 @@ function backForMain(idSection) {
 }
 
 function changePreferences(checked, preference) {
-  const preferenceDescription = preferencesUser[preference];
   const preferenceValue = checked;
 
-  if (preferenceDescription) {
-    socket.emit("change_preference", {
-      user_id: id,
-      preference: preferenceDescription,
-      preferenceValue,
-    });
-  }
+  socket.emit("change_preference", {
+    user_id: id,
+    preference,
+    preferenceValue,
+  });
 }
 
 /* =========================== */
@@ -287,6 +284,14 @@ socket.emit(
     }
   }
 );
+
+socket.emit("list_preferences", { user_id: id }, (preferences) => {
+  for (property in preferences) {
+    if (["notification_preference", "sound_preference"].includes(property)) {
+      preferencesUser[property] = preferences[property];
+    }
+  }
+});
 
 socket.on("user_receiver_message", (params) => {
   const { text, usernameSender, idUser } = params;
@@ -363,13 +368,9 @@ document.getElementById("imageUser").addEventListener("click", () => {
 document.getElementById("configButton").addEventListener("click", () => {
   document.getElementById("section-config").style.left = "0";
 
-  socket.emit("list_preferences", { user_id: id }, (preferences) => {
-    for (property in preferences) {
-      if (["notification_preference", "sound_preference"].includes(property)) {
-        document.getElementById(property).checked = preferences[property];
-      }
-    }
-  });
+  for (property in preferencesUser) {
+    document.getElementById(property).checked = preferencesUser[property];
+  }
 });
 
 document.getElementById("logoutButton").addEventListener("click", () => {
@@ -385,13 +386,13 @@ document
   .addEventListener("change", (e) => {
     const checked = e.target.checked;
 
-    changePreferences(checked, "notification_check");
+    changePreferences(checked, "notification_preference");
   });
 
 document.getElementById("sound_preference").addEventListener("change", (e) => {
   const checked = e.target.checked;
 
-  changePreferences(checked, "sound_check");
+  changePreferences(checked, "sound_preference");
 });
 
 inputProfileName.addEventListener("blur", () => {

@@ -22,17 +22,19 @@ function listMessagesUsers(params, templateName, idUser) {
 
   const chatContainer = document.getElementById(`chatContainer${idUser}`);
 
-  const template = document.getElementById(templateName).innerHTML;
+  if (chatContainer) {
+    const template = document.getElementById(templateName).innerHTML;
 
-  const rendered = Mustache.render(template, {
-    name: params.nameUserSender,
-    message: params.message,
-    date: dayjs(params.createdAt).format("DD/MM/YY HH:mm:ss"),
-  });
+    const rendered = Mustache.render(template, {
+      name: params.nameUserSender,
+      message: params.message,
+      date: dayjs(params.createdAt).format("DD/MM/YY HH:mm:ss"),
+    });
 
-  chatContainer.innerHTML += rendered;
+    chatContainer.innerHTML += rendered;
 
-  containerChat.scrollTo(0, containerChat.scrollHeight);
+    containerChat.scrollTo(0, containerChat.scrollHeight);
+  }
 }
 
 function openModal() {
@@ -296,12 +298,20 @@ socket.emit("list_preferences", { user_id: id }, (preferences) => {
 socket.on("user_receiver_message", (params) => {
   const { text, usernameSender, idUser } = params;
 
-  Toastify({
-    text: `${usernameSender} mandou uma mensagem pra você!`,
-    backgroundColor: "linear-gradient(to right, #6d23b6, #47126b)",
-    duration: 2000,
-    onClick: () => talk(idUser),
-  }).showToast();
+  const { notification_preference, sound_preference } = preferencesUser;
+
+  let soundNotification = document.getElementById("soundNotification");
+
+  soundNotification.play();
+
+  if (notification_preference === true) {
+    Toastify({
+      text: `${usernameSender} mandou uma mensagem pra você!`,
+      backgroundColor: "linear-gradient(to right, #6d23b6, #47126b)",
+      duration: 2000,
+      onClick: () => talk(idUser),
+    }).showToast();
+  }
 
   const paramsRender = {
     name: usernameSender,

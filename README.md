@@ -60,7 +60,7 @@ $ npm run dev
 
 <h1>📜Sobre</h1>
 <div>
-    Estudante de Analise e Desenvolvimento de Sistemas (4° Semestre), e estagiário na <a href="https://www.orama.com.br/">Orama Investimentos</a>. <br> Estudando sempre <a href="https://nodejs.org/en/">NodeJS</a>, <a href="https://pt-br.reactjs.org/">ReactJS</a>, e treinando para ser um Back-End Developer e quem sabe um Fullstack <br>
+    Gruadado em Analise e Desenvolvimento de Sistemas e Front-End Junior na <a href=https://www.sptech.school/">SPTech Digital High School</a>. <br> Estudando sempre <a href="https://nodejs.org/en/">NodeJS</a>, <a href="https://pt-br.reactjs.org/">ReactJS</a>, e treinando para ser um FullStack Developer.<br>
     Se caso gostarem dê uma estrela no projeto!✨ <br>
     Se caso precisarem entrar em contato comigo abaixo estão minhas redes socias 
     <p align="left">

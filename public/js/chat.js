@@ -1,6 +1,6 @@
 const userLoged = JSON.parse(localStorage.getItem("user"));
 
-const { username, email, id, token, avatar } = userLoged;
+const { name: username, email, id, token, avatar } = userLoged;
 const baseURL = "http://localhost:3333";
 const preferencesUser = {
   notification_preference: false,
@@ -300,10 +300,15 @@ socket.on("user_receiver_message", (params) => {
 
   const { notification_preference, sound_preference } = preferencesUser;
 
-  let soundNotification = document.getElementById("soundNotification");
-
-  soundNotification.play();
-
+  if(sound_preference === true) {
+    let sound = new Howl({
+      src: ["../sound/notification_sound.mp3"],
+      volume: 0.5,
+    });
+  
+    sound.play();
+  }
+  
   if (notification_preference === true) {
     Toastify({
       text: `${usernameSender} mandou uma mensagem pra você!`,

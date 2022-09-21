@@ -41,5 +41,9 @@ module.exports = async (params, callback) => {
 
   const messages = new MessagesSerialize().handle(messagesConcated);
 
+  // Listar conversar
+  // Listar mensagens Pendentes
+  // Devolver no callback
+
   callback(messages);
 };

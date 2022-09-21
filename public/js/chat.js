@@ -10,6 +10,7 @@ const preferencesUser = {
 let socket = null;
 let users = [];
 let allConversations = [];
+let messagesPending = [];
 
 socket = io();
 
@@ -56,12 +57,17 @@ function updateListAllConversations(lastConversations) {
     ).innerHTML;
 
     lastConversations.forEach((item) => {
+      const quantityMessages = messagesPending.filter(
+        (message) => message.fkUserSender === item.fkUserReceiver
+      ).length;
+
       const renderedConversations = Mustache.render(templateListConversations, {
         idUser: item.user_receiver.id,
         nameUser: item.user_receiver.name,
         avatarUser: item.user_receiver.avatar
           ? `${baseURL}/images/${item.user_receiver.avatar}`
           : "../images/user3.png",
+        quantityMessages,
       });
 
       document.getElementById("list_peoples").innerHTML +=
@@ -273,7 +279,10 @@ socket.emit(
   { username, email },
   (messagesStatusPending, lastConversations) => {
     allConversations = lastConversations;
+    messagesPending = messagesStatusPending;
+
     updateListAllConversations(lastConversations);
+
     if (messagesStatusPending.length > 0) {
       messagesStatusPending.map((messageUser) => {
         Toastify({
@@ -300,15 +309,15 @@ socket.on("user_receiver_message", (params) => {
 
   const { notification_preference, sound_preference } = preferencesUser;
 
-  if(sound_preference === true) {
+  if (sound_preference === true) {
     let sound = new Howl({
       src: ["../sound/notification_sound.mp3"],
       volume: 0.5,
     });
-  
+
     sound.play();
   }
-  
+
   if (notification_preference === true) {
     Toastify({
       text: `${usernameSender} mandou uma mensagem pra você!`,

@@ -23,36 +23,74 @@
     <link rel="stylesheet" href="../css/global.css" />
     <link rel="stylesheet" href="../css/navbar.css" />
     <link rel="stylesheet" href="../css/chat.css" />
-    <link rel="stylesheet" href="../css/profile.css" />
+    <link rel="stylesheet" href="../css/edit.css" />
   </head>
   <body>
     <div class="container">
       <div class="main">
         <div class="listUsers">
-          <div class="section-profile">
-            <div class="header-profile">
+          <div class="section-edit" id="section-profile">
+            <div class="header-section-edit">
               <img
-                id="arrow-profile"
+                id="arrow-edit"
                 src="../images/left-arrow.png"
                 alt="Icone de voltar"
+                onclick="backForMain('section-profile')"
               />
               <p>Perfil</p>
             </div>
-            <div class="container-profile">
+            <div class="container-edit">
               <label for="file-input">
                 <img id="imageUserProfile" title="Alterar Imagem" />
               </label>
               <input type="file" class="update_file" id="file-input" />
-              <div class="description-profile">
+              <div class="description-edit">
                 <h4>Seu nome</h4>
                 <div class="section-edit-profile">
                   <input type="text" id="input-profile-name" />
                   <img src="../images/edit.png" id="image-profile-edit" />
                 </div>
-                <p>
+                <p class="description-text">
                   Esse é nome de seu usuario e será visivel para seus contatos e
                   as outras pessoas cadastradas na aplicação.
                 </p>
+              </div>
+            </div>
+          </div>
+          <div class="section-edit" id="section-config">
+            <div class="header-section-edit">
+              <img
+                id="arrow-edit"
+                src="../images/left-arrow.png"
+                alt="Icone de voltar"
+                onclick="backForMain('section-config')"
+              />
+              <p>Configurações</p>
+            </div>
+            <div class="container-edit">
+              <div class="row-edit">
+                <p class="description-text">PREFERENCIAS</p>
+              </div>
+              <div class="row-edit">
+                <div class="options-section">
+                  <span>Notificações de Mensagens</span>
+                  <p>Mostrar Notificações de novas mensagens</p>
+                </div>
+                <label class="check-section">
+                  <input id="notification_preference" type="checkbox" />
+                  <span></span>
+                </label>
+              </div>
+
+              <div class="row-edit">
+                <div class="options-section">
+                  <span>Sons</span>
+                  <p>Reproduzir sons ao receber mensagens</p>
+                </div>
+                <label class="check-section">
+                  <input id="sound_preference" type="checkbox" />
+                  <span></span>
+                </label>
               </div>
             </div>
           </div>
@@ -66,6 +104,12 @@
                 class="open_modal"
                 alt="Nova conversa"
                 title="Nova Conversa"
+              />
+              <img
+                src="../images/settings.png"
+                alt="Configurações"
+                title="Configurações"
+                id="configButton"
               />
               <img
                 src="../images/logout.png"
@@ -183,6 +227,7 @@
     <script src="https://unpkg.com/mustache@latest"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
     <script src="js/chat.js"></script>
   </body>
 </html>

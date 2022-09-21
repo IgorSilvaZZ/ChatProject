@@ -1,4 +1,4 @@
-.section-profile {
+.section-edit {
   position: absolute;
 
   width: 100%;
@@ -15,7 +15,7 @@
   transition: 350ms;
 }
 
-.header-profile {
+.header-section-edit {
   display: flex;
   align-items: center;
 
@@ -27,14 +27,14 @@
   background: #2c3e50;
 }
 
-.header-profile p {
+.header-section-edit p {
   font-size: 25px;
   font-weight: 700;
 
   color: white;
 }
 
-.header-profile img {
+.header-section-edit img {
   width: 5%;
 
   margin: 0px 20px;
@@ -42,7 +42,7 @@
   cursor: pointer;
 }
 
-.container-profile {
+.container-edit {
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -54,13 +54,13 @@
   border-radius: 0px 0px 0px 20px;
 }
 
-.container-profile label {
+.container-edit label {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.container-profile img {
+.container-edit img {
   margin: 30px 0px;
 
   width: 40%;
@@ -68,14 +68,14 @@
   cursor: pointer;
 }
 
-.container-profile > input {
+.container-edit > input {
   width: 0;
   height: 0;
 
   visibility: hidden;
 }
 
-.description-profile {
+.description-edit {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -85,7 +85,7 @@
   width: 85%;
 }
 
-.description-profile h4 {
+.description-edit h4 {
   color: #47126b;
 }
 
@@ -122,8 +122,98 @@
   transition: all 0.2s;
 }
 
-.description-profile p {
+.description-text {
   color: #3c096c;
 
   font-weight: 600;
+}
+
+.row-edit {
+  display: flex;
+
+  width: 90%;
+  height: 10%;
+
+  padding: 10px;
+}
+
+.options-section {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  width: 85%;
+  height: 100%;
+}
+
+.options-section span {
+  font-size: 14px;
+
+  color: #3c096c;
+
+  font-weight: 500;
+}
+
+.options-section p {
+  font-size: 12px;
+
+  color: white;
+}
+
+.check-section {
+  position: relative;
+
+  width: 15%;
+  height: 100%;
+}
+
+.check-section input {
+  position: absolute;
+
+  width: 0;
+  height: 0;
+
+  opacity: 0;
+
+  cursor: pointer;
+}
+
+.check-section span {
+  position: absolute;
+
+  height: 20px;
+  width: 20px;
+
+  border: 2px solid #b4b7ba;
+  border-radius: 5px;
+
+  cursor: pointer;
+}
+
+.check-section input:checked ~ span {
+  background-color: #3c096c;
+}
+
+.check-section span::after {
+  content: "";
+
+  position: absolute;
+  display: none;
+
+  left: 7px;
+  top: 2px;
+
+  width: 5px;
+  height: 10px;
+
+  border: solid white;
+  border-width: 0 3px 3px 0;
+
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.check-section input:checked ~ span::after {
+  display: block;
 }

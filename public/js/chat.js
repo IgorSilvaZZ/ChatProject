@@ -1,15 +1,15 @@
 const userLoged = JSON.parse(localStorage.getItem("user"));
 
-const username = userLoged.name;
-const email = userLoged.email;
-const id = userLoged.id;
-const token = userLoged.token;
-const avatar = userLoged.avatar;
+const { name: username, email, id, token, avatar } = userLoged;
+const baseURL = "http://localhost:3333";
+const preferencesUser = {
+  notification_preference: false,
+  sound_preference: false,
+};
 
 let socket = null;
 let users = [];
 let allConversations = [];
-const baseURL = "http://localhost:3333";
 
 socket = io();
 
@@ -22,17 +22,19 @@ function listMessagesUsers(params, templateName, idUser) {
 
   const chatContainer = document.getElementById(`chatContainer${idUser}`);
 
-  const template = document.getElementById(templateName).innerHTML;
+  if (chatContainer) {
+    const template = document.getElementById(templateName).innerHTML;
 
-  const rendered = Mustache.render(template, {
-    name: params.nameUserSender,
-    message: params.message,
-    date: dayjs(params.createdAt).format("DD/MM/YY HH:mm:ss"),
-  });
+    const rendered = Mustache.render(template, {
+      name: params.nameUserSender,
+      message: params.message,
+      date: dayjs(params.createdAt).format("DD/MM/YY HH:mm:ss"),
+    });
 
-  chatContainer.innerHTML += rendered;
+    chatContainer.innerHTML += rendered;
 
-  containerChat.scrollTo(0, containerChat.scrollHeight);
+    containerChat.scrollTo(0, containerChat.scrollHeight);
+  }
 }
 
 function openModal() {
@@ -243,6 +245,20 @@ function createUsersModal(listUsers) {
   });
 }
 
+function backForMain(idSection) {
+  document.getElementById(idSection).style.left = "-100vh";
+}
+
+function changePreferences(checked, preference) {
+  const preferenceValue = checked;
+
+  socket.emit("change_preference", {
+    user_id: id,
+    preference,
+    preferenceValue,
+  });
+}
+
 /* =========================== */
 
 /* ======= EMISSÃO/ESCUTA DE EVENTOS ======== */
@@ -271,15 +287,36 @@ socket.emit(
   }
 );
 
+socket.emit("list_preferences", { user_id: id }, (preferences) => {
+  for (property in preferences) {
+    if (["notification_preference", "sound_preference"].includes(property)) {
+      preferencesUser[property] = preferences[property];
+    }
+  }
+});
+
 socket.on("user_receiver_message", (params) => {
   const { text, usernameSender, idUser } = params;
 
-  Toastify({
-    text: `${usernameSender} mandou uma mensagem pra você!`,
-    backgroundColor: "linear-gradient(to right, #6d23b6, #47126b)",
-    duration: 2000,
-    onClick: () => talk(idUser),
-  }).showToast();
+  const { notification_preference, sound_preference } = preferencesUser;
+
+  if(sound_preference === true) {
+    let sound = new Howl({
+      src: ["../sound/notification_sound.mp3"],
+      volume: 0.5,
+    });
+  
+    sound.play();
+  }
+  
+  if (notification_preference === true) {
+    Toastify({
+      text: `${usernameSender} mandou uma mensagem pra você!`,
+      backgroundColor: "linear-gradient(to right, #6d23b6, #47126b)",
+      duration: 2000,
+      onClick: () => talk(idUser),
+    }).showToast();
+  }
 
   const paramsRender = {
     name: usernameSender,
@@ -338,13 +375,17 @@ document.getElementById("searchValue").addEventListener("keyup", (event) => {
 });
 
 document.getElementById("imageUser").addEventListener("click", () => {
-  document.querySelector(".section-profile").style.left = "0";
+  document.getElementById("section-profile").style.left = "0";
 
   inputProfileName.value = username;
 });
 
-document.getElementById("arrow-profile").addEventListener("click", () => {
-  document.querySelector(".section-profile").style.left = "-100vh";
+document.getElementById("configButton").addEventListener("click", () => {
+  document.getElementById("section-config").style.left = "0";
+
+  for (property in preferencesUser) {
+    document.getElementById(property).checked = preferencesUser[property];
+  }
 });
 
 document.getElementById("logoutButton").addEventListener("click", () => {
@@ -353,6 +394,20 @@ document.getElementById("logoutButton").addEventListener("click", () => {
   localStorage.clear();
 
   window.location = "/";
+});
+
+document
+  .getElementById("notification_preference")
+  .addEventListener("change", (e) => {
+    const checked = e.target.checked;
+
+    changePreferences(checked, "notification_preference");
+  });
+
+document.getElementById("sound_preference").addEventListener("change", (e) => {
+  const checked = e.target.checked;
+
+  changePreferences(checked, "sound_preference");
 });
 
 inputProfileName.addEventListener("blur", () => {

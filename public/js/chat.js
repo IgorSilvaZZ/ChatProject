@@ -129,17 +129,26 @@ function talk(idUser) {
     fkUserParticipant: user.id,
   };
 
-  socket.emit("list_messages", paramsListMessages, (messages) => {
-    if (messages.length > 0) {
-      messages.map((item) => {
-        if (item.idUserSender === id) {
-          listMessagesUsers(item, "template_user_send_message", idUser);
-        } else {
-          listMessagesUsers(item, "template_user_receiver_message", idUser);
-        }
-      });
+  socket.emit(
+    "list_messages",
+    paramsListMessages,
+    (messages, lastConversations, messagesStatusPending) => {
+      allConversations = lastConversations;
+      messagesPending = messagesStatusPending;
+
+      updateListAllConversations(allConversations);
+
+      if (messages.length > 0) {
+        messages.map((item) => {
+          if (item.idUserSender === id) {
+            listMessagesUsers(item, "template_user_send_message", idUser);
+          } else {
+            listMessagesUsers(item, "template_user_receiver_message", idUser);
+          }
+        });
+      }
     }
-  });
+  );
 }
 
 function sendMessage(paramsUser) {
@@ -282,17 +291,6 @@ socket.emit(
     messagesPending = messagesStatusPending;
 
     updateListAllConversations(lastConversations);
-
-    if (messagesStatusPending.length > 0) {
-      messagesStatusPending.map((messageUser) => {
-        Toastify({
-          text: `${messageUser.user_sender.name} enviou uma mensagem, enquanto estava offline!`,
-          backgroundColor: "#5f27cd",
-          duration: 2000,
-          onClick: () => talk(messageUser.user_sender.id),
-        }).showToast();
-      });
-    }
   }
 );
 
@@ -336,8 +334,10 @@ socket.on("user_receiver_message", (params) => {
   socket.emit(
     "list_last_conversations",
     { fkUserSender: id },
-    (lastConversations) => {
+    (lastConversations, messagesStatusPending) => {
       allConversations = lastConversations;
+      messagesPending = messagesStatusPending;
+
       updateListAllConversations(lastConversations);
     }
   );

@@ -1,28 +1,24 @@
-const { verify } = require('jsonwebtoken');
-const { secret } = require('../config/auth.json');
+const { verify } = require("jsonwebtoken");
+const { secret } = require("../config/auth.json");
 
 const ensureAuthenticated = (req, res, next) => {
+  const authToken = req.headers.authorization;
 
-    const authToken = req.headers.authorization;
+  if (!authToken) {
+    return res.status(401).end();
+  }
 
-    if(!authToken){
-        return res.status(401).end();
-    }
+  const [, token] = authToken.split(" ");
 
-    const [, token ] = authToken.split(' ');
+  try {
+    const { sub } = verify(token, secret);
 
-    try {
+    req.userId = sub;
 
-        const { sub } = verify(token, secret);
+    return next();
+  } catch (error) {
+    return res.status(401).end();
+  }
+};
 
-        req.userId = sub;
-
-        return next();
-
-    } catch (error) {
-        return res.status(401).end();
-    }
-
-}
-
-module.exports = { ensureAuthenticated }
+module.exports = { ensureAuthenticated };

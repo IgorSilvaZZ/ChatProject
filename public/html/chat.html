@@ -136,13 +136,17 @@
             <span class="listPeoples" id="list_conversations">
               <div id="notFoundMessages">
                 <img src="../images/new-message.png" />
-                <p>Clique em nova conversa para inicar uma nova conversa.</p>
+                <p>Clique em uma conversa para iniciar uma nova conversa.</p>
               </div>
               <div id="list_peoples"></div>
               <script id="template_conversations" type="x-tmpl-mustache">
                   <div class="people" id="user{{idUser}}" onclick="talk('{{idUser}}')">
                     <img class="people_icon" src="{{avatarUser}}">
                     <p class="people_text">{{nameUser}}</p>
+                    {{ #quantityMessages }}
+
+                    <p class="quantity_messages">{{ quantityMessages }}</p>
+                    {{ /quantityMessages }}
                 </div>
               </script>
             </span>

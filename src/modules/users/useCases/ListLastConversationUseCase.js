@@ -1,4 +1,7 @@
 const {
+  ListStatusMessagesService,
+} = require("../../messages/services/ListStatusMessagesService");
+const {
   ListAllConversationsUserService,
 } = require("../services/ListAllConversationsUserService");
 
@@ -9,5 +12,10 @@ module.exports = async (params, callback) => {
     fkUserSender
   );
 
-  callback(conversations);
+  const messagesStatusPending = await new ListStatusMessagesService().handle({
+    statusMessage: false,
+    fkUserReceiver: fkUserSender,
+  });
+
+  callback(conversations, messagesStatusPending);
 };

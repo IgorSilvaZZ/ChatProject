@@ -9,6 +9,9 @@ const {
 const { UpdateMessageService } = require("../services/UpdateMessageService");
 
 const { MessagesSerialize } = require("../../../serializes/MessagesSerialize");
+const {
+  ListStatusMessagesService,
+} = require("../services/ListStatusMessagesService");
 
 module.exports = async (params, callback) => {
   const { fkUser, fkUserParticipant } = params;
@@ -41,5 +44,17 @@ module.exports = async (params, callback) => {
 
   const messages = new MessagesSerialize().handle(messagesConcated);
 
-  callback(messages);
+  // Listar ultimas conversas atualizadas
+  const lastConversations = await new ListAllConversationsUserService().handle(
+    fkUser
+  );
+
+  // Listar mensagens Pendentes
+  const messagesStatusPending = await new ListStatusMessagesService().handle({
+    fkUserReceiver: fkUser,
+    statusMessage: false,
+  });
+
+  // Devolver no callback
+  callback(messages, lastConversations, messagesStatusPending);
 };

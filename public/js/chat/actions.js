@@ -1,5 +1,3 @@
-/* ======= FUNÇÕES USADA NO RESTANTE DO CODIGO ======== */
-
 function listMessagesUsers(params, templateName, idUser) {
   const containerChat = document.getElementById(`containerChat`);
 
@@ -18,12 +16,6 @@ function listMessagesUsers(params, templateName, idUser) {
 
     containerChat.scrollTo(0, containerChat.scrollHeight);
   }
-}
-
-function openModal() {
-  document.getElementById("modalSection").style.top = "0";
-
-  createUsersModal(users);
 }
 
 function updateListAllConversations(lastConversations) {
@@ -255,5 +247,3 @@ function changePreferences(checked, preference) {
     preferenceValue,
   });
 }
-
-/* =========================== */

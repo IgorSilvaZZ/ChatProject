@@ -34,33 +34,43 @@ O projeto consiste em um chat em tempo real. Para diversas pessoas que tiverem o
 - [Sqlite](https://www.sqlite.org/index.html)
 - [BcryptJS](https://github.com/dcodeIO/bcrypt.js#readme)
 - [Multer](https://github.com/expressjs/multer/blob/master/doc/README-pt-br.md)
+- [HowlerJS](https://howlerjs.com/)
 
 <br>
 
 <h2>💬Como usar:</h2>
 
 ### Clonar o Projeto
+
 ```sh
 $ git clone https://github.com/IgorSilvaZZ/ChatProject
 $ cd ChatProject
 ```
 
 ### Instalar dependecias
+
 ```sh
 $ npm i
 $ code .
 ```
 
 ### Executar projeto
+
 ```sh
 $ npm run dev
+```
+
+### Colocar no navegador
+
+```sh
+    http://localhost:3333/
 ```
 
 <br>
 
 <h1>📜Sobre</h1>
 <div>
-    Gruadado em Analise e Desenvolvimento de Sistemas e Front-End Junior na <a href=https://www.sptech.school/">SPTech Digital High School</a>. <br> Estudando sempre <a href="https://nodejs.org/en/">NodeJS</a>, <a href="https://pt-br.reactjs.org/">ReactJS</a>, e treinando para ser um FullStack Developer.<br>
+    Graduado em Analise e Desenvolvimento de Sistemas e FullStack na <a href="https://www.orama.com.br/">Orama Investimos</a>. <br> Estudando sempre <a href="https://nodejs.org/en/">NodeJS</a>, <a href="https://pt-br.reactjs.org/">ReactJS</a>, e <a href="https://www.javascript.com/">Javascript</a> <br>
     Se caso gostarem dê uma estrela no projeto!✨ <br>
     Se caso precisarem entrar em contato comigo abaixo estão minhas redes socias 
     <p align="left">

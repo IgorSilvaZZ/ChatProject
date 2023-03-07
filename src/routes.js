@@ -45,6 +45,10 @@ router.get("/register", (req, res) => {
   return res.render("html/register.html");
 });
 
+router.get("/newRegister", (req, res) => {
+  return res.render("html/newRegister.html");
+});
+
 router.patch(
   "/avatar",
   ensureAuthenticated,

@@ -3,11 +3,35 @@ const baseURL = "http://localhost:3333";
 let socket = null;
 socket = io();
 
+function validateAuthenticateUser({ email, password }) {
+  if (email === "") {
+    Toastify({
+      text: "Digite um email para continuar!",
+      backgroundColor: "linear-gradient(to right, #e74c3c, #c0392b)",
+      duration: 2000,
+    }).showToast();
+
+    return;
+  }
+
+  if (password === "") {
+    Toastify({
+      text: "Digite uma senha para continuar!",
+      backgroundColor: "linear-gradient(to right, #e74c3c, #c0392b)",
+      duration: 2000,
+    }).showToast();
+
+    return;
+  }
+}
+
 async function handleLogin() {
   const dataUser = {
-    email: document.getElementById("email").value,
-    password: document.getElementById("password").value,
+    email: document.getElementById("email_input").value,
+    password: document.getElementById("password_input").value,
   };
+
+  validateAuthenticateUser(dataUser);
 
   try {
     const { data } = await axios.post(`${baseURL}/authenticate`, dataUser);
@@ -48,5 +72,9 @@ async function handleLogin() {
     }
   }
 }
+
+document
+  .getElementById("register_link")
+  .addEventListener("click", () => (window.location = "/newRegister"));
 
 document.getElementById("btnSubmit").addEventListener("click", handleLogin);

@@ -1,12 +1,46 @@
 let socket = null;
 socket = io();
 
+function validationUserData({ name, email, password }) {
+  if (name === "" || (name.length < 3 && name.length > 100)) {
+    Toastify({
+      text: "Insira um nome valido!",
+      backgroundColor: "linear-gradient(to right, #e74c3c, #c0392b)",
+      duration: 2000,
+    }).showToast();
+
+    return;
+  }
+
+  if (email === "") {
+    Toastify({
+      text: "Email é obrigatorio!",
+      backgroundColor: "linear-gradient(to right, #e74c3c, #c0392b)",
+      duration: 2000,
+    }).showToast();
+
+    return;
+  }
+
+  if (password === "" || (password.length < 3 && password.length > 50)) {
+    Toastify({
+      text: "Insira uma senha valida!",
+      backgroundColor: "linear-gradient(to right, #e74c3c, #c0392b)",
+      duration: 2000,
+    }).showToast();
+
+    return;
+  }
+}
+
 async function handleSubmit() {
   const userData = {
-    name: document.getElementById("name").value,
-    email: document.getElementById("email").value,
-    password: document.getElementById("password").value,
+    name: document.getElementById("name_input").value,
+    email: document.getElementById("email_input").value,
+    password: document.getElementById("password_input").value,
   };
+
+  validationUserData(userData);
 
   try {
     const { data } = await axios.post(
@@ -48,5 +82,9 @@ async function handleSubmit() {
     }
   }
 }
+
+document
+  .getElementById("login_link")
+  .addEventListener("click", () => (window.location = "/newLogin"));
 
 document.getElementById("btnSubmit").addEventListener("click", handleSubmit);

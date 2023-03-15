@@ -19,58 +19,32 @@
       type="text/css"
       href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
     />
-    <title>Register</title>
-    <link rel="stylesheet" href="../css/register.css" />
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/newRegister.css" />
+    <title>Registro</title>
   </head>
   <body>
-    <div class="container">
-      <div class="imageContainer">
-        <div class="containerImage">
-          <img src="../images/registerImg.svg" />
+    <main class="main">
+      <div class="form-section">
+        <span>Criei sua conta de graça</span>
+        <h1>Crie sua conta!</h1>
+        <p>Já tem conta? <b id="login_link">Logar-se</b></p>
+
+        <div class="form-section-inputs">
+          <input type="text" placeholder="Nome" id="name_input" />
+          <input type="email" placeholder="Email" id="email_input" />
+          <input type="password" placeholder="Senha" id="password_input" />
+
+          <button id="btnSubmit">Enviar</button>
         </div>
       </div>
-      <div class="containerForm">
-        <div class="inputsContainer">
-          <div class="headerForm">
-            <h3>Register</h3>
-          </div>
-          <div class="formContainer">
-            <div class="rowInput">
-              <div class="inputContainer fullWidth">
-                <div class="imageInput">
-                  <img src="../images/email.png" />
-                </div>
-                <div class="containerInput">
-                  <input type="text" id="email" placeholder="Email" />
-                </div>
-              </div>
-            </div>
-            <div class="rowInput">
-              <div class="inputContainer">
-                <div class="imageInput widthImage">
-                  <img src="../images/userInput.svg" />
-                </div>
-                <div class="containerInput">
-                  <input type="text" id="name" placeholder="Name" />
-                </div>
-              </div>
-              <div class="inputContainer">
-                <div class="imageInput widthImage">
-                  <img src="../images/padlock.png" />
-                </div>
-                <div class="containerInput">
-                  <input type="password" id="password" placeholder="Password" />
-                </div>
-              </div>
-            </div>
-            <div class="containerButtons">
-              <button class="buttonSubmit" id="btnBack">Voltar</button>
-              <button class="buttonSubmit" id="btnSubmit">Registrar</button>
-            </div>
-          </div>
-        </div>
+
+      <div class="separator"></div>
+
+      <div class="register-image">
+        <img src="../images/new-register-image.png" alt="Register Image" />
       </div>
-    </div>
+    </main>
 
     <script
       type="text/javascript"
@@ -79,11 +53,5 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="../js/register.js"></script>
-
-    <script>
-      document.getElementById("btnBack").addEventListener("click", () => {
-        window.location = "/";
-      });
-    </script>
   </body>
 </html>

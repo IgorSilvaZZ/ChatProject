@@ -1,3 +1,19 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #353b48;
+  overflow-y: hidden;
+}
+.container {
+  display: flex;
+  height: 95%;
+  width: 95%;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+}
+
 .main {
   display: flex;
   height: 100%;

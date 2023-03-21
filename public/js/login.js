@@ -3,37 +3,33 @@ const baseURL = "http://localhost:3333";
 let socket = null;
 socket = io();
 
-function validateAuthenticateUser({ email, password }) {
-  if (email === "") {
-    Toastify({
-      text: "Digite um email para continuar!",
-      backgroundColor: "linear-gradient(to right, #e74c3c, #c0392b)",
-      duration: 2000,
-    }).showToast();
-
-    return;
-  }
-
-  if (password === "") {
-    Toastify({
-      text: "Digite uma senha para continuar!",
-      backgroundColor: "linear-gradient(to right, #e74c3c, #c0392b)",
-      duration: 2000,
-    }).showToast();
-
-    return;
-  }
-}
-
 async function handleLogin() {
   const dataUser = {
     email: document.getElementById("email_input").value,
     password: document.getElementById("password_input").value,
   };
 
-  validateAuthenticateUser(dataUser);
-
   try {
+    if (dataUser.email === "") {
+      Toastify({
+        text: "Digite um email para continuar!",
+        backgroundColor: "linear-gradient(to right, #e74c3c, #c0392b)",
+        duration: 2000,
+      }).showToast();
+
+      return;
+    }
+
+    if (dataUser.password === "") {
+      Toastify({
+        text: "Digite uma senha para continuar!",
+        backgroundColor: "linear-gradient(to right, #e74c3c, #c0392b)",
+        duration: 2000,
+      }).showToast();
+
+      return userIsValid;
+    }
+
     const { data } = await axios.post(`${baseURL}/authenticate`, dataUser);
 
     const user = {

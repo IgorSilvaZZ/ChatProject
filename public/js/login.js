@@ -75,6 +75,6 @@ async function handleLogin() {
 
 document
   .getElementById("register_link")
-  .addEventListener("click", () => (window.location = "/newRegister"));
+  .addEventListener("click", () => (window.location = "/register"));
 
 document.getElementById("btnSubmit").addEventListener("click", handleLogin);

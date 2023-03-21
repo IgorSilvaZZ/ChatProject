@@ -3,14 +3,14 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: #353b48;
+  background: #323232;
   overflow-y: hidden;
 }
 .container {
   display: flex;
   height: 95%;
   width: 95%;
-  background: rgba(0, 0, 0, 0.5);
+  background: #131313;
   border-radius: 20px;
 }
 

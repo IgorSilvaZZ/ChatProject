@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -19,44 +19,31 @@
       type="text/css"
       href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
     />
-    <title>Home</title>
-    <link rel="stylesheet" href="../css/home.css" />
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/login.css" />
+    <title>Login</title>
   </head>
   <body>
-    <div class="container">
-      <div class="imageContainer">
-        <div class="containerImage">
-          <img src="../images/programmer.svg" />
+    <main class="main">
+      <div class="login-image">
+        <img src="../images/login-image.png" alt="Login Image" />
+      </div>
+
+      <div class="separator"></div>
+
+      <div class="form-section">
+        <h1>Logue para continuar no Chat!</h1>
+
+        <div class="form-section-inputs">
+          <input type="email" placeholder="Email" id="email_input" />
+          <input type="password" placeholder="Senha" id="password_input" />
+
+          <button id="btnSubmit">Entrar</button>
+
+          <p>Não tem Conta? <b id="register_link">Registrar-se</b></p>
         </div>
       </div>
-      <div class="containerForm">
-        <div class="headerForm">
-          <h1>Login</h1>
-        </div>
-        <div class="formContainer">
-          <div class="inputContainer">
-            <div class="imageInput">
-              <img src="../images/userInput.svg" />
-            </div>
-            <div class="containerInput">
-              <input type="text" id="email" placeholder="Email" />
-            </div>
-          </div>
-          <div class="inputContainer">
-            <div class="imageInput">
-              <img src="../images/padlock.png" />
-            </div>
-            <div class="containerInput">
-              <input type="password" id="password" placeholder="Password" />
-            </div>
-          </div>
-          <div class="containerButtons">
-            <button class="buttonSubmit" id="btnSubmit">Entrar</button>
-            <button class="buttonSubmit" id="btnRegister">Registrar</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    </main>
 
     <script
       type="text/javascript"
@@ -65,11 +52,5 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="../js/login.js"></script>
-
-    <script>
-      document.getElementById("btnRegister").addEventListener("click", () => {
-        window.location = "/register";
-      });
-    </script>
   </body>
 </html>

@@ -5,11 +5,31 @@ socket = io();
 
 async function handleLogin() {
   const dataUser = {
-    email: document.getElementById("email").value,
-    password: document.getElementById("password").value,
+    email: document.getElementById("email_input").value,
+    password: document.getElementById("password_input").value,
   };
 
   try {
+    if (dataUser.email === "") {
+      Toastify({
+        text: "Digite um email para continuar!",
+        backgroundColor: "linear-gradient(to right, #e74c3c, #c0392b)",
+        duration: 2000,
+      }).showToast();
+
+      return;
+    }
+
+    if (dataUser.password === "") {
+      Toastify({
+        text: "Digite uma senha para continuar!",
+        backgroundColor: "linear-gradient(to right, #e74c3c, #c0392b)",
+        duration: 2000,
+      }).showToast();
+
+      return userIsValid;
+    }
+
     const { data } = await axios.post(`${baseURL}/authenticate`, dataUser);
 
     const user = {
@@ -48,5 +68,9 @@ async function handleLogin() {
     }
   }
 }
+
+document
+  .getElementById("register_link")
+  .addEventListener("click", () => (window.location = "/register"));
 
 document.getElementById("btnSubmit").addEventListener("click", handleLogin);

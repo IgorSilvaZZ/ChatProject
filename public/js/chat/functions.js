@@ -241,9 +241,5 @@ function backForMain(idSection) {
 function changePreferences(checked, preference) {
   const preferenceValue = checked;
 
-  socket.emit("change_preference", {
-    user_id: id,
-    preference,
-    preferenceValue,
-  });
+  // Chamar a rota de update de preferences e atualizar no localStorage as preferencias atualizadas
 }

@@ -1,6 +1,12 @@
-const { UsersRepository } = require("../repositories/UsersRepository");
-const { hash, compare } = require("bcryptjs");
+const { compare } = require("bcryptjs");
 const { sign } = require("jsonwebtoken");
+
+const { UsersRepository } = require("../repositories/UsersRepository");
+
+const {
+  FindByPreferenceUserService,
+} = require("../services/FindByPreferenceUserService");
+
 const { secret } = require("../../../config/auth.json");
 
 class AutheticateUserService {
@@ -15,12 +21,18 @@ class AutheticateUserService {
       throw new Error("Email/Password incorrect");
     }
 
+    const user_id = String(user.id);
+
+    const preferences = await new FindByPreferenceUserService().handle({
+      user_id,
+    });
+
     const token = sign({ email: user.email }, secret, {
-      subject: String(user.id),
+      subject: user_id,
       expiresIn: "1d",
     });
 
-    return { user, token };
+    return { user, preferences, token };
   }
 }
 

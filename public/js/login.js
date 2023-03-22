@@ -38,6 +38,10 @@ async function handleLogin() {
       email: data.user.email,
       token: data.token,
       avatar: data.user.avatar,
+      preferences: {
+        notification_preference: data.preferences.notification_preference,
+        sound_preference: data.preferences.sound_preference,
+      },
     };
 
     localStorage.setItem("user", JSON.stringify(user));

@@ -238,8 +238,19 @@ function backForMain(idSection) {
   document.getElementById(idSection).style.left = "-100vh";
 }
 
-function changePreferences(checked, preference) {
-  const preferenceValue = checked;
+async function changePreferences(checked, preference) {
+  const { data } = await axios.patch(
+    "http://localhost:3333/user/preferences",
+    {
+      preference_name: preference,
+      preference_value: checked,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
-  // Chamar a rota de update de preferences e atualizar no localStorage as preferencias atualizadas
+  console.log(data);
 }

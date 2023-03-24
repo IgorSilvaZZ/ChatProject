@@ -38,6 +38,10 @@ async function handleLogin() {
       email: data.user.email,
       token: data.token,
       avatar: data.user.avatar,
+      preferences: {
+        notification_preference: data.preferences.notification_preference,
+        sound_preference: data.preferences.sound_preference,
+      },
     };
 
     localStorage.setItem("user", JSON.stringify(user));
@@ -52,7 +56,8 @@ async function handleLogin() {
       window.location = "/chat";
     }, 2000);
   } catch (error) {
-    if (error.response.status === 400) {
+    console.log(error);
+    if (error?.response?.status === 400) {
       Toastify({
         text: "Usuario ou Senha incorretos!",
         backgroundColor: "linear-gradient(to right, #e74c3c, #c0392b)",

@@ -238,12 +238,29 @@ function backForMain(idSection) {
   document.getElementById(idSection).style.left = "-100vh";
 }
 
-function changePreferences(checked, preference) {
-  const preferenceValue = checked;
+async function changePreferences(checked, preference) {
+  await axios.patch(
+    "http://localhost:3333/user/preferences",
+    {
+      preference_name: preference,
+      preference_value: checked,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
-  socket.emit("change_preference", {
-    user_id: id,
-    preference,
-    preferenceValue,
-  });
+  const userData = JSON.parse(localStorage.getItem("user"));
+
+  const newUserData = {
+    ...userData,
+    preferences: {
+      ...userData.preferences,
+      [preference]: checked,
+    },
+  };
+
+  localStorage.setItem("user", JSON.stringify(newUserData));
 }

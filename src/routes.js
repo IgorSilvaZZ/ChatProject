@@ -26,6 +26,9 @@ const {
 const {
   UpdateUserController,
 } = require("./modules/users/controllers/UpdateUserController");
+const {
+  UpdatePreferencesController,
+} = require("./modules/users/controllers/UpdatePreferencesController");
 
 const avatarUpload = multer(upload("./tmp/avatar"));
 
@@ -53,5 +56,10 @@ router.patch(
 );
 
 router.patch("/user", ensureAuthenticated, new UpdateUserController().execute);
+router.patch(
+  "/user/preferences",
+  ensureAuthenticated,
+  new UpdatePreferencesController().execute
+);
 
 module.exports = { router };

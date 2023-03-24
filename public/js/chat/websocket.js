@@ -2,11 +2,11 @@ const userLogged = JSON.parse(localStorage.getItem("user"));
 
 const baseURL = "http://localhost:3333";
 
-const { name: username, email, id, token, avatar } = userLogged;
+const { name: username, email, id, token, avatar, preferences } = userLogged;
 
 const preferencesUser = {
-  notification_preference: false,
-  sound_preference: false,
+  notification_preference: preferences.notification_preference,
+  sound_preference: preferences.sound_preference,
 };
 
 let socket = null;
@@ -34,20 +34,12 @@ socket.emit(
   }
 );
 
-socket.emit("list_preferences", { user_id: id }, (preferences) => {
-  for (property in preferences) {
-    if (["notification_preference", "sound_preference"].includes(property)) {
-      preferencesUser[property] = preferences[property];
-    }
-  }
-});
-
 socket.on("user_receiver_message", (params) => {
   const { text, usernameSender, idUser } = params;
 
-  const { notification_preference, sound_preference } = preferencesUser;
+  const { preferences } = JSON.parse(localStorage.getItem("user"));
 
-  if (sound_preference === true) {
+  if (preferences.sound_preference === true) {
     let sound = new Howl({
       src: ["../sound/notification_sound.mp3"],
       volume: 0.5,
@@ -56,7 +48,7 @@ socket.on("user_receiver_message", (params) => {
     sound.play();
   }
 
-  if (notification_preference === true) {
+  if (preferences.notification_preference === true) {
     Toastify({
       text: `${usernameSender} mandou uma mensagem pra você!`,
       backgroundColor: "linear-gradient(to right, #6d23b6, #47126b)",
@@ -66,7 +58,7 @@ socket.on("user_receiver_message", (params) => {
   }
 
   const paramsRender = {
-    name: usernameSender,
+    nameUserSender: usernameSender,
     message: text,
     date: dayjs().format("DD/MM/YY HH:mm:ss"),
   };

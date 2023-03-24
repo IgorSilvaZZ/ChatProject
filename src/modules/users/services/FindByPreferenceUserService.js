@@ -1,5 +1,3 @@
-const { Op } = require("sequelize");
-
 const {
   PreferencesRepository,
 } = require("../repositories/PreferencesRepository");

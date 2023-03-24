@@ -239,7 +239,7 @@ function backForMain(idSection) {
 }
 
 async function changePreferences(checked, preference) {
-  const { data } = await axios.patch(
+  await axios.patch(
     "http://localhost:3333/user/preferences",
     {
       preference_name: preference,
@@ -252,5 +252,15 @@ async function changePreferences(checked, preference) {
     }
   );
 
-  console.log(data);
+  const userData = JSON.parse(localStorage.getItem("user"));
+
+  const newUserData = {
+    ...userData,
+    preferences: {
+      ...userData.preferences,
+      [preference]: checked,
+    },
+  };
+
+  localStorage.setItem("user", JSON.stringify(newUserData));
 }

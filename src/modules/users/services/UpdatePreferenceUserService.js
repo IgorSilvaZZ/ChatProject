@@ -11,8 +11,15 @@ class UpdatePreferenceUserService {
     });
 
     if (!preferencesExists) {
+      const preferenceCreate = {
+        notification_preference: false,
+        sound_preference: false,
+      };
+
       const newPreference = await PreferencesRepository.create({
+        ...preferenceCreate,
         [preference]: preferenceValue,
+        user_id,
       });
 
       return newPreference;
@@ -30,6 +37,7 @@ class UpdatePreferenceUserService {
       );
 
       const preferenceUpdated = {
+        ...preferencesExists,
         [preference]: preferenceValue,
       };
 

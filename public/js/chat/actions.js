@@ -54,6 +54,13 @@ document.getElementById("imageUser").addEventListener("click", () => {
 
 document.getElementById("configButton").addEventListener("click", () => {
   document.getElementById("section-config").style.left = "0";
+  
+  const { preferences } = JSON.parse(localStorage.getItem("user"));
+
+  for (preference in preferences) {
+    document.getElementById(preference).checked = preferences[preference];
+  }
+
 });
 
 document.getElementById("logoutButton").addEventListener("click", () => {

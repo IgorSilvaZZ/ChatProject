@@ -23,9 +23,18 @@ class AutheticateUserService {
 
     const user_id = String(user.id);
 
-    const preferences = await new FindByPreferenceUserService().handle({
+    let preferences = {};
+
+    preferences = await new FindByPreferenceUserService().handle({
       user_id,
     });
+
+    if (!preferences) {
+      preferences = {
+        notification_preference: false,
+        sound_preference: false,
+      };
+    }
 
     const token = sign({ email: user.email }, secret, {
       subject: user_id,

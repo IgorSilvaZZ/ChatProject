@@ -56,7 +56,8 @@ async function handleLogin() {
       window.location = "/chat";
     }, 2000);
   } catch (error) {
-    if (error.response.status === 400) {
+    console.log(error);
+    if (error?.response?.status === 400) {
       Toastify({
         text: "Usuario ou Senha incorretos!",
         backgroundColor: "linear-gradient(to right, #e74c3c, #c0392b)",

@@ -142,6 +142,11 @@ function sendMessage(paramsUser) {
     updateListAllConversations(lastConversations);
   });
 
+  // Emissão do novo evento de conversa e mensagem
+  socket.emit("user_send_new_message", params, (conversations) => {
+    console.log("conversations", conversations);
+  });
+
   const paramsRender = {
     nameUserSender: username,
     message: params.text,

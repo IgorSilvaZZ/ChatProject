@@ -5,6 +5,9 @@ const logoutUserUseCase = require("../modules/users/useCases/LogoutUserUseCase")
 const listAllUsersConnectionUseCase = require("../modules/connections/useCases/ListAllUsersConnectionUseCase");
 const listLastConversationsUseCase = require("../modules/users/useCases/ListLastConversationUseCase");
 
+// Novos useCases para conversas e mensagens (Nova feature)
+const sendNewMessageUseCase = require("../modules/users/useCases/SendNewMessageUseCase");
+
 module.exports = () => {
   global.io.on("connect", (socket) => {
     socket.on("access_chat", async (params, callback) => {
@@ -24,5 +27,8 @@ module.exports = () => {
     socket.on("update_users", (params) => {
       listAllUsersConnectionUseCase(params);
     });
+
+    // Novos eventos para conversas e mensagens (Nova feature)
+    socket.on("user_send_new_message", sendNewMessageUseCase);
   });
 };

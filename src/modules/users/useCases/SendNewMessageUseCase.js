@@ -45,22 +45,33 @@ class FindConversationUserService {
   }
 }
 
-const verifyConversationUsers = async ({ fkUserSender, fkUserReceiver }) => {
-  const conversation = await new FindConversationUserService().handle({
-    fkUserSender,
-    fkUserReceiver,
-  });
+class ListAllConversationUserService {
+  async handle(fkUser) {
+    const conversations = await NewConversationRepository.findAll({
+      where: {
+        [Op.or]: [{ fkUserSender: fkUser }, { fkUserReceiver: fkUser }],
+      },
+      include: [{ association: "user_receiver" }],
+    });
 
-  return conversation;
-};
+    return conversations;
+  }
+}
 
-const createConversationUser = async ({ fkUserSender, fkUserReceiver }) => {
-  const conversation = await new CreateConversationUserService().handle({
-    fkUserSender,
-    fkUserReceiver,
-  });
+const verifyConversationUser = async ({ fkUserSender, fkUserReceiver }) => {
+  const conversationForUserSender =
+    await new FindConversationUserService().handle({
+      fkUserSender,
+      fkUserReceiver,
+    });
 
-  return conversation;
+  const conversationForUserReceiver =
+    await new FindConversationUserService().handle({
+      fkUserSender: fkUserReceiver,
+      fkUserReceiver: fkUserSender,
+    });
+
+  return conversationForUserSender || conversationForUserReceiver;
 };
 
 module.exports = async (params, callback) => {
@@ -75,38 +86,57 @@ module.exports = async (params, callback) => {
 
   const fkUserSender = userSenderConnection.user_id;
 
+  let fkUserReceiver = null;
+  let emitForUserReceiver = false;
+
   // Verificando se o usuario que vai receber esta offline
   if (!userReceiverConnection || userReceiverConnection.socket_id == null) {
     // Procurando o usuario que esta offline
-    const { id: fkUserReceiver } = await new FindByEmailUser().handle(
-      emailUserReceiver
-    );
+    const { id } = await new FindByEmailUser().handle(emailUserReceiver);
 
-    // Verificando se existente para o usuario logado
-    const conversationUser = await verifyConversationUsers({
+    fkUserReceiver = id;
+  } else {
+    // Caso o usuario esteja online e capturando o o id do usuario conectado
+    fkUserReceiver = userReceiverConnection.user_id;
+    emitForUserReceiver = true;
+  }
+  // Verificar se contem uma conversa do usuario do logado (Enviando a mensagem)
+  // Tanto para fkUserSender e fkUserReceiver
+  // Garantindo que ele nao vai ter o id do usuario logado associado ao mesmo id do usuario que esta enviando a mensagem (fkUserReceiver)
+  let conversationUser = verifyConversationUser({
+    fkUserSender,
+    fkUserReceiver,
+  });
+
+  if (!conversationUser) {
+    // Assumindo que esta criando a conversa vai ser sempre o fkUserSender(Usuario que esta enviando)
+    conversationUser = await new CreateConversationUserService().handle({
       fkUserSender,
       fkUserReceiver,
     });
-
-    if (!conversationUser) {
-      await createConversationUser({
-        fkUserSender,
-        fkUserReceiver,
-      });
-    }
-
-    //Fazer veficação de conversa existente para o usuario não logado, ou seja o outro usuario que estou mandando mensagem
-    const conversationOtherUser = await verifyConversationUsers({
-      fkUserSender: fkUserReceiver,
-      fkUserReceiver: fkUserSender,
-    });
-
-    // Criando conversa que nao existe para o usuario logado
-    if (!conversationOtherUser) {
-      await createConversationUser({
-        fkUserSender: fkUserReceiver,
-        fkUserReceiver: fkUserSender,
-      });
-    }
   }
+
+  await new CreateMessageService().handle({
+    fkConversation: conversationUser.id,
+    message: text,
+    statusMessage: false,
+  });
+
+  // Criar o novo evento de receber mensagem
+  if (emitForUserReceiver) {
+    global.io
+      .to(userReceiverConnection.socket_id)
+      .emit("user_receiver_new_message", {
+        text,
+        usernameSender,
+        idUser: fkUserSender,
+      });
+  }
+
+  // Listando as conversas existente do usuario que esta enviando a mensagem
+  const conversationsUser = await new ListAllConversationUserService().handle(
+    fkUserSender
+  );
+
+  callback(conversationsUser);
 };

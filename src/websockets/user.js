@@ -7,6 +7,7 @@ const listLastConversationsUseCase = require("../modules/users/useCases/ListLast
 
 // Novos useCases para conversas e mensagens (Nova feature)
 const sendNewMessageUseCase = require("../modules/users/useCases/SendNewMessageUseCase");
+const listLastNewConversations = require("../modules/users/useCases/ListLastNewConversationUseCase");
 
 module.exports = () => {
   global.io.on("connect", (socket) => {
@@ -30,5 +31,7 @@ module.exports = () => {
 
     // Novos eventos para conversas e mensagens (Nova feature)
     socket.on("user_send_new_message", sendNewMessageUseCase);
+
+    socket.on("list_user_new_conversations", listLastNewConversations);
   });
 };

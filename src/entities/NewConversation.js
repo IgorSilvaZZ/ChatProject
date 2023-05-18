@@ -7,7 +7,7 @@ class NewConversation extends Model {
         fkUserSender: DataTypes.INTEGER,
         fkUserReceiver: DataTypes.INTEGER,
         createdAt: DataTypes.DATE,
-        updateAt: DataTypes.DATE,
+        updatedAt: DataTypes.DATE,
       },
       {
         sequelize,

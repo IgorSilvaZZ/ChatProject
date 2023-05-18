@@ -74,6 +74,14 @@ socket.on("user_receiver_message", (params) => {
     }
   );
 
+  socket.emit(
+    "list_user_new_conversations",
+    { fkUser: id },
+    (lastConversations) => {
+      console.log(lastConversations);
+    }
+  );
+
   listMessagesUsers(
     paramsRender,
     "template_user_receiver_message",

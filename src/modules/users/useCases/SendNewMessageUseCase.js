@@ -10,6 +10,10 @@ const {
 
 const { FindByEmailUser } = require("../services/FindByEmailUser");
 
+const {
+  FindByEmailUserConnectionService,
+} = require("../../connections/services/FindByEmailUserConnectionService");
+
 class CreateMessageService {
   async handle({ message, fkConversation, statusMessage }) {
     const messageSend = NewMessagesRepository.create({
@@ -51,7 +55,10 @@ class ListAllConversationUserService {
       where: {
         [Op.or]: [{ fkUserSender: fkUser }, { fkUserReceiver: fkUser }],
       },
-      include: [{ association: "user_receiver" }],
+      include: [
+        { association: "user_sender" },
+        { association: "user_receiver" },
+      ],
     });
 
     return conversations;
@@ -103,7 +110,7 @@ module.exports = async (params, callback) => {
   // Verificar se contem uma conversa do usuario do logado (Enviando a mensagem)
   // Tanto para fkUserSender e fkUserReceiver
   // Garantindo que ele nao vai ter o id do usuario logado associado ao mesmo id do usuario que esta enviando a mensagem (fkUserReceiver)
-  let conversationUser = verifyConversationUser({
+  let conversationUser = await verifyConversationUser({
     fkUserSender,
     fkUserReceiver,
   });

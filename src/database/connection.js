@@ -27,6 +27,6 @@ Message.associate(connection.models);
 Conversation.associate(connection.models);
 
 NewMessage.associate(connection.models);
-NewMessage.associate(connection.models);
+NewConversation.associate(connection.models);
 
 module.exports = connection;

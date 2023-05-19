@@ -26,9 +26,11 @@ socket.emit("list_all_users", null, (listUsers) => {
 socket.emit(
   "access_chat",
   { username, email },
-  (messagesStatusPending, lastConversations) => {
+  (messagesStatusPending, lastConversations, lastMessagesConversations) => {
     allConversations = lastConversations;
     messagesPending = messagesStatusPending;
+
+    console.log(lastMessagesConversations);
 
     updateListAllConversations(lastConversations);
   }
@@ -74,13 +76,13 @@ socket.on("user_receiver_message", (params) => {
     }
   );
 
-  socket.emit(
+  /* socket.emit(
     "list_user_new_conversations",
     { fkUser: id },
-    (lastConversations) => {
-      console.log(lastConversations);
+    (lastConversations, lastMessagesConversations) => {
+      console.log(lastConversations, lastMessagesConversations);
     }
-  );
+  ); */
 
   listMessagesUsers(
     paramsRender,

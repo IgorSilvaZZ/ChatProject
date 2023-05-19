@@ -40,9 +40,9 @@ module.exports = async (params, callback) => {
     fkUserSender: fkUserParticipant,
   });
 
-  const messagesConcated = messagesUserSender.concat(messagesUserReceiver);
+  const messagesConcatenated = messagesUserSender.concat(messagesUserReceiver);
 
-  const messages = new MessagesSerialize().handle(messagesConcated);
+  const messages = new MessagesSerialize().handle(messagesConcatenated);
 
   // Listar ultimas conversas atualizadas
   const lastConversations = await new ListAllConversationsUserService().handle(

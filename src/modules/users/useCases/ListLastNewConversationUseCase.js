@@ -4,6 +4,10 @@ const {
   NewConversationRepository,
 } = require("../repositories/NewConversationRepository");
 
+const {
+  NewMessagesRepository,
+} = require("../../messages/repositories/NewMessagesRepository");
+
 class ListAllConversationUserService {
   async handle(fkUser) {
     const conversations = await NewConversationRepository.findAll({
@@ -20,10 +24,30 @@ class ListAllConversationUserService {
   }
 }
 
+class ListLastMessageConversationMessageService {
+  async handle(fkConversation) {
+    const lastMessageConversation = await NewMessagesRepository.findOne({
+      where: { fkConversation },
+      order: [["createdAt"]],
+      limit: 1,
+    });
+
+    return lastMessageConversation;
+  }
+}
+
 module.exports = async ({ fkUser }, callback) => {
   const conversations = await new ListAllConversationUserService().handle(
     fkUser
   );
 
-  callback(conversations);
+  const lastConversationsMessagesUser = conversations.map((conversation) =>
+    new ListLastMessageConversationMessageService().handle(conversation.id)
+  );
+
+  const lastMessagesConversations = await Promise.all(
+    lastConversationsMessagesUser
+  );
+
+  callback(conversations, lastMessagesConversations);
 };

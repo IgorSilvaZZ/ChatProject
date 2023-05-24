@@ -30,9 +30,7 @@ socket.emit(
     allConversations = lastConversations;
     messagesPending = messagesStatusPending;
 
-    console.log(lastMessagesConversations);
-
-    updateListAllConversations(lastConversations);
+    updateListAllConversations(lastMessagesConversations);
   }
 );
 
@@ -72,7 +70,7 @@ socket.on("user_receiver_message", (params) => {
       allConversations = lastConversations;
       messagesPending = messagesStatusPending;
 
-      updateListAllConversations(lastConversations);
+      // updateListAllConversations(lastConversations);
     }
   );
 

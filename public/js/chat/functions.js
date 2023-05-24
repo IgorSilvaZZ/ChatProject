@@ -18,8 +18,8 @@ function listMessagesUsers(params, templateName, idUser) {
   }
 }
 
-function updateListAllConversations(lastConversations) {
-  if (lastConversations.length > 0) {
+function updateListAllConversations(lastMessagesConversations) {
+  if (lastMessagesConversations.length > 0) {
     if (document.getElementById("notFoundMessages")) {
       document.getElementById("notFoundMessages").style.display = "none";
     }
@@ -30,28 +30,34 @@ function updateListAllConversations(lastConversations) {
       "template_conversations"
     ).innerHTML;
 
-    lastConversations.forEach((item) => {
-      const quantityMessages = messagesPending.filter(
-        (message) => message.fkUserSender === item.fkUserReceiver
-      ).length;
+    lastMessagesConversations.forEach(
+      ({ conversation, message, fkConversation }) => {
+        const nameUserReceiverProperty =
+          conversation.fkUserSender == id ? "user_receiver" : "user_sender";
 
-      const renderedConversations = Mustache.render(templateListConversations, {
-        idUser: item.user_receiver.id,
-        nameUser: item.user_receiver.name,
-        avatarUser: item.user_receiver.avatar
-          ? `${baseURL}/images/${item.user_receiver.avatar}`
-          : "../images/user3.png",
-        quantityMessages,
-      });
+        const prefixMessage =
+          nameUserReceiverProperty == "user_receiver" ? "" : "Você: ";
 
-      document.getElementById("list_peoples").innerHTML +=
-        renderedConversations;
+        const userReceiver = conversation[nameUserReceiverProperty];
 
-      document.querySelector(".people_icon").style.borderRadius = item
-        .user_receiver.avatar
-        ? "50%"
-        : "0px";
-    });
+        const avatarUserReceiver = userReceiver.avatar
+          ? `${baseURL}/images/${userReceiver.avatar}`
+          : "../images/user3.png";
+
+        const renderConversation = Mustache.render(templateListConversations, {
+          idUserReceiver: userReceiver.id,
+          idConversation: fkConversation,
+          avatarUserReceiver,
+          nameUserReceiver: userReceiver.name,
+          message: `${prefixMessage}${message}`,
+        });
+
+        document.getElementById("list_peoples").innerHTML += renderConversation;
+
+        document.querySelector(".people_icon").style.borderRadius =
+          userReceiver.avatar ? "50%" : "0px";
+      }
+    );
   } else {
     document.getElementById("list_peoples").innerHTML = "";
   }
@@ -110,7 +116,7 @@ function talk(idUser) {
       allConversations = lastConversations;
       messagesPending = messagesStatusPending;
 
-      updateListAllConversations(allConversations);
+      // updateListAllConversations(allConversations);
 
       if (messages.length > 0) {
         messages.map((item) => {
@@ -121,6 +127,64 @@ function talk(idUser) {
           }
         });
       }
+    }
+  );
+}
+
+function initConversation(fkConversation, idUserReceiver) {
+  const idConversation = Number(fkConversation);
+  const userReceiverId = Number(idUserReceiver);
+
+  document.getElementById("modalSection").style.top = "-100%";
+
+  const divContainerChat = document.getElementById("chat_container");
+
+  const divLoadingSelectChat = document.getElementById("chat_loading_chat");
+
+  const containerChat = document.getElementById(`containerChat`);
+
+  divLoadingSelectChat.style.display = "none";
+  divContainerChat.style.display = "flex";
+
+  containerChat.innerHTML = "";
+  document.querySelector(".footerChat").innerHTML = "";
+
+  const userReceiver = users.find((user) => user.id === userReceiverId);
+
+  const templateChatContainer = document.getElementById(
+    "template_all_messages"
+  ).innerHTML;
+
+  const renderChatContainer = Mustache.render(templateChatContainer, {
+    idUserReceiver,
+  });
+
+  containerChat.innerHTML += renderChatContainer;
+
+  const templateFooter = document.getElementById(
+    "template_send_message"
+  ).innerHTML;
+
+  const renderFooter = Mustache.render(templateFooter, {
+    emailUserReceiver: userReceiver.email,
+    paramsUser: JSON.stringify({
+      emailUserReceiver: userReceiver.email,
+      idUserReceiver,
+    }),
+  });
+
+  document.querySelector(".footerChat").innerHTML += renderFooter;
+
+  const paramsListMessages = {
+    fkUser: id,
+    fkConversation: idConversation,
+  };
+
+  socket.emit(
+    "list_new_messages",
+    paramsListMessages,
+    (messages, lastConversations) => {
+      console.log(messages);
     }
   );
 }
@@ -139,7 +203,7 @@ function sendMessage(paramsUser) {
 
   socket.emit("user_send_message", params, (lastConversations) => {
     allConversations = lastConversations;
-    updateListAllConversations(lastConversations);
+    // updateListAllConversations(lastConversations);
   });
 
   // Emissão do novo evento de conversa e mensagem

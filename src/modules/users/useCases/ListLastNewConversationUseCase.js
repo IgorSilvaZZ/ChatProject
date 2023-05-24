@@ -28,7 +28,18 @@ class ListLastMessageConversationMessageService {
   async handle(fkConversation) {
     const lastMessageConversation = await NewMessagesRepository.findOne({
       where: { fkConversation },
-      order: [["createdAt"]],
+      attributes: ["id", "fkConversation"],
+      include: [
+        {
+          association: "conversation",
+          attributes: ["fkUserReceiver", "fkUserSender"],
+          include: [
+            { association: "user_sender", attributes: ["name"] },
+            { association: "user_receiver", attributes: ["name"] },
+          ],
+        },
+      ],
+      order: [["createdAt", "DESC"]],
       limit: 1,
     });
 

@@ -1,3 +1,5 @@
+const { Op } = require("sequelize");
+
 const {
   NewConversationRepository,
 } = require("../../users/repositories/NewConversationRepository");
@@ -84,10 +86,11 @@ module.exports = async ({ fkUser, fkConversation }, callback) => {
     fkUser
   );
 
-  const messagesStatusPending = await new ListStatusMessagesService().handle(
+  /* const messagesStatusPending = await new ListStatusMessagesService().handle(
     fkConversation,
     false
-  );
+  ); */
 
   // Colocar o callback correto nesse case
+  callback(messages, lastConversations);
 };

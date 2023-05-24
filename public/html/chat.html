@@ -140,13 +140,18 @@
               </div>
               <div id="list_peoples"></div>
               <script id="template_conversations" type="x-tmpl-mustache">
-                  <div class="people" id="user{{idUser}}" onclick="talk('{{idUser}}')">
-                    <img class="people_icon" src="{{avatarUser}}">
-                    <p class="people_text">{{nameUser}}</p>
-                    {{ #quantityMessages }}
+                  <div class="people" id="user{{ idUserReceiver }}" onclick="initConversation('{{ idConversation }}', '{{ idUserReceiver }}')">
+                    <img class="people_icon" src="{{ avatarUserReceiver }}">
+                    <div class="item-people">
+                      <p class="people_text">{{ nameUserReceiver }}</p>
+                      <span class="last_message_people">{{ message }}</span>
+                    </div>
+
+                    <!-- Implementação futura -->
+                    <!-- {{ #quantityMessages }}
 
                     <p class="quantity_messages">{{ quantityMessages }}</p>
-                    {{ /quantityMessages }}
+                    {{ /quantityMessages }} -->
                 </div>
               </script>
             </span>
@@ -169,7 +174,7 @@
           <div class="containerChat" id="containerChat"></div>
 
           <script id="template_all_messages" type="x-tmpl-mustache">
-            <div style="height: 100%; width: 100%;" id="chatContainer{{idUser}}">
+            <div style="height: 100%; width: 100%;" id="chatContainer{{ idUserReceiver }}">
             </div>
           </script>
 
@@ -206,8 +211,8 @@
 
           <div class="footerChat"></div>
           <script id="template_send_message" type="x-tmpl-mustache">
-            <input class="footerChat_input" type="text" placeholder="Escreva mensagem" id="messageUser{{emailUser}}" name="messageUser">
-            <div class="buttonSendMessage" id="buttonSubmitMessage"onclick="sendMessage('{{paramsUser}}')"></div>
+            <input class="footerChat_input" type="text" placeholder="Escreva mensagem" id="messageUser{{ emailUserReceiver }}" name="messageUser">
+            <div class="buttonSendMessage" id="buttonSubmitMessage"onclick="sendMessage('{{ paramsUserReceiver }}')"></div>
           </script>
         </div>
       </div>

@@ -50,6 +50,23 @@ class ListLastMessageConversationMessageService {
   async handle(fkConversation) {
     const lastMessageConversation = await NewMessagesRepository.findOne({
       where: { fkConversation },
+      attributes: ["id", "fkConversation", "message"],
+      include: [
+        {
+          association: "conversation",
+          attributes: ["fkUserReceiver", "fkUserSender"],
+          include: [
+            {
+              association: "user_sender",
+              attributes: ["id", "name", "avatar"],
+            },
+            {
+              association: "user_receiver",
+              attributes: ["id", "name", "avatar"],
+            },
+          ],
+        },
+      ],
       order: [["createdAt", "DESC"]],
       limit: 1,
     });
@@ -90,7 +107,7 @@ module.exports = async (socket, params, callback) => {
     const lastConversations =
       await new ListAllConversationsUserService().handle(user.id);
 
-    // Parte nova de novas conversas e mensagens
+    // Parte nova de conversas e mensagens
     const conversations = await new ListAllConversationUserService().handle(
       user.id
     );

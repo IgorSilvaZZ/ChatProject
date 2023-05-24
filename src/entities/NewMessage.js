@@ -19,7 +19,7 @@ class NewMessage extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.User, {
+    this.belongsTo(models.NewConversation, {
       foreignKey: "fkConversation",
       as: "conversation",
     });

@@ -82,15 +82,14 @@ module.exports = async ({ fkUser, fkConversation }, callback) => {
 
   await new UpdateMessageService().handle(fkConversation, true);
 
-  const lastConversations = await new ListAllConversationUserService().handle(
+  /* const lastConversations = await new ListAllConversationUserService().handle(
     fkUser
-  );
+  ); */
 
   /* const messagesStatusPending = await new ListStatusMessagesService().handle(
     fkConversation,
     false
   ); */
 
-  // Colocar o callback correto nesse case
-  callback(messages, lastConversations);
+  callback(messages);
 };

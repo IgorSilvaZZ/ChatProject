@@ -21,6 +21,13 @@ module.exports = {
         onUpdate: "SET NULL",
         onDelete: "SET NULL",
       },
+      sendMessage: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: "tbUsers", key: "id" },
+        onUpdate: "SET NULL",
+        onDelete: "SET NULL",
+      },
       statusMessage: {
         type: Sequelize.BOOLEAN,
         allowNull: true,

@@ -32,7 +32,7 @@ class ListLastMessageConversationMessageService {
       include: [
         {
           association: "conversation",
-          attributes: ["fkUserReceiver", "fkUserSender"],
+          attributes: ["fkUserReceiver", "fkUserSender", "sendMessage"],
           include: [
             { association: "user_sender", attributes: ["name"] },
             { association: "user_receiver", attributes: ["name"] },

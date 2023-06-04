@@ -15,11 +15,12 @@ const {
 } = require("../../connections/services/FindByEmailUserConnectionService");
 
 class CreateMessageService {
-  async handle({ message, fkConversation, statusMessage }) {
+  async handle({ message, fkConversation, statusMessage, fkUserSender }) {
     const messageSend = NewMessagesRepository.create({
       message,
       fkConversation,
       statusMessage,
+      sendMessage: fkUserSender,
     });
 
     return messageSend;
@@ -126,6 +127,7 @@ module.exports = async (params, callback) => {
   await new CreateMessageService().handle({
     fkConversation: conversationUser.id,
     message: text,
+    fkUserSender,
     statusMessage: false,
   });
 

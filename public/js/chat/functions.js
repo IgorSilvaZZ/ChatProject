@@ -7,7 +7,7 @@ function listMessagesUsers(params, templateName, idUser) {
     const template = document.getElementById(templateName).innerHTML;
 
     const rendered = Mustache.render(template, {
-      name: params.nameUserSender,
+      name: params.nameUser,
       message: params.message,
       date: dayjs(params.createdAt).format("DD/MM/YY HH:mm:ss"),
     });
@@ -180,13 +180,40 @@ function initConversation(fkConversation, idUserReceiver) {
     fkConversation: idConversation,
   };
 
-  socket.emit(
-    "list_new_messages",
-    paramsListMessages,
-    (messages, lastConversations) => {
-      console.log(messages);
-    }
-  );
+  socket.emit("list_new_messages", paramsListMessages, (messages) => {
+    console.log("messages ", messages);
+
+    // Validar pela propriedade sendMessage
+
+    /* if (messages.length > 0) {
+      messages.forEach(({ conversation, message, createdAt }) => {
+        const nameUserProperty =
+          conversation.fkUserSender == id ? "user_receiver" : "user_sender";
+
+        const userRender = conversation[nameUserProperty];
+
+        const paramsForRender = {
+          message,
+          nameUser: userRender.nameUser,
+          createdAt,
+        };
+
+        if (nameUserProperty === "user_receiver") {
+          listMessagesUsers(
+            paramsForRender,
+            "template_user_receiver_message",
+            userReceiverId
+          );
+        } else {
+          listMessagesUsers(
+            paramsForRender,
+            "template_user_send_message",
+            userReceiverId
+          );
+        }
+      });
+    } */
+  });
 }
 
 function sendMessage(paramsUser) {

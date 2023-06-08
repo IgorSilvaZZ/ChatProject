@@ -31,8 +31,10 @@ document.querySelector(".close").addEventListener("click", () => {
 });
 
 // Pesquisa de conversa na input
+// Refatorar parte de pesquisa com novo paradigma de conversa
 document.getElementById("searchValue").addEventListener("keyup", (event) => {
-  const nameUser = event.target.value;
+  console.log(allConversations);
+  /* const nameUser = event.target.value;
 
   if (nameUser === "") {
     updateListAllConversations(allConversations);
@@ -43,7 +45,7 @@ document.getElementById("searchValue").addEventListener("keyup", (event) => {
     ({ user_receiver: { name } }) => name.includes(nameUser)
   );
 
-  updateListAllConversations(conversationsSearch);
+  updateListAllConversations(conversationsSearch); */
 });
 
 document.getElementById("imageUser").addEventListener("click", () => {

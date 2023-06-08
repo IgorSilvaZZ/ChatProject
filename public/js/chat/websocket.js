@@ -26,9 +26,9 @@ socket.emit("list_all_users", null, (listUsers) => {
 socket.emit(
   "access_chat",
   { username, email },
-  (messagesStatusPending, lastConversations, lastMessagesConversations) => {
-    allConversations = lastConversations;
+  (messagesStatusPending, lastMessagesConversations) => {
     messagesPending = messagesStatusPending;
+    allConversations = lastMessagesConversations;
 
     updateListAllConversations(lastMessagesConversations);
   }
@@ -63,16 +63,14 @@ socket.on("user_receiver_message", (params) => {
     date: dayjs().format("DD/MM/YY HH:mm:ss"),
   };
 
-  socket.emit(
+  /* socket.emit(
     "list_last_conversations",
     { fkUserSender: id },
     (lastConversations, messagesStatusPending) => {
       allConversations = lastConversations;
       messagesPending = messagesStatusPending;
-
-      // updateListAllConversations(lastConversations);
     }
-  );
+  ); */
 
   /* socket.emit(
     "list_user_new_conversations",

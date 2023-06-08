@@ -6,6 +6,7 @@ class NewMessage extends Model {
       {
         message: DataTypes.TEXT,
         fkConversation: DataTypes.INTEGER,
+        sendMessage: DataTypes.INTEGER,
         statusMessage: DataTypes.BOOLEAN,
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE,
@@ -22,6 +23,11 @@ class NewMessage extends Model {
     this.belongsTo(models.NewConversation, {
       foreignKey: "fkConversation",
       as: "conversation",
+    });
+
+    this.belongsTo(models.User, {
+      foreignKey: "sendMessage",
+      as: "send_user_message",
     });
   }
 }

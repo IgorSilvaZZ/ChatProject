@@ -80,7 +80,9 @@ module.exports = async ({ fkUser, fkConversation }, callback) => {
     fkConversation
   );
 
-  await new UpdateMessageService().handle(fkConversation, true);
+  if (messages.length > 0) {
+    await new UpdateMessageService().handle(fkConversation, true);
+  }
 
   /* const lastConversations = await new ListAllConversationUserService().handle(
     fkUser

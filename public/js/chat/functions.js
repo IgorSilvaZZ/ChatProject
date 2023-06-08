@@ -19,6 +19,7 @@ function listMessagesUsers(params, templateName, idUser) {
 }
 
 function updateListAllConversations(lastMessagesConversations) {
+  console.log(lastMessagesConversations);
   if (lastMessagesConversations.length > 0) {
     if (document.getElementById("notFoundMessages")) {
       document.getElementById("notFoundMessages").style.display = "none";
@@ -167,7 +168,7 @@ function initConversation(fkConversation, idUserReceiver) {
 
   const renderFooter = Mustache.render(templateFooter, {
     emailUserReceiver: userReceiver.email,
-    paramsUser: JSON.stringify({
+    paramsUserReceiver: JSON.stringify({
       emailUserReceiver: userReceiver.email,
       idUserReceiver,
     }),
@@ -217,21 +218,17 @@ function initConversation(fkConversation, idUserReceiver) {
 }
 
 function sendMessage(paramsUser) {
-  const { emailUser, idUser } = JSON.parse(paramsUser);
+  const { emailUserReceiver, idUserReceiver } = JSON.parse(paramsUser);
 
-  const text = document.getElementById(`messageUser${emailUser}`);
+  const text = document.getElementById(`messageUser${emailUserReceiver}`);
 
   const params = {
     text: text.value,
     emailUserSender: email,
-    emailUserReceiver: emailUser,
+    emailUserReceiver,
     usernameSender: username,
+    sendMessage: id,
   };
-
-  socket.emit("user_send_message", params, (lastConversations) => {
-    allConversations = lastConversations;
-    // updateListAllConversations(lastConversations);
-  });
 
   // Emissão do novo evento de conversa e mensagem
   socket.emit("user_send_new_message", params, (conversations) => {
@@ -244,7 +241,11 @@ function sendMessage(paramsUser) {
     date: dayjs().format("DD/MM/YY HH:mm:ss"),
   };
 
-  listMessagesUsers(paramsRender, "template_user_send_message", Number(idUser));
+  listMessagesUsers(
+    paramsRender,
+    "template_user_send_message",
+    Number(idUserReceiver)
+  );
 
   const containerChat = document.getElementById(`containerChat`);
 
@@ -322,8 +323,32 @@ function createUsersModal(listUsers) {
     divPeople.appendChild(imgPeople);
     divPeople.appendChild(namePeople);
 
+    let conversationUser = null;
+    let fkConversation = 1;
+
+    if (allConversations.length > 0) {
+      conversationUser = allConversations.find(
+        ({ conversation, fkConversation }) => {
+          if (
+            (conversation.fkUserSender == id &&
+              conversation.fkUserReceiver == user.id) ||
+            (conversation.fkUserReceiver == id &&
+              conversation.fkUserSender == user.id)
+          ) {
+            return { conversation, fkConversation };
+          } else {
+            return null;
+          }
+        }
+      );
+
+      fkConversation = conversationUser
+        ? conversationUser.fkConversation
+        : allConversations[allConversations.length - 1].fkConversation + 1;
+    }
+
     divPeople.addEventListener("click", () => {
-      talk(user.id);
+      initConversation(fkConversation, user.id);
     });
 
     containerModalBody.appendChild(divPeople);

@@ -83,7 +83,13 @@ const verifyConversationUser = async ({ fkUserSender, fkUserReceiver }) => {
 };
 
 module.exports = async (params, callback) => {
-  const { text, emailUserSender, emailUserReceiver, usernameSender } = params;
+  const {
+    text,
+    emailUserSender,
+    emailUserReceiver,
+    usernameSender,
+    sendMessage,
+  } = params;
 
   // Pegando informações dos usuarios atraves do connection a partir do email
   const userSenderConnection =
@@ -128,6 +134,7 @@ module.exports = async (params, callback) => {
     fkConversation: conversationUser.id,
     message: text,
     fkUserSender,
+    sendMessage,
     statusMessage: false,
   });
 

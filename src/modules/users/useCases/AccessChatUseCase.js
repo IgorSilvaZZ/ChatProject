@@ -18,10 +18,6 @@ const {
   ListStatusMessagesService,
 } = require("../../messages/services/ListStatusMessagesService");
 
-const {
-  ListAllConversationsUserService,
-} = require("../services/ListAllConversationsUserService");
-
 // Parte nova de conversas e ultimas mensagens
 const {
   NewMessagesRepository,
@@ -50,11 +46,11 @@ class ListLastMessageConversationMessageService {
   async handle(fkConversation) {
     const lastMessageConversation = await NewMessagesRepository.findOne({
       where: { fkConversation },
-      attributes: ["id", "fkConversation", "message"],
+      attributes: ["id", "fkConversation", "message", "sendMessage"],
       include: [
         {
           association: "conversation",
-          attributes: ["fkUserReceiver", "fkUserSender", "sendMessage"],
+          attributes: ["fkUserReceiver", "fkUserSender"],
           include: [
             {
               association: "user_sender",
@@ -104,9 +100,6 @@ module.exports = async (socket, params, callback) => {
       fkUserReceiver: user.id,
     });
 
-    const lastConversations =
-      await new ListAllConversationsUserService().handle(user.id);
-
     // Parte nova de conversas e mensagens
     const conversations = await new ListAllConversationUserService().handle(
       user.id
@@ -120,10 +113,6 @@ module.exports = async (socket, params, callback) => {
       lastConversationsMessagesUser
     );
 
-    callback(
-      messagesStatusPending,
-      lastConversations,
-      lastMessagesConversations
-    );
+    callback(messagesStatusPending, lastMessagesConversations);
   }
 };

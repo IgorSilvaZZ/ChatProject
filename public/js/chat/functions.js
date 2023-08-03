@@ -19,7 +19,7 @@ function listMessagesUsers(params, templateName, idUser) {
 }
 
 function updateListAllConversations(lastMessagesConversations) {
-  console.log(lastMessagesConversations);
+  // console.log(lastMessagesConversations);
   if (lastMessagesConversations.length > 0) {
     if (document.getElementById("notFoundMessages")) {
       document.getElementById("notFoundMessages").style.display = "none";
@@ -186,10 +186,10 @@ function initConversation(fkConversation, idUserReceiver) {
 
     // Validar pela propriedade sendMessage
 
-    /* if (messages.length > 0) {
-      messages.forEach(({ conversation, message, createdAt }) => {
+    if (messages.length > 0) {
+      messages.forEach(({ conversation, message, sendMessage, createdAt }) => {
         const nameUserProperty =
-          conversation.fkUserSender == id ? "user_receiver" : "user_sender";
+          sendMessage == id ? "user_sender" : "user_receiver";
 
         const userRender = conversation[nameUserProperty];
 
@@ -213,7 +213,7 @@ function initConversation(fkConversation, idUserReceiver) {
           );
         }
       });
-    } */
+    }
   });
 }
 
@@ -227,7 +227,6 @@ function sendMessage(paramsUser) {
     emailUserSender: email,
     emailUserReceiver,
     usernameSender: username,
-    sendMessage: id,
   };
 
   // Emissão do novo evento de conversa e mensagem

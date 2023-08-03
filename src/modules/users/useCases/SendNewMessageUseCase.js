@@ -16,7 +16,7 @@ const {
 
 class CreateMessageService {
   async handle({ message, fkConversation, statusMessage, fkUserSender }) {
-    const messageSend = NewMessagesRepository.create({
+    const messageSend = await NewMessagesRepository.create({
       message,
       fkConversation,
       statusMessage,
@@ -83,13 +83,7 @@ const verifyConversationUser = async ({ fkUserSender, fkUserReceiver }) => {
 };
 
 module.exports = async (params, callback) => {
-  const {
-    text,
-    emailUserSender,
-    emailUserReceiver,
-    usernameSender,
-    sendMessage,
-  } = params;
+  const { text, emailUserSender, emailUserReceiver, usernameSender } = params;
 
   // Pegando informações dos usuarios atraves do connection a partir do email
   const userSenderConnection =
@@ -134,7 +128,6 @@ module.exports = async (params, callback) => {
     fkConversation: conversationUser.id,
     message: text,
     fkUserSender,
-    sendMessage,
     statusMessage: false,
   });
 

@@ -19,7 +19,6 @@ function listMessagesUsers(params, templateName, idUser) {
 }
 
 function updateListAllConversations(lastMessagesConversations) {
-  // console.log(lastMessagesConversations);
   if (lastMessagesConversations.length > 0) {
     if (document.getElementById("notFoundMessages")) {
       document.getElementById("notFoundMessages").style.display = "none";
@@ -32,14 +31,14 @@ function updateListAllConversations(lastMessagesConversations) {
     ).innerHTML;
 
     lastMessagesConversations.forEach(
-      ({ conversation, message, fkConversation }) => {
-        const nameUserReceiverProperty =
-          conversation.fkUserSender == id ? "user_receiver" : "user_sender";
+      ({ conversation, message, fkConversation, sendMessage }) => {
+        const nameUserProperty =
+          sendMessage == id ? "user_receiver" : "user_sender";
 
         const prefixMessage =
-          nameUserReceiverProperty == "user_receiver" ? "" : "Você: ";
+          nameUserProperty == "user_receiver" ? "Você: " : "";
 
-        const userReceiver = conversation[nameUserReceiverProperty];
+        const userReceiver = conversation[nameUserProperty];
 
         const avatarUserReceiver = userReceiver.avatar
           ? `${baseURL}/images/${userReceiver.avatar}`
@@ -62,74 +61,6 @@ function updateListAllConversations(lastMessagesConversations) {
   } else {
     document.getElementById("list_peoples").innerHTML = "";
   }
-}
-
-function talk(idUser) {
-  document.getElementById("modalSection").style.top = "-100%";
-
-  const divContainerChat = document.getElementById("chat_container");
-
-  const divLoadingSelectChat = document.getElementById("chat_loading_chat");
-
-  const containerChat = document.getElementById(`containerChat`);
-
-  divLoadingSelectChat.style.display = "none";
-  divContainerChat.style.display = "flex";
-
-  containerChat.innerHTML = "";
-  document.querySelector(".footerChat").innerHTML = "";
-
-  const user = users.find((userFind) => userFind.id === Number(idUser));
-
-  const templateChatContainer = document.getElementById(
-    "template_all_messages"
-  ).innerHTML;
-
-  const renderedChatContainer = Mustache.render(templateChatContainer, {
-    idUser,
-  });
-
-  containerChat.innerHTML += renderedChatContainer;
-
-  const templateFooter = document.getElementById(
-    "template_send_message"
-  ).innerHTML;
-
-  const rendereFooter = Mustache.render(templateFooter, {
-    emailUser: user.email,
-    paramsUser: JSON.stringify({
-      emailUser: user.email,
-      idUser,
-    }),
-  });
-
-  document.querySelector(".footerChat").innerHTML += rendereFooter;
-
-  const paramsListMessages = {
-    fkUser: id,
-    fkUserParticipant: user.id,
-  };
-
-  socket.emit(
-    "list_messages",
-    paramsListMessages,
-    (messages, lastConversations, messagesStatusPending) => {
-      allConversations = lastConversations;
-      messagesPending = messagesStatusPending;
-
-      // updateListAllConversations(allConversations);
-
-      if (messages.length > 0) {
-        messages.map((item) => {
-          if (item.idUserSender === id) {
-            listMessagesUsers(item, "template_user_send_message", idUser);
-          } else {
-            listMessagesUsers(item, "template_user_receiver_message", idUser);
-          }
-        });
-      }
-    }
-  );
 }
 
 function initConversation(fkConversation, idUserReceiver) {
@@ -182,10 +113,6 @@ function initConversation(fkConversation, idUserReceiver) {
   };
 
   socket.emit("list_new_messages", paramsListMessages, (messages) => {
-    console.log("messages ", messages);
-
-    // Validar pela propriedade sendMessage
-
     if (messages.length > 0) {
       messages.forEach(({ conversation, message, sendMessage, createdAt }) => {
         const nameUserProperty =
@@ -230,8 +157,8 @@ function sendMessage(paramsUser) {
   };
 
   // Emissão do novo evento de conversa e mensagem
-  socket.emit("user_send_new_message", params, (conversations) => {
-    console.log("conversations", conversations);
+  socket.emit("user_send_new_message", params, (lastMessagesConversations) => {
+    updateListAllConversations(lastMessagesConversations);
   });
 
   const paramsRender = {

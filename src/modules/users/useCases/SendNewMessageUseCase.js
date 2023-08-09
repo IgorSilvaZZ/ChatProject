@@ -66,6 +66,35 @@ class ListAllConversationUserService {
   }
 }
 
+class ListLastMessageConversationMessageService {
+  async handle(fkConversation) {
+    const lastMessageConversation = await NewMessagesRepository.findOne({
+      where: { fkConversation },
+      attributes: ["id", "fkConversation", "message", "sendMessage"],
+      include: [
+        {
+          association: "conversation",
+          attributes: ["fkUserReceiver", "fkUserSender"],
+          include: [
+            {
+              association: "user_sender",
+              attributes: ["id", "name", "avatar"],
+            },
+            {
+              association: "user_receiver",
+              attributes: ["id", "name", "avatar"],
+            },
+          ],
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+      limit: 1,
+    });
+
+    return lastMessageConversation;
+  }
+}
+
 const verifyConversationUser = async ({ fkUserSender, fkUserReceiver }) => {
   const conversationForUserSender =
     await new FindConversationUserService().handle({
@@ -147,5 +176,13 @@ module.exports = async (params, callback) => {
     fkUserSender
   );
 
-  callback(conversationsUser);
+  const lastConversationsMessagesUser = conversationsUser.map((conversation) =>
+    new ListLastMessageConversationMessageService().handle(conversation.id)
+  );
+
+  const lastMessagesConversations = await Promise.all(
+    lastConversationsMessagesUser
+  );
+
+  callback(lastMessagesConversations);
 };

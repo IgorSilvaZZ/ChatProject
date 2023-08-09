@@ -34,7 +34,7 @@ socket.emit(
   }
 );
 
-socket.on("user_receiver_message", (params) => {
+socket.on("user_receiver_new_message", (params) => {
   const { text, usernameSender, idUser } = params;
 
   const { preferences } = JSON.parse(localStorage.getItem("user"));
@@ -63,22 +63,13 @@ socket.on("user_receiver_message", (params) => {
     date: dayjs().format("DD/MM/YY HH:mm:ss"),
   };
 
-  /* socket.emit(
-    "list_last_conversations",
-    { fkUserSender: id },
-    (lastConversations, messagesStatusPending) => {
-      allConversations = lastConversations;
-      messagesPending = messagesStatusPending;
-    }
-  ); */
-
-  /* socket.emit(
+  socket.emit(
     "list_user_new_conversations",
     { fkUser: id },
-    (lastConversations, lastMessagesConversations) => {
-      console.log(lastConversations, lastMessagesConversations);
+    (lastMessagesConversations) => {
+      updateListAllConversations(lastMessagesConversations);
     }
-  ); */
+  );
 
   listMessagesUsers(
     paramsRender,

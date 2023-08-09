@@ -28,14 +28,20 @@ class ListLastMessageConversationMessageService {
   async handle(fkConversation) {
     const lastMessageConversation = await NewMessagesRepository.findOne({
       where: { fkConversation },
-      attributes: ["id", "fkConversation"],
+      attributes: ["id", "fkConversation", "message", "sendMessage"],
       include: [
         {
           association: "conversation",
-          attributes: ["fkUserReceiver", "fkUserSender", "sendMessage"],
+          attributes: ["fkUserReceiver", "fkUserSender"],
           include: [
-            { association: "user_sender", attributes: ["name"] },
-            { association: "user_receiver", attributes: ["name"] },
+            {
+              association: "user_sender",
+              attributes: ["id", "name", "avatar"],
+            },
+            {
+              association: "user_receiver",
+              attributes: ["id", "name", "avatar"],
+            },
           ],
         },
       ],
@@ -60,5 +66,5 @@ module.exports = async ({ fkUser }, callback) => {
     lastConversationsMessagesUser
   );
 
-  callback(conversations, lastMessagesConversations);
+  callback(lastMessagesConversations);
 };

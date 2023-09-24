@@ -1,5 +1,3 @@
-const { Op } = require("sequelize");
-
 const { FindByEmailUser } = require("../services/FindByEmailUser");
 
 const {
@@ -18,58 +16,13 @@ const {
   ListStatusMessagesService,
 } = require("../../messages/services/ListStatusMessagesService");
 
-// Parte nova de conversas e ultimas mensagens
 const {
-  NewMessagesRepository,
-} = require("../../messages/repositories/NewMessagesRepository");
+  ListAllConversationUserService,
+} = require("../services/ListAllConversationUserService");
 
 const {
-  NewConversationRepository,
-} = require("../repositories/NewConversationRepository");
-
-class ListAllConversationUserService {
-  async handle(fkUser) {
-    const conversations = await NewConversationRepository.findAll({
-      where: {
-        [Op.or]: [{ fkUserSender: fkUser }, { fkUserReceiver: fkUser }],
-      },
-      include: [
-        { association: "user_sender" },
-        { association: "user_receiver" },
-      ],
-    });
-
-    return conversations;
-  }
-}
-class ListLastMessageConversationMessageService {
-  async handle(fkConversation) {
-    const lastMessageConversation = await NewMessagesRepository.findOne({
-      where: { fkConversation },
-      attributes: ["id", "fkConversation", "message", "sendMessage"],
-      include: [
-        {
-          association: "conversation",
-          attributes: ["fkUserReceiver", "fkUserSender"],
-          include: [
-            {
-              association: "user_sender",
-              attributes: ["id", "name", "avatar"],
-            },
-            {
-              association: "user_receiver",
-              attributes: ["id", "name", "avatar"],
-            },
-          ],
-        },
-      ],
-      order: [["createdAt", "DESC"]],
-      limit: 1,
-    });
-
-    return lastMessageConversation;
-  }
-}
+  ListLastMessageConversationMessageService,
+} = require("../../messages/services/ListLastMessageConversationMessageService");
 
 module.exports = async (socket, params, callback) => {
   const { email } = params;

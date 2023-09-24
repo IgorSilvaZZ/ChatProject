@@ -1,21 +1,23 @@
 const {
-  ListStatusMessagesService,
-} = require("../../messages/services/ListStatusMessagesService");
+  ListLastMessageConversationMessageService,
+} = require("../../messages/services/ListLastMessageConversationMessageService");
+
 const {
-  ListAllConversationsUserService,
-} = require("../services/ListAllConversationsUserService");
+  ListAllConversationUserService,
+} = require("../services/ListAllConversationUserService");
 
-module.exports = async (params, callback) => {
-  const { fkUserSender } = params;
-
-  const conversations = await new ListAllConversationsUserService().handle(
-    fkUserSender
+module.exports = async ({ fkUser }, callback) => {
+  const conversations = await new ListAllConversationUserService().handle(
+    fkUser
   );
 
-  const messagesStatusPending = await new ListStatusMessagesService().handle({
-    statusMessage: false,
-    fkUserReceiver: fkUserSender,
-  });
+  const lastConversationsMessagesUser = conversations.map((conversation) =>
+    new ListLastMessageConversationMessageService().handle(conversation.id)
+  );
 
-  callback(conversations, messagesStatusPending);
+  const lastMessagesConversations = await Promise.all(
+    lastConversationsMessagesUser
+  );
+
+  callback(lastMessagesConversations);
 };

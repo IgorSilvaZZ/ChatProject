@@ -5,8 +5,8 @@ class Message extends Model {
     super.init(
       {
         message: DataTypes.TEXT,
-        fkUserSender: DataTypes.INTEGER,
-        fkUserReceiver: DataTypes.INTEGER,
+        fkConversation: DataTypes.INTEGER,
+        sendMessage: DataTypes.INTEGER,
         statusMessage: DataTypes.BOOLEAN,
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE,
@@ -20,13 +20,14 @@ class Message extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.User, {
-      foreignKey: "fkUserSender",
-      as: "user_sender",
+    this.belongsTo(models.NewConversation, {
+      foreignKey: "fkConversation",
+      as: "conversation",
     });
+
     this.belongsTo(models.User, {
-      foreignKey: "fkUserReceiver",
-      as: "user_receiver",
+      foreignKey: "sendMessage",
+      as: "send_user_message",
     });
   }
 }

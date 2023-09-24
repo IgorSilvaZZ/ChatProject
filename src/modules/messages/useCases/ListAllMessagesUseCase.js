@@ -1,60 +1,41 @@
 const {
-  ListAllMessagesService,
-} = require("../services/ListAllMessagesService");
+  NewConversationRepository,
+} = require("../../users/repositories/NewConversationRepository");
 
 const {
-  ListAllConversationsUserService,
-} = require("../../users/services/ListAllConversationsUserService");
+  ListMessagesConversationsMessageService,
+} = require("../services/ListMessagesConversationsMessageService");
 
-const { UpdateMessageService } = require("../services/UpdateMessageService");
+class UpdateMessageService {
+  async handle(fkConversation, statusMessage) {
+    const message = await NewConversationRepository.update(
+      { statusMessage },
+      { where: { fkConversation }, returning: true }
+    );
 
-const { MessagesSerialize } = require("../../../serializes/MessagesSerialize");
-const {
-  ListStatusMessagesService,
-} = require("../services/ListStatusMessagesService");
+    const messageUpdate = { ...message[1] };
 
-module.exports = async (params, callback) => {
-  const { fkUser, fkUserParticipant } = params;
+    return messageUpdate;
+  }
+}
 
-  const paramsUserSender = {
-    fkUserSender: fkUser,
-    fkUserReceiver: fkUserParticipant,
-  };
-
-  const paramsUserReceiver = {
-    fkUserSender: fkUserParticipant,
-    fkUserReceiver: fkUser,
-  };
-
-  const messagesUserSender = await new ListAllMessagesService().handle(
-    paramsUserSender
+module.exports = async ({ fkUser, fkConversation }, callback) => {
+  const messages = await new ListMessagesConversationsMessageService().handle(
+    fkConversation
   );
 
-  const messagesUserReceiver = await new ListAllMessagesService().handle(
-    paramsUserReceiver
-  );
+  if (messages.length > 0) {
+    await new UpdateMessageService().handle(fkConversation, true);
+  }
 
-  await new UpdateMessageService().handle({
-    statusMessage: true,
-    fkUserReceiver: fkUser,
-    fkUserSender: fkUserParticipant,
-  });
-
-  const messagesConcatenated = messagesUserSender.concat(messagesUserReceiver);
-
-  const messages = new MessagesSerialize().handle(messagesConcatenated);
-
-  // Listar ultimas conversas atualizadas
-  const lastConversations = await new ListAllConversationsUserService().handle(
+  /* const lastConversations = await new ListAllConversationUserService().handle(
     fkUser
-  );
+  ); */
 
-  // Listar mensagens Pendentes
-  const messagesStatusPending = await new ListStatusMessagesService().handle({
-    fkUserReceiver: fkUser,
-    statusMessage: false,
-  });
+  /* const messagesStatusPending = await new ListStatusMessagesService().handle(
+    fkConversation,
+    false
+  ); */
 
-  // Devolver no callback
-  callback(messages, lastConversations, messagesStatusPending);
+  callback(messages);
 };

@@ -1,16 +1,15 @@
-const { MessageRepository } = require("../repositories/MessageRepository");
+const { MessagesRepository } = require("../repositories/MessagesRepository");
 
 class CreateMessageService {
-  async handle({ fkUserSender, fkUserReceiver, message, statusMessage }) {
-    const messageSend = MessageRepository.create({
-      fkUserSender,
-      fkUserReceiver,
+  async handle({ message, fkConversation, statusMessage, fkUserSender }) {
+    const messageSend = await MessagesRepository.create({
       message,
+      fkConversation,
       statusMessage,
+      sendMessage: fkUserSender,
     });
 
     return messageSend;
   }
 }
-
 module.exports = { CreateMessageService };

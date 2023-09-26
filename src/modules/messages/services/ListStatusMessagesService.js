@@ -1,16 +1,21 @@
-const { MessageRepository } = require("../repositories/MessageRepository");
+const { MessagesRepository } = require("../repositories/MessagesRepository");
 
 class ListStatusMessagesService {
-  async handle({ statusMessage, fkUserReceiver }) {
-    const messages = await MessageRepository.findAll({
-      where: { statusMessage },
+  async handle({ fkConversation, statusMessage }) {
+    const messagesStatus = await MessagesRepository.findAll({
+      where: { statusMessage, fkConversation },
       include: [
-        { association: "user_receiver", where: { id: fkUserReceiver } },
-        { association: "user_sender" },
+        {
+          association: "conversation",
+          include: [
+            { association: "user_sender" },
+            { association: "user_receiver" },
+          ],
+        },
       ],
     });
 
-    return messages;
+    return messagesStatus;
   }
 }
 

@@ -32,13 +32,12 @@ function updateListAllConversations(lastMessagesConversations) {
 
     lastMessagesConversations.forEach(
       ({ conversation, message, fkConversation, sendMessage }) => {
-        const nameUserProperty =
-          sendMessage == id ? "user_receiver" : "user_sender";
+        let prefixMessage = sendMessage == id ? "Você: " : "";
 
-        const prefixMessage =
-          nameUserProperty == "user_receiver" ? "Você: " : "";
-
-        const userReceiver = conversation[nameUserProperty];
+        let userReceiver =
+          conversation.user_sender.id === id
+            ? { ...conversation.user_receiver }
+            : { ...conversation.user_sender };
 
         const avatarUserReceiver = userReceiver.avatar
           ? `${baseURL}/images/${userReceiver.avatar}`

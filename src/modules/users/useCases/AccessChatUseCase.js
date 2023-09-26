@@ -48,14 +48,17 @@ module.exports = async (socket, params, callback) => {
       });
     }
 
-    const messagesStatusPending = await new ListStatusMessagesService().handle({
-      statusMessage: false,
-      fkUserReceiver: user.id,
-    });
-
     // Parte nova de conversas e mensagens
     const conversations = await new ListAllConversationUserService().handle(
       user.id
+    );
+
+    const messagesStatusPending = conversations.map((conversation) =>
+      new ListStatusMessagesService().handle({
+        statusMessage: false,
+        fkUserReceiver: user.id,
+        fkConversation: conversation.id,
+      })
     );
 
     const lastConversationsMessagesUser = conversations.map((conversation) =>

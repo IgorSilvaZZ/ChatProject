@@ -1,3 +1,5 @@
+const { Op } = require("sequelize");
+
 const {
   ConversationsRepository,
 } = require("../repositories/ConversationsRepository");

@@ -1,23 +1,8 @@
 const {
-  NewConversationRepository,
-} = require("../../users/repositories/NewConversationRepository");
-
-const {
   ListMessagesConversationsMessageService,
 } = require("../services/ListMessagesConversationsMessageService");
 
-class UpdateMessageService {
-  async handle(fkConversation, statusMessage) {
-    const message = await NewConversationRepository.update(
-      { statusMessage },
-      { where: { fkConversation }, returning: true }
-    );
-
-    const messageUpdate = { ...message[1] };
-
-    return messageUpdate;
-  }
-}
+const { UpdateMessageService } = require("../services/UpdateMessageService");
 
 module.exports = async ({ fkUser, fkConversation }, callback) => {
   const messages = await new ListMessagesConversationsMessageService().handle(

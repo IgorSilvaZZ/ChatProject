@@ -20,7 +20,7 @@ class Message extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.NewConversation, {
+    this.belongsTo(models.Conversation, {
       foreignKey: "fkConversation",
       as: "conversation",
     });

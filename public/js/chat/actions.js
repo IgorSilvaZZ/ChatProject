@@ -31,6 +31,7 @@ document.querySelector(".close").addEventListener("click", () => {
 });
 
 // Pesquisa de conversa na input
+// Refatorar parte de pesquisa com novo paradigma de conversa
 document.getElementById("searchValue").addEventListener("keyup", (event) => {
   const nameUser = event.target.value;
 
@@ -39,9 +40,18 @@ document.getElementById("searchValue").addEventListener("keyup", (event) => {
     return;
   }
 
-  const conversationsSearch = allConversations.filter(
-    ({ user_receiver: { name } }) => name.includes(nameUser)
-  );
+  const conversationsSearch = allConversations.filter(({ conversation }) => {
+    let userReceiver =
+      conversation.user_sender.id === id
+        ? { ...conversation.user_receiver }
+        : { ...conversation.user_sender };
+
+    if (String(userReceiver.name).includes(nameUser)) {
+      return {
+        userReceiver,
+      };
+    }
+  });
 
   updateListAllConversations(conversationsSearch);
 });
@@ -54,13 +64,12 @@ document.getElementById("imageUser").addEventListener("click", () => {
 
 document.getElementById("configButton").addEventListener("click", () => {
   document.getElementById("section-config").style.left = "0";
-  
+
   const { preferences } = JSON.parse(localStorage.getItem("user"));
 
   for (preference in preferences) {
     document.getElementById(preference).checked = preferences[preference];
   }
-
 });
 
 document.getElementById("logoutButton").addEventListener("click", () => {

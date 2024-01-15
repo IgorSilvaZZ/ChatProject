@@ -17,8 +17,12 @@ const {
 } = require("../../messages/services/ListStatusMessagesService");
 
 const {
-  ListAllConversationsUserService,
-} = require("../services/ListAllConversationsUserService");
+  ListAllConversationUserService,
+} = require("../services/ListAllConversationUserService");
+
+const {
+  ListLastMessageConversationMessageService,
+} = require("../../messages/services/ListLastMessageConversationMessageService");
 
 module.exports = async (socket, params, callback) => {
   const { email } = params;
@@ -44,14 +48,27 @@ module.exports = async (socket, params, callback) => {
       });
     }
 
-    const messagesStatusPending = await new ListStatusMessagesService().handle({
-      statusMessage: false,
-      fkUserReceiver: user.id,
-    });
+    // Parte nova de conversas e mensagens
+    const conversations = await new ListAllConversationUserService().handle(
+      user.id
+    );
 
-    const lastConversations =
-      await new ListAllConversationsUserService().handle(user.id);
+    const messagesStatusPending = conversations.map((conversation) =>
+      new ListStatusMessagesService().handle({
+        statusMessage: false,
+        fkUserReceiver: user.id,
+        fkConversation: conversation.id,
+      })
+    );
 
-    callback(messagesStatusPending, lastConversations);
+    const lastConversationsMessagesUser = conversations.map((conversation) =>
+      new ListLastMessageConversationMessageService().handle(conversation.id)
+    );
+
+    const lastMessagesConversations = await Promise.all(
+      lastConversationsMessagesUser
+    );
+
+    callback(messagesStatusPending, lastMessagesConversations);
   }
 };

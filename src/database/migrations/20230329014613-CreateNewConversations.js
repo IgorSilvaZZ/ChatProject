@@ -1,8 +1,9 @@
 "use strict";
 
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    return queryInterface.createTable("tbConversations", {
+    return queryInterface.createTable("tbNewConversations", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -14,14 +15,14 @@ module.exports = {
         allowNull: false,
         references: { model: "tbUsers", key: "id" },
         onUpdate: "SET NULL",
-        onDeleted: "SET NULL",
+        onDelete: "SET NULL",
       },
       fkUserReceiver: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: { model: "tbUsers", key: "id" },
         onUpdate: "SET NULL",
-        onDeleted: "SET NULL",
+        onDelete: "SET NULL",
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -35,6 +36,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    return queryInterface.dropTable("tbConversations");
+    return queryInterface.dropTable("tbNewConversations");
   },
 };

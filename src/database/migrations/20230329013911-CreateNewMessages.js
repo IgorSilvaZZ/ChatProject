@@ -1,8 +1,9 @@
 "use strict";
 
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    return queryInterface.createTable("tbMessages", {
+  async up(queryInterface, Sequelize) {
+    return queryInterface.createTable("tbNewMessages", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -13,19 +14,19 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true,
       },
-      fkUserSender: {
+      fkConversation: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: "tbUsers", key: "id" },
+        references: { model: "tbNewConversations", key: "id" },
         onUpdate: "SET NULL",
-        onDeleted: "SET NULL",
+        onDelete: "SET NULL",
       },
-      fkUserReceiver: {
+      sendMessage: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: { model: "tbUsers", key: "id" },
         onUpdate: "SET NULL",
-        onDeleted: "SET NULL",
+        onDelete: "SET NULL",
       },
       statusMessage: {
         type: Sequelize.BOOLEAN,
@@ -42,7 +43,7 @@ module.exports = {
     });
   },
 
-  down: async (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("tbMessages");
+  async down(queryInterface, Sequelize) {
+    return queryInterface.dropTable("tbNewMessages");
   },
 };

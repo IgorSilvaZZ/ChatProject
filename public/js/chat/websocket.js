@@ -26,15 +26,15 @@ socket.emit("list_all_users", null, (listUsers) => {
 socket.emit(
   "access_chat",
   { username, email },
-  (messagesStatusPending, lastConversations) => {
-    allConversations = lastConversations;
+  (messagesStatusPending, lastMessagesConversations) => {
     messagesPending = messagesStatusPending;
+    allConversations = lastMessagesConversations;
 
-    updateListAllConversations(lastConversations);
+    updateListAllConversations(lastMessagesConversations);
   }
 );
 
-socket.on("user_receiver_message", (params) => {
+socket.on("user_receiver_new_message", (params) => {
   const { text, usernameSender, idUser } = params;
 
   const { preferences } = JSON.parse(localStorage.getItem("user"));
@@ -64,13 +64,10 @@ socket.on("user_receiver_message", (params) => {
   };
 
   socket.emit(
-    "list_last_conversations",
-    { fkUserSender: id },
-    (lastConversations, messagesStatusPending) => {
-      allConversations = lastConversations;
-      messagesPending = messagesStatusPending;
-
-      updateListAllConversations(lastConversations);
+    "list_user_new_conversations",
+    { fkUser: id },
+    (lastMessagesConversations) => {
+      updateListAllConversations(lastMessagesConversations);
     }
   );
 

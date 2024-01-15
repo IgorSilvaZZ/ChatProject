@@ -1,60 +1,26 @@
 const {
-  ListAllMessagesService,
-} = require("../services/ListAllMessagesService");
-
-const {
-  ListAllConversationsUserService,
-} = require("../../users/services/ListAllConversationsUserService");
+  ListMessagesConversationsMessageService,
+} = require("../services/ListMessagesConversationsMessageService");
 
 const { UpdateMessageService } = require("../services/UpdateMessageService");
 
-const { MessagesSerialize } = require("../../../serializes/MessagesSerialize");
-const {
-  ListStatusMessagesService,
-} = require("../services/ListStatusMessagesService");
-
-module.exports = async (params, callback) => {
-  const { fkUser, fkUserParticipant } = params;
-
-  const paramsUserSender = {
-    fkUserSender: fkUser,
-    fkUserReceiver: fkUserParticipant,
-  };
-
-  const paramsUserReceiver = {
-    fkUserSender: fkUserParticipant,
-    fkUserReceiver: fkUser,
-  };
-
-  const messagesUserSender = await new ListAllMessagesService().handle(
-    paramsUserSender
+module.exports = async ({ fkUser, fkConversation }, callback) => {
+  const messages = await new ListMessagesConversationsMessageService().handle(
+    fkConversation
   );
 
-  const messagesUserReceiver = await new ListAllMessagesService().handle(
-    paramsUserReceiver
-  );
+  if (messages.length > 0) {
+    await new UpdateMessageService().handle(fkConversation, true);
+  }
 
-  await new UpdateMessageService().handle({
-    statusMessage: true,
-    fkUserReceiver: fkUser,
-    fkUserSender: fkUserParticipant,
-  });
-
-  const messagesConcated = messagesUserSender.concat(messagesUserReceiver);
-
-  const messages = new MessagesSerialize().handle(messagesConcated);
-
-  // Listar ultimas conversas atualizadas
-  const lastConversations = await new ListAllConversationsUserService().handle(
+  /* const lastConversations = await new ListAllConversationUserService().handle(
     fkUser
-  );
+  ); */
 
-  // Listar mensagens Pendentes
-  const messagesStatusPending = await new ListStatusMessagesService().handle({
-    fkUserReceiver: fkUser,
-    statusMessage: false,
-  });
+  /* const messagesStatusPending = await new ListStatusMessagesService().handle(
+    fkConversation,
+    false
+  ); */
 
-  // Devolver no callback
-  callback(messages, lastConversations, messagesStatusPending);
+  callback(messages);
 };

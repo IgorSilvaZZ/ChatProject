@@ -1,9 +1,9 @@
 const { MessagesRepository } = require("../repositories/MessagesRepository");
 
-class ListStatusMessagesService {
-  async handle({ fkConversation, statusMessage }) {
-    const messagesStatus = await MessagesRepository.findAll({
-      where: { statusMessage, fkConversation },
+class ListMessagesConversationsMessageService {
+  async handle(fkConversation) {
+    const messages = await MessagesRepository.findAll({
+      where: { fkConversation },
       include: [
         {
           association: "conversation",
@@ -15,8 +15,8 @@ class ListStatusMessagesService {
       ],
     });
 
-    return messagesStatus;
+    return messages;
   }
 }
 
-module.exports = { ListStatusMessagesService };
+module.exports = { ListMessagesConversationsMessageService };

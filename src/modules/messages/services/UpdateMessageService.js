@@ -1,15 +1,17 @@
-const { MessageRepository } = require("../repositories/MessageRepository");
+const {
+  ConversationsRepository,
+} = require("../../users/repositories/ConversationsRepository");
 
 class UpdateMessageService {
-  async handle({ statusMessage, fkUserSender, fkUserReceiver }) {
-    const messages = await MessageRepository.update(
+  async handle(fkConversation, statusMessage) {
+    const message = await ConversationsRepository.update(
       { statusMessage },
-      { where: { fkUserSender, fkUserReceiver }, returning: true }
+      { where: { fkConversation }, returning: true }
     );
 
-    const messagesUpdated = { ...messages[1] };
+    const messageUpdate = { ...message[1] };
 
-    return messagesUpdated;
+    return messageUpdate;
   }
 }
 

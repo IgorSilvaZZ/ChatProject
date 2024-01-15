@@ -7,7 +7,7 @@ function listMessagesUsers(params, templateName, idUser) {
     const template = document.getElementById(templateName).innerHTML;
 
     const rendered = Mustache.render(template, {
-      name: params.nameUserSender,
+      name: params.nameUser,
       message: params.message,
       date: dayjs(params.createdAt).format("DD/MM/YY HH:mm:ss"),
     });
@@ -18,8 +18,8 @@ function listMessagesUsers(params, templateName, idUser) {
   }
 }
 
-function updateListAllConversations(lastConversations) {
-  if (lastConversations.length > 0) {
+function updateListAllConversations(lastMessagesConversations) {
+  if (lastMessagesConversations.length > 0) {
     if (document.getElementById("notFoundMessages")) {
       document.getElementById("notFoundMessages").style.display = "none";
     }
@@ -30,34 +30,42 @@ function updateListAllConversations(lastConversations) {
       "template_conversations"
     ).innerHTML;
 
-    lastConversations.forEach((item) => {
-      const quantityMessages = messagesPending.filter(
-        (message) => message.fkUserSender === item.fkUserReceiver
-      ).length;
+    lastMessagesConversations.forEach(
+      ({ conversation, message, fkConversation, sendMessage }) => {
+        let prefixMessage = sendMessage == id ? "Você: " : "";
 
-      const renderedConversations = Mustache.render(templateListConversations, {
-        idUser: item.user_receiver.id,
-        nameUser: item.user_receiver.name,
-        avatarUser: item.user_receiver.avatar
-          ? `${baseURL}/images/${item.user_receiver.avatar}`
-          : "../images/user3.png",
-        quantityMessages,
-      });
+        let userReceiver =
+          conversation.user_sender.id === id
+            ? { ...conversation.user_receiver }
+            : { ...conversation.user_sender };
 
-      document.getElementById("list_peoples").innerHTML +=
-        renderedConversations;
+        const avatarUserReceiver = userReceiver.avatar
+          ? `${baseURL}/images/${userReceiver.avatar}`
+          : "../images/user3.png";
 
-      document.querySelector(".people_icon").style.borderRadius = item
-        .user_receiver.avatar
-        ? "50%"
-        : "0px";
-    });
+        const renderConversation = Mustache.render(templateListConversations, {
+          idUserReceiver: userReceiver.id,
+          idConversation: fkConversation,
+          avatarUserReceiver,
+          nameUserReceiver: userReceiver.name,
+          message: `${prefixMessage}${message}`,
+        });
+
+        document.getElementById("list_peoples").innerHTML += renderConversation;
+
+        document.querySelector(".people_icon").style.borderRadius =
+          userReceiver.avatar ? "50%" : "0px";
+      }
+    );
   } else {
     document.getElementById("list_peoples").innerHTML = "";
   }
 }
 
-function talk(idUser) {
+function initConversation(fkConversation, idUserReceiver) {
+  const idConversation = Number(fkConversation);
+  const userReceiverId = Number(idUserReceiver);
+
   document.getElementById("modalSection").style.top = "-100%";
 
   const divContainerChat = document.getElementById("chat_container");
@@ -72,74 +80,84 @@ function talk(idUser) {
   containerChat.innerHTML = "";
   document.querySelector(".footerChat").innerHTML = "";
 
-  const user = users.find((userFind) => userFind.id === Number(idUser));
+  const userReceiver = users.find((user) => user.id === userReceiverId);
 
   const templateChatContainer = document.getElementById(
     "template_all_messages"
   ).innerHTML;
 
-  const renderedChatContainer = Mustache.render(templateChatContainer, {
-    idUser,
+  const renderChatContainer = Mustache.render(templateChatContainer, {
+    idUserReceiver,
   });
 
-  containerChat.innerHTML += renderedChatContainer;
+  containerChat.innerHTML += renderChatContainer;
 
   const templateFooter = document.getElementById(
     "template_send_message"
   ).innerHTML;
 
-  const rendereFooter = Mustache.render(templateFooter, {
-    emailUser: user.email,
-    paramsUser: JSON.stringify({
-      emailUser: user.email,
-      idUser,
+  const renderFooter = Mustache.render(templateFooter, {
+    emailUserReceiver: userReceiver.email,
+    paramsUserReceiver: JSON.stringify({
+      emailUserReceiver: userReceiver.email,
+      idUserReceiver,
     }),
   });
 
-  document.querySelector(".footerChat").innerHTML += rendereFooter;
+  document.querySelector(".footerChat").innerHTML += renderFooter;
 
   const paramsListMessages = {
     fkUser: id,
-    fkUserParticipant: user.id,
+    fkConversation: idConversation,
   };
 
-  socket.emit(
-    "list_messages",
-    paramsListMessages,
-    (messages, lastConversations, messagesStatusPending) => {
-      allConversations = lastConversations;
-      messagesPending = messagesStatusPending;
+  socket.emit("list_new_messages", paramsListMessages, (messages) => {
+    if (messages.length > 0) {
+      messages.forEach(({ conversation, message, sendMessage, createdAt }) => {
+        const nameUserProperty =
+          sendMessage == id ? "user_sender" : "user_receiver";
 
-      updateListAllConversations(allConversations);
+        const userRender = conversation[nameUserProperty];
 
-      if (messages.length > 0) {
-        messages.map((item) => {
-          if (item.idUserSender === id) {
-            listMessagesUsers(item, "template_user_send_message", idUser);
-          } else {
-            listMessagesUsers(item, "template_user_receiver_message", idUser);
-          }
-        });
-      }
+        const paramsForRender = {
+          message,
+          nameUser: userRender.nameUser,
+          createdAt,
+        };
+
+        if (nameUserProperty === "user_receiver") {
+          listMessagesUsers(
+            paramsForRender,
+            "template_user_receiver_message",
+            userReceiverId
+          );
+        } else {
+          listMessagesUsers(
+            paramsForRender,
+            "template_user_send_message",
+            userReceiverId
+          );
+        }
+      });
     }
-  );
+  });
 }
 
 function sendMessage(paramsUser) {
-  const { emailUser, idUser } = JSON.parse(paramsUser);
+  const { emailUserReceiver, idUserReceiver } = JSON.parse(paramsUser);
 
-  const text = document.getElementById(`messageUser${emailUser}`);
+  const text = document.getElementById(`messageUser${emailUserReceiver}`);
 
   const params = {
     text: text.value,
     emailUserSender: email,
-    emailUserReceiver: emailUser,
+    emailUserReceiver,
     usernameSender: username,
   };
 
-  socket.emit("user_send_message", params, (lastConversations) => {
-    allConversations = lastConversations;
-    updateListAllConversations(lastConversations);
+  // Emissão do novo evento de conversa e mensagem
+  socket.emit("user_send_new_message", params, (lastMessagesConversations) => {
+    updateListAllConversations(lastMessagesConversations);
   });
 
   const paramsRender = {
@@ -148,7 +166,11 @@ function sendMessage(paramsUser) {
     date: dayjs().format("DD/MM/YY HH:mm:ss"),
   };
 
-  listMessagesUsers(paramsRender, "template_user_send_message", Number(idUser));
+  listMessagesUsers(
+    paramsRender,
+    "template_user_send_message",
+    Number(idUserReceiver)
+  );
 
   const containerChat = document.getElementById(`containerChat`);
 
@@ -226,8 +248,32 @@ function createUsersModal(listUsers) {
     divPeople.appendChild(imgPeople);
     divPeople.appendChild(namePeople);
 
+    let conversationUser = null;
+    let fkConversation = 1;
+
+    if (allConversations.length > 0) {
+      conversationUser = allConversations.find(
+        ({ conversation, fkConversation }) => {
+          if (
+            (conversation.fkUserSender == id &&
+              conversation.fkUserReceiver == user.id) ||
+            (conversation.fkUserReceiver == id &&
+              conversation.fkUserSender == user.id)
+          ) {
+            return { conversation, fkConversation };
+          } else {
+            return null;
+          }
+        }
+      );
+
+      fkConversation = conversationUser
+        ? conversationUser.fkConversation
+        : allConversations[allConversations.length - 1].fkConversation + 1;
+    }
+
     divPeople.addEventListener("click", () => {
-      talk(user.id);
+      initConversation(fkConversation, user.id);
     });
 
     containerModalBody.appendChild(divPeople);

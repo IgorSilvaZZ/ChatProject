@@ -1,13 +1,13 @@
 const { FindAllUsersService } = require("../services/FindAllUsersService");
 
-const { UsersSerialize } = require("../../../serializes/UsersSerialize");
+const { usersFormattedMapper } = require("../mappers/UsersMapper");
 
 module.exports = async (params, callback) => {
   const { email } = params;
 
   const users = await new FindAllUsersService().handle();
 
-  const allUsers = new UsersSerialize().handle(users);
+  const allUsers = usersFormattedMapper(users);
 
   const allUsersFilters = allUsers.filter((user) => user.email != email);
 

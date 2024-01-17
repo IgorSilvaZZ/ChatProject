@@ -6,9 +6,7 @@ const {
   CreateConnectionService,
 } = require("../services/CreateConnectionService");
 
-const {
-  ConnectionsSerialize,
-} = require("../../../serializes/ConnectionsSerialize");
+const { connectionsFormattedMapper } = require("../mappers/ConnectionsMapper");
 
 module.exports = async (params, callback) => {
   if (params && params.new_user) {
@@ -20,7 +18,7 @@ module.exports = async (params, callback) => {
     const connectionsUpdateList =
       await new FindAllUsersConnectionService().handle();
 
-    const allConnectionsUsersUpdated = new ConnectionsSerialize().handle(
+    const allConnectionsUsersUpdated = connectionsFormattedMapper(
       connectionsUpdateList
     );
 
@@ -28,7 +26,7 @@ module.exports = async (params, callback) => {
   } else {
     const connections = await new FindAllUsersConnectionService().handle();
 
-    const allConnectionsUsers = new ConnectionsSerialize().handle(connections);
+    const allConnectionsUsers = connectionsFormattedMapper(connections);
 
     callback(allConnectionsUsers);
   }

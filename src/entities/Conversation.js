@@ -6,6 +6,7 @@ class Conversation extends Model {
       {
         fkUserSender: DataTypes.INTEGER,
         fkUserReceiver: DataTypes.INTEGER,
+        fkGroup: DataTypes.INTEGER,
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE,
       },
@@ -26,6 +27,11 @@ class Conversation extends Model {
     this.belongsTo(models.User, {
       foreignKey: "fkUserReceiver",
       as: "user_receiver",
+    });
+
+    this.belongsTo(models.Room, {
+      foreignKey: "fkGroup",
+      as: "conversation_group",
     });
   }
 }

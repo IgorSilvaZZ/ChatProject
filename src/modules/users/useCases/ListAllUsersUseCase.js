@@ -1,11 +1,11 @@
 const { FindAllUsersService } = require("../services/FindAllUsersService");
 
-const { UsersSerialize } = require("../../../serializes/UsersSerialize");
+const { usersFormattedMapper } = require("../mappers/UsersMapper");
 
 module.exports = async (params) => {
   const users = await new FindAllUsersService().handle();
 
-  const allUsers = new UsersSerialize().handle(users);
+  const allUsers = usersFormattedMapper(users);
 
   global.io.emit("update_all_users", allUsers);
 };

@@ -6,6 +6,7 @@ const { Connection } = require("../entities/Connection");
 const { Message } = require("../entities/Message");
 const { Conversation } = require("../entities/Conversation");
 const { Preferences } = require("../entities/Preferences");
+const { Room } = require("../entities/Room");
 
 const connection = new Sequelize(config);
 
@@ -14,10 +15,12 @@ Connection.init(connection);
 Preferences.init(connection);
 Message.init(connection);
 Conversation.init(connection);
+Room.init(connection);
 
 Connection.associate(connection.models);
 Preferences.associate(connection.models);
 Message.associate(connection.models);
 Conversation.associate(connection.models);
+Room.associate(connection.models);
 
 module.exports = connection;

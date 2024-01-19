@@ -4,6 +4,7 @@ class Room extends Model {
   static init(sequelize) {
     super.init(
       {
+        name: DataTypes.TEXT,
         fkAdmin: DataTypes.INTEGER,
         fkParticipant: DataTypes.INTEGER,
         createdAt: DataTypes.DATE,

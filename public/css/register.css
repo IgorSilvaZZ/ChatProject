@@ -1,3 +1,11 @@
+.form-section {
+  gap: 0px;
+}
+
+.form-section-inputs {
+  gap: 12px;
+}
+
 .form-section span {
   font-size: 12px;
   font-weight: 700;

@@ -2,7 +2,15 @@ const userLogged = JSON.parse(localStorage.getItem("user"));
 
 const baseURL = "http://localhost:3333";
 
-const { name: username, email, id, token, avatar, preferences } = userLogged;
+const {
+  name: username,
+  email,
+  nickname,
+  id,
+  token,
+  avatar,
+  preferences,
+} = userLogged;
 
 const preferencesUser = {
   notification_preference: preferences.notification_preference,

@@ -36,6 +36,7 @@ async function handleLogin() {
       id: data.user.id,
       name: data.user.name,
       email: data.user.email,
+      nickname: data.user.nickname,
       token: data.token,
       avatar: data.user.avatar,
       preferences: {

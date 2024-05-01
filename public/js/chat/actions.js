@@ -14,6 +14,10 @@ window.addEventListener("load", () => {
     : "../images/user3.png";
 
   imageProfile.style.borderRadius = avatar ? "50%" : "0px";
+
+  if (!nickname) {
+    alert("Usuario nem nome do usuario!");
+  }
 });
 
 /* Actions diretamente na DOM */

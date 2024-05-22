@@ -228,6 +228,23 @@
       </div>
     </div>
 
+    <div class="bg-modal" id="modalNickName">
+      <div class="modal modal-register-nickname">
+        <div class="modal-header">
+          <h1>Cadastro de nome de usuário</h1>
+        </div>
+        <div class="modal-body" style="justify-content: space-around">
+          <input
+            type="text"
+            placeholder="Nome de usuário"
+            id="new_nickname_input"
+          />
+
+          <button onclick="registerNickName()">Enviar</button>
+        </div>
+      </div>
+    </div>
+
     <script
       type="text/javascript"
       src="https://cdn.jsdelivr.net/npm/toastify-js"
@@ -240,5 +257,6 @@
     <script src="js/chat/websocket.js"></script>
     <script src="js/chat/functions.js"></script>
     <script src="js/chat/actions.js"></script>
+    <script src="js/chat/invite.js"></script>
   </body>
 </html>

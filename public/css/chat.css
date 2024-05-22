@@ -375,6 +375,37 @@ body {
   overflow-x: hidden;
 }
 
+.modal-register-nickname input {
+  width: 400px;
+
+  padding: 15px;
+
+  font-weight: 600;
+
+  color: white;
+  background: #2f2f2f;
+
+  border-radius: 8px;
+  border: none;
+
+  outline: none;
+}
+
+.modal-register-nickname button {
+  width: 180px;
+
+  padding: 10px;
+
+  background: #5f27cd;
+  color: white;
+
+  border-radius: 10px;
+  border: none;
+
+  outline: none;
+  cursor: pointer;
+}
+
 .update_file {
   width: 80%;
 
@@ -385,4 +416,9 @@ body {
   color: white;
 
   border-radius: 8px;
+}
+
+.modal-register-nickname {
+  width: 40%;
+  height: 35%;
 }

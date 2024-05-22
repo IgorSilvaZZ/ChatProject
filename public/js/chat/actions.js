@@ -16,7 +16,13 @@ window.addEventListener("load", () => {
   imageProfile.style.borderRadius = avatar ? "50%" : "0px";
 
   if (!nickname) {
-    alert("Usuario nem nome do usuario!");
+    Toastify({
+      text: "Cadastre um nome de usuario para sua conta para prosseguir!",
+      backgroundColor: "linear-gradient(to right, #6d23b6, #47126b)",
+      duration: 3000,
+    }).showToast();
+
+    document.getElementById("modalNickName").style.top = "0";
   }
 });
 
@@ -71,7 +77,7 @@ document.getElementById("configButton").addEventListener("click", () => {
 
   const { preferences } = JSON.parse(localStorage.getItem("user"));
 
-  for (preference in preferences) {
+  for (let preference in preferences) {
     document.getElementById(preference).checked = preferences[preference];
   }
 });

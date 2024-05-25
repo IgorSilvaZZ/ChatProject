@@ -24,8 +24,9 @@ const {
 } = require("./modules/users/controllers/UpdateAvatarUserController");
 
 const {
-  UpdateUserController,
-} = require("./modules/users/controllers/UpdateUserController");
+  PatchUserController,
+} = require("./modules/users/controllers/PatchUserController");
+
 const {
   UpdatePreferencesController,
 } = require("./modules/users/controllers/UpdatePreferencesController");
@@ -55,7 +56,8 @@ router.patch(
   new UpdateAvatarUserController().execute
 );
 
-router.patch("/user", ensureAuthenticated, new UpdateUserController().execute);
+router.patch("/user", ensureAuthenticated, new PatchUserController().execute);
+
 router.patch(
   "/user/preferences",
   ensureAuthenticated,

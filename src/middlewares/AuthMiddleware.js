@@ -1,4 +1,5 @@
 const { verify } = require("jsonwebtoken");
+
 const { secret } = require("../config/auth.json");
 
 const ensureAuthenticated = (req, res, next) => {

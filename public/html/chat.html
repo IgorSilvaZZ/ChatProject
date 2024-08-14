@@ -140,7 +140,7 @@
               </div>
               <div id="list_peoples"></div>
               <script id="template_conversations" type="x-tmpl-mustache">
-                  <div class="people" id="user{{ idUserReceiver }}" onclick="initConversation('{{ idConversation }}', '{{ idUserReceiver }}')">
+                  <div class="people" style="height: 60px" id="user{{ idUserReceiver }}" onclick="initConversation('{{ idConversation }}', '{{ idUserReceiver }}')">
                     <img class="people_icon" src="{{ avatarUserReceiver }}">
                     <div class="item-people">
                       <p class="people_text">{{ nameUserReceiver }}</p>
@@ -211,7 +211,7 @@
 
           <div class="footerChat"></div>
           <script id="template_send_message" type="x-tmpl-mustache">
-            <input class="footerChat_input" type="text" placeholder="Escreva mensagem" id="messageUser{{ emailUserReceiver }}" name="messageUser">
+            <input class="footerChat_input" type="text" placeholder="Escreva uma mensagem" id="messageUser{{ emailUserReceiver }}" name="messageUser">
             <div class="buttonSendMessage" id="buttonSubmitMessage"onclick="sendMessage('{{ paramsUserReceiver }}')"></div>
           </script>
         </div>
@@ -219,12 +219,62 @@
     </div>
 
     <div class="bg-modal" id="modalSection">
-      <div class="modal" id="modal-users">
-        <div class="modal-header">
-          <h1>Selecionar Contato</h1>
+      <div class="modal" id="modal-invites">
+        <div class="modal-header" style="height: 50px">
+          <div
+            style="display: flex; align-items: center; gap: 10px; width: 400px"
+          >
+            <h1>Lista de contatos</h1>
+            <button
+              style="
+                width: 22px;
+                height: 22px;
+                text-align: center;
+                background: #5f27cd;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+              "
+              title="Adicionar Contato"
+            >
+              +
+            </button>
+          </div>
           <span class="close">&times;</span>
         </div>
-        <div class="modal-body" id="list_users"></div>
+        <div class="modal-body" id="list_invites">
+          <!-- <div
+            style="
+              width: 100%;
+              padding: 0px 10px;
+              display: flex;
+              justify-content: flex-end;
+            "
+          >
+            <button
+              style="
+                padding: 8px;
+                background: #5f27cd;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+              "
+            >
+              + Adicionar novo contato
+            </button>
+          </div> -->
+          <div class="content-invites"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-modal" id="modalInvites">
+      <div class="modal">
+        <div class="modal-header">
+          <h1>Lista de solicitações</h1>
+          <span class="close">&times;</span>
+        </div>
+        <div class="modal-body" id="list_invites"></div>
       </div>
     </div>
 

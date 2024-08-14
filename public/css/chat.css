@@ -71,7 +71,7 @@ body {
   align-items: center;
 
   width: 95%;
-  height: 15%;
+  height: 50px;
 
   background: rgba(73, 80, 87, 0.5);
 
@@ -81,7 +81,7 @@ body {
   cursor: pointer;
   opacity: 0.8;
 
-  transition: opacity 0.2s;
+  transition: background 0.2s;
 }
 
 .people:hover {
@@ -97,7 +97,7 @@ body {
 }
 
 .people_icon {
-  height: 70%;
+  height: 45px;
 
   padding: 4px 9px;
 }
@@ -109,6 +109,20 @@ body {
   color: white;
 
   text-align: left;
+}
+
+.people-card {
+  justify-content: space-between;
+}
+
+.people-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+
+  width: 300px;
+  border: 2px solid red;
 }
 
 .last_message_people {
@@ -343,6 +357,7 @@ body {
 .modal-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   font-size: 10px;
   color: white;

@@ -222,22 +222,31 @@ const loadFilteredListUsers = (listUsers) => {
 };
 
 function createUsersModal(listUsers) {
-  const containerModalBody = document.getElementById("list_users");
+  const containerModalBody = document.getElementById("list_invites");
 
   containerModalBody.innerHTML = "";
 
   listUsers.forEach((user) => {
     const divPeople = document.createElement("div");
 
+    const divContentPeople = document.createElement("div");
+
     const imgPeople = document.createElement("img");
 
     const namePeople = document.createElement("p");
 
+    const iconMessage = document.createElement("img");
+
     divPeople.id = `user${id}`;
-    divPeople.className = "people";
+    divPeople.className = "people people-card";
+
+    divContentPeople.className = "people-content";
 
     namePeople.textContent = user.name;
     namePeople.className = "people_text";
+
+    iconMessage.src = "https://img.icons8.com/windows/32/topic--v1.png";
+    iconMessage.width = "20";
 
     imgPeople.src = user.avatar
       ? `${baseURL}/images/${user.avatar}`
@@ -245,8 +254,11 @@ function createUsersModal(listUsers) {
 
     imgPeople.className = "people_icon";
 
-    divPeople.appendChild(imgPeople);
-    divPeople.appendChild(namePeople);
+    divContentPeople.appendChild(imgPeople);
+    divContentPeople.appendChild(namePeople);
+
+    divPeople.appendChild(divContentPeople);
+    divPeople.appendChild(iconMessage);
 
     let conversationUser = null;
     let fkConversation = 1;

@@ -242,7 +242,25 @@
           </div>
           <span class="close">&times;</span>
         </div>
-        <div class="modal-body" id="list_invites">
+        <div class="modal-body">
+          <div style="width: 90%" id="list_invites"></div>
+          <script id="template_people" type="x-tmpl-mustache">
+            <div
+              id="user_{{ userReceiverId }}"
+              class="people people-card"
+              onclick="initConversation('{{ fkConversation }}', '{{ userReceiverId }}')"
+            >
+              <div class="people-content">
+                <img src="{{ imgPeople }}" class="people_icon">
+                <p class="people_text">{{ namePeople }}</p>
+              </div>
+              <i
+                class="ph ph-chat"
+                style="margin:  0px 10px;"
+              >
+              </i>
+            </div>
+          </script>
           <!-- <div
             style="
               width: 100%;
@@ -299,6 +317,7 @@
       type="text/javascript"
       src="https://cdn.jsdelivr.net/npm/toastify-js"
     ></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.4/dayjs.min.js"></script>
     <script src="https://unpkg.com/mustache@latest"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>

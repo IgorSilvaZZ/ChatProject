@@ -216,49 +216,19 @@ async function updateUser(name) {
   window.location.reload();
 }
 
-const loadFilteredListUsers = (listUsers) => {
-  const filteredUsers = listUsers.filter((user) => user.email !== email);
-  return filteredUsers;
-};
+const loadFilteredListUsers = (listUsers) =>
+  listUsers.filter((user) => user.email !== email);
 
 function createUsersModal(listUsers) {
-  const containerModalBody = document.getElementById("list_invites");
-
-  containerModalBody.innerHTML = "";
+  const listInvites = document.getElementById("list_invites");
+  const templatePeopleCard =
+    document.getElementById("template_people").innerHTML;
 
   listUsers.forEach((user) => {
-    const divPeople = document.createElement("div");
-
-    const divContentPeople = document.createElement("div");
-
-    const imgPeople = document.createElement("img");
-
-    const namePeople = document.createElement("p");
-
-    const iconMessage = document.createElement("img");
-
-    divPeople.id = `user${id}`;
-    divPeople.className = "people people-card";
-
-    divContentPeople.className = "people-content";
-
-    namePeople.textContent = user.name;
-    namePeople.className = "people_text";
-
-    iconMessage.src = "https://img.icons8.com/windows/32/topic--v1.png";
-    iconMessage.width = "20";
-
-    imgPeople.src = user.avatar
+    const namePeople = user.name;
+    const imgPeople = user.avatar
       ? `${baseURL}/images/${user.avatar}`
       : "../images/user3.png";
-
-    imgPeople.className = "people_icon";
-
-    divContentPeople.appendChild(imgPeople);
-    divContentPeople.appendChild(namePeople);
-
-    divPeople.appendChild(divContentPeople);
-    divPeople.appendChild(iconMessage);
 
     let conversationUser = null;
     let fkConversation = 1;
@@ -273,9 +243,9 @@ function createUsersModal(listUsers) {
               conversation.fkUserSender == user.id)
           ) {
             return { conversation, fkConversation };
-          } else {
-            return null;
           }
+
+          return null;
         }
       );
 
@@ -284,11 +254,14 @@ function createUsersModal(listUsers) {
         : allConversations[allConversations.length - 1].fkConversation + 1;
     }
 
-    divPeople.addEventListener("click", () => {
-      initConversation(fkConversation, user.id);
+    const renderPeopleCard = Mustache.render(templatePeopleCard, {
+      userReceiverId: user.id,
+      namePeople,
+      imgPeople,
+      fkConversation,
     });
 
-    containerModalBody.appendChild(divPeople);
+    listInvites.innerHTML += renderPeopleCard;
   });
 }
 
